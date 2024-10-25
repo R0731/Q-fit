@@ -17,6 +17,13 @@ CREATE TABLE user (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- trainer 테이블 (트레이너 정보, user와 1:多 관계)
+CREATE TABLE trainer (
+    id INT PRIMARY KEY,
+    gym VARCHAR(100),
+    FOREIGN KEY (id) REFERENCES user(id)
+);
+
 -- trainee 테이블 (훈련생 정보, user와 1:1 관계)
 CREATE TABLE trainee (
     id INT PRIMARY KEY,
@@ -25,12 +32,7 @@ CREATE TABLE trainee (
     FOREIGN KEY (trainer_id) REFERENCES trainer(id)
 );
 
--- trainer 테이블 (트레이너 정보, user와 1:多 관계)
-CREATE TABLE trainer (
-    id INT PRIMARY KEY,
-    gym VARCHAR(100),
-    FOREIGN KEY (id) REFERENCES user(id)
-);
+
 
 -- today_quest 테이블 (훈련생이 받은 퀘스트 정보)
 CREATE TABLE today_quest (
@@ -46,17 +48,24 @@ CREATE TABLE today_quest (
     FOREIGN KEY (trainer_id) REFERENCES trainer(id)
 );
 
+CREATE TABLE exercise(
+	exercise_id INT PRIMARY KEY AUTO_INCREMENT,
+    exercise_type ENUM('Weight', 'Cardio'),
+    exercise_parts varchar(40),
+	exercise_name varchar(100)
+);
+
 -- task 테이블 (퀘스트 내 개별 작업)
 CREATE TABLE task (
-    task_id INT PRIMARY KEY AUTO_INCREMENT,
     quest_id INT NOT NULL,
     order_index INT,
     is_completed BOOLEAN DEFAULT FALSE,
-    exercise_type ENUM('Weight', 'Cardio'),
     count INT,
     weight_kg INT,      -- Weight에서 사용 (무게)
     cardio_minutes INT, -- Cardio에서 사용 (시간)
-    FOREIGN KEY (quest_id) REFERENCES today_quest(quest_id)
+    exercise_id INT NOT NULL,
+    FOREIGN KEY (quest_id) REFERENCES today_quest(quest_id),
+    FOREIGN KEY (exercise_id) REFERENCES exercise(exercise_id)
 );
 
 -- review 테이블 (today_quest와 관련된 리뷰)
@@ -89,3 +98,35 @@ CREATE TABLE notification (
     is_read BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES user(id)
 );
+
+INSERT INTO exercise(exercise_type, exercise_parts, exercise_name)
+VALUES ('Cardio', '유산소','런닝 머신'),
+('Cardio', '유산소','싸이클'),
+('Weight', '가슴','벤치 프레스'),
+('Weight', '가슴','딥스'),
+('Weight', '가슴','덤벨 플라이'),
+('Weight', '가슴','케이블 크로스 오버'),
+('Weight', '가슴','푸시업'),
+('Weight', '등','랫풀다운'),
+('Weight', '등','친업'),
+('Weight', '등','루마니안 데드리프트'),
+('Weight', '등','풀업'),
+('Weight', '등','티바로우머신'),
+('Weight', '어깨','오버헤드프레스'),
+('Weight', '어깨','사이드 레터럴 레이즈'),
+('Weight', '어깨','페이스 풀'),
+('Weight', '어깨','숄더프레스'),
+('Weight', '어깨','프론트레이즈'),
+('Weight', '팔','바벨컬'),
+('Weight', '팔','덤벨컬'),
+('Weight', '팔','암컬 머신'),
+('Weight', '팔','트라이셉 익스텐션머신'),
+('Weight', '팔','덤벨 리스트 컬'),
+('Weight', '하체','프론트 스쿼트'),
+('Weight', '하체','레그 프레스'),
+('Weight', '하체','레그 컬'),
+('Weight', '하체','레그 익스텐션'),
+('Weight', '하체','덤벨 런지')
+;
+
+select * from exercise
