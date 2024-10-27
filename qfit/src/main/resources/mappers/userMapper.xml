@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.qfit.mvc.model.dao.user.UserDao">
+  
+  	<resultMap type="com.qfit.mvc.model.dto.user.UserDto" id="userMap">
+  		<result column="user_id" property="userId"/>
+  		<result column="user_pw" property="userPassword"/>
+  		<result column="user_name" property="userName"/>
+  		<result column="phone_number" property="phoneNumber"/>
+  		<result column="email" property="email"/>
+  		<result column="gender" property="gender"/>
+  		<result column="birth_date" property="birthdate"/>
+  		<result column="user_type" property="userType"/>
+  	</resultMap>
+  	
+  	<!-- user 테이블에 공통 정보 추가 -->
+ 	<insert id="addUser" parameterType="com.qfit.mvc.model.dto.user.User">
+ 		INSERT INTO user (user_id, user_pw, user_name, phone_number, email, gender, birth_date, user_type)
+ 		VALUES (#{userId}, #{userPassword}, #{userName}, #{phoneNumber}, #{email}, #{gender}, #{birthdate}, #{userType});
+		<!-- 자동으로 생성된 user테이블의 id를 프로퍼티에 저장 -->
+ 		<selectKey keyProperty="id" resultType="int" order="AFTER">
+ 			SELECT LAST_INSERT_ID();
+ 		</selectKey>
+ 	</insert>
+ 	
+ 	<!-- trainee 테이블에 trainer 정보 추가 -->
+ 	<update id="addTrainerInfo" parameterType="int">
+ 		UPDATE trainee
+ 		SET trainer_id = #{trainerId}
+ 		WHERE id = #{id};
+ 	</update>
+  
+  	<!-- userId 중복 체크 -->
+  	<select id="isUserIdAvailable" parameterType="String">
+  		SELECT IFNULL(COUNT(*), 0)
+  		FROM user
+  		WHERE user_id = #{userId};
+  	</select>
+  	
+  	<!-- 회원 탈퇴 -->
+  	<delete id="deleteUser" parameterType="int">
+  		DELETE FROM user 
+  		WHERE id = #{id};
+  	</delete>
+  	
+  	<!-- userId로 회원조회 -->
+  	<select id="selectOnebyId" parameterType="String" resultMap="userMap">
+  		SELECT *
+  		FROM user
+  		WHERE user_id = #{userId};
+  	</select>
+  	
+  </mapper>
