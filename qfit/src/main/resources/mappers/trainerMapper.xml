@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.qfit.mvc.model.dao.user.TrainerDao">
+
+	<!-- userType이 1일 시 trainer 테이블에도 추가 -->
+	<insert id="addTrainer" parameterType="int">
+		INSERT INTO trainer (id) VALUES (#{id});
+	</insert>
+	
+ 	<!-- trainer 테이블에 gym 정보 추가 -->
+ 	<update id="addGym" parameterType="map">
+ 		UPDATE trainer
+ 		SET gym = #{gym}
+ 		WHERE id = #{id};
+ 	</update>
+ 	
+ 	<!-- user삭제 시 trainer테이블 정보도 삭제 -->
+ 	<delete id="deleteTrainer" parameterType="int">
+ 		DELETE FROM trainer
+ 		WHERE id = #{id};
+ 	</delete>
+  </mapper>
