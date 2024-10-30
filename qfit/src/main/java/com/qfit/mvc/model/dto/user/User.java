@@ -6,7 +6,7 @@ import com.qfit.mvc.model.dao.user.TrainerDao;
 import com.qfit.mvc.model.dao.user.UserDao;
 
 @Alias("User")
-public abstract class User {
+public class User {
 	protected int id;
 	private String userId;
 	private String userPassword;
@@ -18,14 +18,6 @@ public abstract class User {
 	private String userImg;
 	private String createdAt; 
 	protected int userType;
-	
-	public void save(UserDao userDao) {
-		userDao.addUser(this);
-	}
-	
-	public void delete(UserDao userDao) {
-		userDao.deleteUser(getId());
-	}
 	
 	public User() {
 		// TODO Auto-generated constructor stub

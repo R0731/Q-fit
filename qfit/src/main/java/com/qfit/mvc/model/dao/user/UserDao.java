@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import com.qfit.mvc.model.dto.user.Trainee;
 import com.qfit.mvc.model.dto.user.Trainer;
 import com.qfit.mvc.model.dto.user.User;
-import com.qfit.mvc.model.dto.user.UserDto;
 
 @Mapper
 public interface UserDao {
@@ -18,7 +17,7 @@ public interface UserDao {
 	
 	public void readUser(User user);
 	
-	public UserDto selectOnebyId(String userId); 
+	public User selectOnebyId(String userId); 
 		
 	public void updatePassword(String password);
 	

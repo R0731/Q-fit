@@ -12,8 +12,6 @@ import com.qfit.mvc.model.dao.user.UserDao;
 import com.qfit.mvc.model.dto.user.Trainee;
 import com.qfit.mvc.model.dto.user.Trainer;
 import com.qfit.mvc.model.dto.user.User;
-import com.qfit.mvc.model.dto.user.UserDto;
-import com.qfit.mvc.model.factory.UserFactory;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -30,7 +28,7 @@ public class UserServiceImpl implements UserService{
 		if(userDao.isUserIdAvailable(user.getUserId()) > 0){
 			return "ID already exists";
 		}
-			user.save(userDao);
+			userDao.addUser(user);
 			return "User regist successfully";
 	}
 
@@ -59,11 +57,7 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User getUserbyId(String userId) {
-		UserDto user = userDao.selectOnebyId(userId);
-		
-		if(user != null) {
-			return UserFactory.createUserByType(user);
-		}
+		User user = userDao.selectOnebyId(userId);
 		
 		return user;
 	}

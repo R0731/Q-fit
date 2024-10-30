@@ -9,18 +9,10 @@ public class Trainee extends User{
 	
 	private int trainerId;
 	
-	public Trainee(UserDto userdto) {
-		super();
-	}
-	
     public Trainee(int id) {
         this.id = id;
     }
 	
-	public Trainee(User user) {
-		// TODO Auto-generated constructor stub
-	}
-
 	public int getTrainerId() {
 		return trainerId;
 	}

@@ -14,14 +14,6 @@ public class Trainer extends User {
 	public Trainer(int id) {
 		this.id = id;
 	}
-	
-	public Trainer(User user) {
-		// TODO Auto-generated constructor stub
-	}
-
-	public Trainer(UserDto userdto) {
-		// TODO Auto-generated constructor stub
-	}
 
 	public String getGym() {
 		return gym;
