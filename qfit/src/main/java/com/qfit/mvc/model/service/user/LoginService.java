@@ -1,7 +1,6 @@
 package com.qfit.mvc.model.service.user;
 
 import com.qfit.mvc.model.dto.user.User;
-import com.qfit.mvc.model.dto.user.UserDto;
 
 public interface LoginService {
 	
