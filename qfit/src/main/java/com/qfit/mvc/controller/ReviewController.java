@@ -17,7 +17,7 @@ import com.qfit.mvc.model.service.ReviewService;
 @RestController
 @RequestMapping("/reviews")
 public class ReviewController {
-	// 어디갔어
+	
 	// 서비스 의존성 주입
 	private final ReviewService reviewService;
 	
@@ -27,14 +27,17 @@ public class ReviewController {
 	
 	// 리뷰 읽어오기
 	@GetMapping("/{questId}")
-	public ResponseEntity<?> getReviewById(@PathVariable("questID") int questId) {
+	public ResponseEntity<?> getReviewById(@PathVariable("questId") int questId) {
+		System.out.println(questId);
 		try {
 			Review review = reviewService.readReview(questId);
+			System.out.println(review);
 			if (review != null) {
 				return new ResponseEntity<Review>(review, HttpStatus.OK);
 			}
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -52,9 +55,14 @@ public class ReviewController {
 		}
 	}
 	
-	// 리뷰 삭제
+	
+	 /**
+	 * 리뷰 삭제 메서드
+	 * @param questId 삭제할 리뷰의 questId
+	 * @return 성공 시 OK (200), 실패 시 INTERNAL_SERVER_ERROR 반환
+	 */
 	@DeleteMapping("/{questId}")
-	public ResponseEntity<String> removeReview(@PathVariable("questID") int questId) {
+	public ResponseEntity<String> removeReview(@PathVariable("questId") int questId) {
 		try {
 			if (reviewService.removeReview(questId)) {
 				return new ResponseEntity<String>("삭제되었습니다.", HttpStatus.OK);
@@ -70,9 +78,10 @@ public class ReviewController {
 	@PutMapping("/{questId}")
 	public ResponseEntity<String> modifyReview(@PathVariable int questId, @RequestBody Review review) {
 		try {
-			review.setQuestId(questId);
+			
 			reviewService.modifyReview(review);
 			return new ResponseEntity<String>("", HttpStatus.OK);
+			
 		} catch (IllegalArgumentException e) {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {

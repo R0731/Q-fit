@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
-@RequestMapping("/api-task")
+@RequestMapping("/task")
 public class TaskRestController {
 
 	private final TaskService taskService;
@@ -34,9 +34,10 @@ public class TaskRestController {
 	}
 	//전체 조회 필요 없음? => 전체 조회에서 퀘스트 ID로 조건 걸어야 하나?
 	//전체 조회
-	@GetMapping("/task")
+	@GetMapping("")
 	public ResponseEntity<List<TaskDto>> list(){
 		List<TaskDto> list = taskService.getTaskList();
+		System.out.println(list.toString());
 		return new ResponseEntity<>(list,HttpStatus.OK);
 	}
 	// 유산소 등록	
@@ -58,8 +59,9 @@ public class TaskRestController {
 	}
 	
 	//
-	@DeleteMapping("/task/{taskId}")
+	@DeleteMapping("/{taskId}")
 	public ResponseEntity<String> delete(@PathVariable("taskId") int id){
+		System.out.println(id);
 		boolean isDeleted = taskService.deleteTask(id);
 		
 		if(isDeleted) {
@@ -68,7 +70,7 @@ public class TaskRestController {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed");
 	}
 	
-	@PutMapping("/task/{id}")
+	@PutMapping("/cardio/{id}")
 	public ResponseEntity<Void> updateCardio(@PathVariable("taskId") int id, @RequestBody TaskDto taskDto){
 		taskDto.setTaskId(id);
 		taskService.updateCardioTask(taskDto);
@@ -76,7 +78,7 @@ public class TaskRestController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 	
-	@PutMapping("/task/{id}")
+	@PutMapping("/weight/{id}")
 	public ResponseEntity<Void> updateWeight(@PathVariable("taskId") int id, @RequestBody TaskDto taskDto){
 		taskDto.setTaskId(id);
 		taskService.updateWeightTask(taskDto);
@@ -84,7 +86,7 @@ public class TaskRestController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 	
-	@PutMapping("/task/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<Void> updateOrder(@PathVariable("taskId") int id, @RequestBody TaskDto taskDto){
 		taskDto.setTaskId(id);
 		taskService.updateOrder(taskDto);

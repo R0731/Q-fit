@@ -4,7 +4,7 @@
 <mapper namespace="com.qfit.mvc.model.dao.ReviewDao">
 	
 	<select id="getReviewByQuestId" resultType="Review">
-		SELECT * FROM review WHERE questId=#{id}
+		SELECT * FROM review WHERE quest_id=#{questId}
 	</select>
 	
 	<insert id="insertReview" parameterType="Review">
@@ -13,13 +13,13 @@
 	</insert>
 	
 	<delete id="deleteReview" parameterType="int">
-		DELETE FROM review WHERE id=#{id}
+		DELETE FROM review WHERE quest_id=#{questId}
 	</delete>
 	
 	<update id="updateReview" parameterType="Review">
 		UPDATE review
 		SET quest_id=#{questId}, difficulty=#{difficulty}
-		WHERE id=#{questId}
+		WHERE quest_id=#{questId}
 	</update>
 	
 </mapper>

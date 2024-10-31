@@ -1,3 +1,4 @@
+DROP DATABASE IF exists qfit;
 CREATE DATABASE qfit;
 
 USE qfit;
@@ -14,7 +15,8 @@ CREATE TABLE user (
     birth_date DATE,
     user_img VARCHAR(255),
     user_type TINYINT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_agreed boolean DEFAULT FALSE
 );
 
 -- trainer 테이블 (트레이너 정보, user와 1:多 관계)
@@ -31,8 +33,6 @@ CREATE TABLE trainee (
     FOREIGN KEY (id) REFERENCES user(id),
     FOREIGN KEY (trainer_id) REFERENCES trainer(id)
 );
-
-
 
 -- today_quest 테이블 (훈련생이 받은 퀘스트 정보)
 CREATE TABLE today_quest (
@@ -57,15 +57,16 @@ CREATE TABLE exercise(
 
 -- task 테이블 (퀘스트 내 개별 작업)
 CREATE TABLE task (
+	task_id INT PRIMARY KEY AUTO_INCREMENT,
     quest_id INT NOT NULL,
-    order_index INT,
+    order_index INT AUTO_INCREMENT,
     is_completed BOOLEAN DEFAULT FALSE,
     count INT,
     weight_kg INT,      -- Weight에서 사용 (무게)
     cardio_minutes INT, -- Cardio에서 사용 (시간)
     exercise_id INT NOT NULL,
-    FOREIGN KEY (quest_id) REFERENCES today_quest(quest_id),
-    FOREIGN KEY (exercise_id) REFERENCES exercise(exercise_id)
+	FOREIGN KEY (quest_id) REFERENCES today_quest(quest_id),
+	FOREIGN KEY (exercise_id) REFERENCES exercise(exercise_id)
 );
 
 -- review 테이블 (today_quest와 관련된 리뷰)
@@ -73,9 +74,8 @@ CREATE TABLE review (
     review_id INT PRIMARY KEY AUTO_INCREMENT,
     quest_id INT NOT NULL,
     difficulty ENUM('EASY', 'MEDIUM', 'HARD'),
-    content TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (quest_id) REFERENCES today_quest(quest_id)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    -- , FOREIGN KEY (quest_id) REFERENCES today_quest(quest_id)
 );
 
 -- feedback 테이블 (review에 대한 트레이너의 피드백)
@@ -129,4 +129,54 @@ VALUES ('Cardio', '유산소','런닝 머신'),
 ('Weight', '하체','덤벨 런지')
 ;
 
-select * from exercise
+INSERT INTO user (user_id, user_pw, user_name, phone_number, email, gender, birth_date, user_img, user_type)
+VALUES 
+('user001', 'password123', 'Alice Smith', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 0),
+('user002', 'password456', 'Bob Brown', '010-8765-4321', 'bob@example.com', 'Male', '1985-11-23', 'bob.jpg', 1),
+('user003', 'password789', 'Charlie Johnson', '010-5555-6666', 'charlie@example.com', 'Male', '1992-07-08', 'charlie.jpg', 0);
+
+INSERT INTO trainer (id, gym)
+VALUES 
+(2, 'Fitness Center A'),
+(3, 'Fitness Center B'),
+(1, 'Fitness Center C');
+
+INSERT INTO trainee (id, trainer_id)
+VALUES 
+(1, 2),
+(2, 1),
+(3, 2);
+
+INSERT INTO today_quest (trainee_id, trainer_id, start_at, end_at, difficulty)
+VALUES 
+(1, 2, '2023-10-31 10:00:00', '2023-10-31 11:00:00', 'MEDIUM'),
+(2, 1, '2023-10-31 14:00:00', '2023-10-31 15:30:00', 'HARD'),
+(3, 2, '2023-10-31 09:00:00', '2023-10-31 10:30:00', 'EASY');
+
+INSERT INTO task (quest_id, order_index, is_completed, count, weight_kg, cardio_minutes, exercise_id)
+VALUES 
+(1, 1, FALSE, 10, 50, NULL, 1),
+(2, 1, FALSE, NULL, NULL, 20, 2),
+(3, 1, TRUE, 15, 60, NULL, 3);
+
+SELECT * FROM task;
+
+INSERT INTO review (quest_id, difficulty)
+VALUES 
+(1, 'MEDIUM'),
+(2, 'HARD'),
+(3, 'EASY');
+
+INSERT INTO feedback (quest_id, trainer_id, content)
+VALUES 
+(1, 2, 'Good effort, Alice! Keep it up!'),
+(2, 1, 'You did well, Bob. Let’s push harder next time!'),
+(3, 2, 'Great job, Charlie. Remember to stretch after the workout.');
+
+INSERT INTO notification (user_id, message, is_read)
+VALUES 
+(1, 'Your training session starts in 1 hour.', FALSE),
+(2, 'New feedback from your trainer.', TRUE),
+(3, 'A new review is available for your last session.', FALSE);
+
+SELECT * FROM task;

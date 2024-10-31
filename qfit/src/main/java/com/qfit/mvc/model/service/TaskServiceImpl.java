@@ -2,9 +2,12 @@ package com.qfit.mvc.model.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.qfit.mvc.model.dao.TaskDao;
 import com.qfit.mvc.model.dto.TaskDto;
 
+@Service
 public class TaskServiceImpl implements TaskService {
 	
 	private final TaskDao taskDao;
