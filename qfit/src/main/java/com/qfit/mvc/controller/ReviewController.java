@@ -17,6 +17,7 @@ import com.qfit.mvc.model.service.ReviewService;
 @RestController
 @RequestMapping("/reviews")
 public class ReviewController {
+	// 어디갔어
 	// 서비스 의존성 주입
 	private final ReviewService reviewService;
 	
