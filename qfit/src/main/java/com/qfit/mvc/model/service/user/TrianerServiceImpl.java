@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.qfit.mvc.model.dao.user.TrainerDao;
 
 @Service
-public class TrianerServiceImpl implements TrainerService {
+public class TrianerServiceImpl implements TrainerService{
 	
 	private final TrainerDao trainerDao;
 	

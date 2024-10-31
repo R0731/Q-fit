@@ -3,102 +3,87 @@ package com.qfit.mvc.model.dto;
 public class TaskDto {
 	private int taskId;
 	private int questId;
-	private int order;
-	private int kg;
-	private int minute;
-	private int count;
-	private int exerciseId;
+	private int orderIndex;
 	private boolean isCompleted;
+	private int count;
+	private int weightKg;
+	private int cardioMinutes;
+	private int exerciseId;
 	
-	public TaskDto(){}
+	public TaskDto() {
+		// TODO Auto-generated constructor stub
+	}
 	
-	
-//무산소 운동
-	public TaskDto(int kg, int count, int exerciseId) {
-		super();
-		this.kg = kg;
+	// 무산소 생성자
+	public TaskDto(int questId, boolean isCompleted, int count, int weightKg, int cardioMinutes, int exerciseId) {
+		this.questId = questId;
 		this.count = count;
+		this.weightKg = weightKg;
 		this.exerciseId = exerciseId;
 	}
-
-
-//유산소 운동
-	public TaskDto(int minute, int exerciseId) {
+	
+	// 유산소 생성자
+	public TaskDto(int questId, int cardioMinutes, int exerciseId) {
 		super();
-		this.minute = minute;
+		this.questId = questId;
+		this.cardioMinutes = cardioMinutes;
 		this.exerciseId = exerciseId;
 	}
-
-
 
 	public int getTaskId() {
 		return taskId;
 	}
-
 	public void setTaskId(int taskId) {
 		this.taskId = taskId;
 	}
-
 	public int getQuestId() {
 		return questId;
 	}
-
 	public void setQuestId(int questId) {
 		this.questId = questId;
 	}
-
-	public int getOrder() {
-		return order;
+	public int getOrderIndex() {
+		return orderIndex;
 	}
-
-	public void setOrder(int order) {
-		this.order = order;
+	public void setOrderIndex(int orderIndex) {
+		this.orderIndex = orderIndex;
 	}
-
-	public int getKg() {
-		return kg;
+	public boolean isCompleted() {
+		return isCompleted;
 	}
-
-	public void setKg(int kg) {
-		this.kg = kg;
+	public void setCompleted(boolean isCompleted) {
+		this.isCompleted = isCompleted;
 	}
-
-	public int getMinute() {
-		return minute;
-	}
-
-	public void setMinute(int minute) {
-		this.minute = minute;
-	}
-
 	public int getCount() {
 		return count;
 	}
-
 	public void setCount(int count) {
 		this.count = count;
 	}
-
+	public int getWeightKg() {
+		return weightKg;
+	}
+	public void setWeightKg(int weightKg) {
+		this.weightKg = weightKg;
+	}
+	public int getCardioMinutes() {
+		return cardioMinutes;
+	}
+	public void setCardioMinutes(int cardioMinutes) {
+		this.cardioMinutes = cardioMinutes;
+	}
 	public int getExerciseId() {
 		return exerciseId;
 	}
-
 	public void setExerciseId(int exerciseId) {
 		this.exerciseId = exerciseId;
 	}
 
-	public boolean isCompleted() {
-		return isCompleted;
-	}
-
-	public void setCompleted(boolean isCompleted) {
-		this.isCompleted = isCompleted;
-	}
-
 	@Override
 	public String toString() {
-		return "TaskDto [taskId=" + taskId + ", questId=" + questId + ", order=" + order + ", kg=" + kg + ", minute="
-				+ minute + ", count=" + count + ", exerciseId=" + exerciseId + ", isCompleted=" + isCompleted + "]";
+		return "TaskDto [taskId=" + taskId + ", questId=" + questId + ", orderIndex=" + orderIndex + ", isCompleted="
+				+ isCompleted + ", count=" + count + ", weightKg=" + weightKg + ", cardioMinutes=" + cardioMinutes
+				+ ", exerciseId=" + exerciseId + "]";
 	}
 	
 	

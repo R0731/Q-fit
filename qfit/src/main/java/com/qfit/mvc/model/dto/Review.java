@@ -18,7 +18,7 @@ public class Review {
 	
 	// 난이도 열거형 선언
 	public enum Difficulty {
-		easy, medium, hard
+		EASY, MEDIUM, HARD;
 	}
 	
 	// 생성자
@@ -26,18 +26,10 @@ public class Review {
 	}
 	
 	public Review(int questId, Difficulty difficulty) {
-		super();
 		this.questId = questId;
 		this.difficulty = difficulty;
 	}
 	
-	public Review(int reviewId, int questId, Difficulty difficulty) {
-		super();
-		this.reviewId = reviewId;
-		this.questId = questId;
-		this.difficulty = difficulty;
-	}
-
 	// Getter 및 Setter 메서드
 	public int getReviewId() {
 		return reviewId;

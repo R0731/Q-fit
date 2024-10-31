@@ -15,7 +15,6 @@ public class ReviewServiceImpl implements ReviewService {
 		this.reviewDao = reviewDao;
 	}
 	
-	
 	// 리뷰 읽어오기
 	@Override
 	public Review readReview(int questId) {
