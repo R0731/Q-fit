@@ -18,8 +18,6 @@ public interface UserDao {
 	public void readUser(User user);
 	
 	public User selectOnebyId(String userId); 
-		
-	public void updatePassword(String password);
 	
 	public void updateUser(User user);
 	
