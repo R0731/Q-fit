@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.qfit.mvc.model.dao.TaskDao;
-import com.qfit.mvc.model.dto.TaskDto;
+import com.qfit.mvc.model.dto.Task;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -19,20 +19,20 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public List<TaskDto> getTaskList() {
+	public List<Task> getTaskList() {
 		System.out.println("모든 태스크를 가져왔습니다.");
 		return taskDao.selectAll();
 	}
 
 	@Override
-	public void addCardioTask(TaskDto taskDto) {
+	public void addCardioTask(Task task) {
 		System.out.println("유산소 태스크를 생성했습니다.");
-		taskDao.insertCardioTask(taskDto);}
+		taskDao.insertCardioTask(task);}
 		
 	@Override
-	public void addWeightTask(TaskDto taskDto) {
+	public void addWeightTask(Task task) {
 		System.out.println("무산소 태스크를 생성했습니다.");
-		taskDao.insertWeightTask(taskDto);
+		taskDao.insertWeightTask(task);
 			
 	}
 
@@ -45,21 +45,21 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public void updateCardioTask(TaskDto taskDto) {
+	public void updateCardioTask(Task task) {
 		System.out.println("유산소 태스크를 수정했습니다.");
-		taskDao.updateCardioTask(taskDto);
+		taskDao.updateCardioTask(task);
 	}
 	
 	@Override
-	public void updateWeightTask(TaskDto taskDto) {
+	public void updateWeightTask(Task task) {
 		System.out.println("무산소 태스크를 수정했습니다.");
-		taskDao.updateWeightTask(taskDto);
+		taskDao.updateWeightTask(task);
 	}
 
 	@Override
-	public void updateOrder(TaskDto taskDto) {
+	public void updateOrder(Task task) {
 		System.out.println("태스크 순서를 수정했습니다.");
-		taskDao.updateOrder(taskDto);
+		taskDao.updateOrder(task);
 	}
 
 }

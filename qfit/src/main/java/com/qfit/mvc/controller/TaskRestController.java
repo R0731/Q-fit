@@ -3,7 +3,7 @@ package com.qfit.mvc.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qfit.mvc.model.dto.TaskDto;
+import com.qfit.mvc.model.dto.Task;
 import com.qfit.mvc.model.service.TaskService;
 
 import java.security.PublicKey;
@@ -35,8 +35,8 @@ public class TaskRestController {
 	//전체 조회 필요 없음? => 전체 조회에서 퀘스트 ID로 조건 걸어야 하나?
 	//전체 조회
 	@GetMapping("")
-	public ResponseEntity<List<TaskDto>> list(){
-		List<TaskDto> list = taskService.getTaskList();
+	public ResponseEntity<List<Task>> list(){
+		List<Task> list = taskService.getTaskList();
 		System.out.println(list.toString());
 		return new ResponseEntity<>(list,HttpStatus.OK);
 	}
@@ -44,18 +44,18 @@ public class TaskRestController {
 	// 이 부분 어렵다.. 유산소와 무산소 태스크를 나눈 것이 잘 못인가..
 	//URL은 어떻게 처리해야 하지?
 	@PostMapping("/add-cardio-task")
-	public ResponseEntity<?> addCardio(@ModelAttribute TaskDto taskDto){
+	public ResponseEntity<?> addCardio(@ModelAttribute Task taskDto){
 		taskService.addCardioTask(taskDto);
 		System.out.println(taskDto);
-		return new ResponseEntity<TaskDto>(taskDto, HttpStatus.CREATED);
+		return new ResponseEntity<Task>(taskDto, HttpStatus.CREATED);
 		}
 	
 	//무산소 등록
 	@PostMapping("/add-weight-task")
-	public ResponseEntity<?> addWeight(@ModelAttribute TaskDto taskDto){
+	public ResponseEntity<?> addWeight(@ModelAttribute Task taskDto){
 		taskService.addWeightTask(taskDto);
 		System.out.println(taskDto);
-		return new ResponseEntity<TaskDto>(taskDto, HttpStatus.CREATED);
+		return new ResponseEntity<Task>(taskDto, HttpStatus.CREATED);
 	}
 	
 	//
@@ -71,7 +71,7 @@ public class TaskRestController {
 	}
 	
 	@PutMapping("/cardio/{id}")
-	public ResponseEntity<Void> updateCardio(@PathVariable("taskId") int id, @RequestBody TaskDto taskDto){
+	public ResponseEntity<Void> updateCardio(@PathVariable("taskId") int id, @RequestBody Task taskDto){
 		taskDto.setTaskId(id);
 		taskService.updateCardioTask(taskDto);
 		
@@ -79,7 +79,7 @@ public class TaskRestController {
 	}
 	
 	@PutMapping("/weight/{id}")
-	public ResponseEntity<Void> updateWeight(@PathVariable("taskId") int id, @RequestBody TaskDto taskDto){
+	public ResponseEntity<Void> updateWeight(@PathVariable("taskId") int id, @RequestBody Task taskDto){
 		taskDto.setTaskId(id);
 		taskService.updateWeightTask(taskDto);
 		
@@ -87,7 +87,7 @@ public class TaskRestController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> updateOrder(@PathVariable("taskId") int id, @RequestBody TaskDto taskDto){
+	public ResponseEntity<Void> updateOrder(@PathVariable("taskId") int id, @RequestBody Task taskDto){
 		taskDto.setTaskId(id);
 		taskService.updateOrder(taskDto);
 		

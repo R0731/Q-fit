@@ -2,22 +2,22 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qfit.mvc.model.dao.TaskDao">
+<mapper namespace="com.qfit.mvc.model.dao.Task">
 
 	<!-- 전체 태스크 조회 -->
-	<select id="selectAll" resultType="TaskDto">
+	<select id="selectAll" resultType="Task">
 		SELECT * 
 		FROM task;
 	</select>
 	
 	<!-- 유산소 태스크 추가 -->
-	<insert id="insertCardioTask" parameterType="TaskDto" keyProperty="task_id" useGeneratedKeys="true">
+	<insert id="insertCardioTask" parameterType="Task" keyProperty="task_id" useGeneratedKeys="true">
 		INSERT INTO task (cardio_minutes, exercise_id)
 		VALUES (#{cardio_minutes}, #{exerciseId});
 	</insert>
 	
 	<!-- 무산소 태스크 추가 -->
-	<insert id="insertWeightTask" parameterType="TaskDto" keyProperty="task_id" useGeneratedKeys="true">
+	<insert id="insertWeightTask" parameterType="Task" keyProperty="task_id" useGeneratedKeys="true">
 		INSERT INTO task (weight_kg, count, exercise_id)
 		VALUES (#{weight_kg}, #{count}, #{exerciseId});
 	</insert>
@@ -25,25 +25,25 @@
 	<!-- 태스크 삭제 -->
 	<delete id="deleteTask" parameterType="int">
 		DELETE FROM task
-		WHERE task_id = #{TaskId};
+		WHERE task_id = #{taskId};
 	</delete>
 	
 	<!-- 유산소 태스크 수정 -->
-	<update id="updateCardioTask" parameterType="TaskDto">
+	<update id="updateCardioTask" parameterType="Task">
 		UPDATE task
 		SET cardio_minutes = #{cardioMinutes}, exercise_id = #{exerciseId}
 		WHERE task_id = #{taskId};
 	</update>
 	
 	<!-- 무산소 태스크 수정 -->
-	<update id="updateWeightTask" parameterType="TaskDto">
+	<update id="updateWeightTask" parameterType="Task">
 		UPDATE task
 		SET weight_kg = #{weightKg}, count = #{count}, exercise_id = #{exerciseId}
 		WHERE task_id = #{taskId};
 	</update>
 
 	<!-- 순서 수정 -->
-	<update id="updateOrder" parameterType="TaskDto">
+	<update id="updateOrder" parameterType="Task">
 		UPDATE task
 		SET order_index = #{orderIndex}
 		WHERE task_id = #{taskId};

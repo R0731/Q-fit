@@ -1,6 +1,6 @@
 package com.qfit.mvc.model.dto;
 
-public class TaskDto {
+public class Task {
 	private int taskId;
 	private int questId;
 	private int orderIndex;
@@ -10,12 +10,14 @@ public class TaskDto {
 	private int cardioMinutes;
 	private int exerciseId;
 	
-	public TaskDto() {
-		// TODO Auto-generated constructor stub
+	/*
+	 * 기본 Task 생성자
+	 */
+	public Task() {
 	}
 	
 	// 무산소 생성자
-	public TaskDto(int questId, boolean isCompleted, int count, int weightKg, int cardioMinutes, int exerciseId) {
+	public Task(int questId, boolean isCompleted, int count, int weightKg, int cardioMinutes, int exerciseId) {
 		this.questId = questId;
 		this.count = count;
 		this.weightKg = weightKg;
@@ -23,7 +25,7 @@ public class TaskDto {
 	}
 	
 	// 유산소 생성자
-	public TaskDto(int questId, int cardioMinutes, int exerciseId) {
+	public Task(int questId, int cardioMinutes, int exerciseId) {
 		super();
 		this.questId = questId;
 		this.cardioMinutes = cardioMinutes;
