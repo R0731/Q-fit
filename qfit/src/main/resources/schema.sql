@@ -35,7 +35,7 @@ CREATE TABLE trainee (
 );
 
 -- today_quest 테이블 (훈련생이 받은 퀘스트 정보)
-CREATE TABLE today_quest (
+CREATE TABLE quest (
     quest_id INT PRIMARY KEY AUTO_INCREMENT,
     trainee_id INT NOT NULL,
     trainer_id INT NOT NULL,
@@ -59,23 +59,25 @@ CREATE TABLE exercise(
 CREATE TABLE task (
 	task_id INT PRIMARY KEY AUTO_INCREMENT,
     quest_id INT NOT NULL,
-    order_index INT AUTO_INCREMENT,
+    order_index INT,
     is_completed BOOLEAN DEFAULT FALSE,
     count INT,
     weight_kg INT,      -- Weight에서 사용 (무게)
     cardio_minutes INT, -- Cardio에서 사용 (시간)
     exercise_id INT NOT NULL,
-	FOREIGN KEY (quest_id) REFERENCES today_quest(quest_id),
+	FOREIGN KEY (quest_id) REFERENCES quest(quest_id),
 	FOREIGN KEY (exercise_id) REFERENCES exercise(exercise_id)
 );
 
--- review 테이블 (today_quest와 관련된 리뷰)
+-- review 테이블 (quest와 관련된 리뷰)
 CREATE TABLE review (
     review_id INT PRIMARY KEY AUTO_INCREMENT,
     quest_id INT NOT NULL,
+    trainee_id INT NOT NULL,
     difficulty ENUM('EASY', 'MEDIUM', 'HARD'),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    -- , FOREIGN KEY (quest_id) REFERENCES today_quest(quest_id)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (quest_id) REFERENCES quest(quest_id),
+    FOREIGN KEY (trainee_id) REFERENCES trainee(id)
 );
 
 -- feedback 테이블 (review에 대한 트레이너의 피드백)
@@ -85,7 +87,7 @@ CREATE TABLE feedback (
     trainer_id INT NOT NULL,
     content TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (quest_id) REFERENCES today_quest(quest_id),
+    FOREIGN KEY (quest_id) REFERENCES quest(quest_id),
     FOREIGN KEY (trainer_id) REFERENCES trainer(id)
 );
 
@@ -147,7 +149,7 @@ VALUES
 (2, 1),
 (3, 2);
 
-INSERT INTO today_quest (trainee_id, trainer_id, start_at, end_at, difficulty)
+INSERT INTO quest (trainee_id, trainer_id, start_at, end_at, difficulty)
 VALUES 
 (1, 2, '2023-10-31 10:00:00', '2023-10-31 11:00:00', 'MEDIUM'),
 (2, 1, '2023-10-31 14:00:00', '2023-10-31 15:30:00', 'HARD'),
@@ -161,11 +163,11 @@ VALUES
 
 SELECT * FROM task;
 
-INSERT INTO review (quest_id, difficulty)
+INSERT INTO review (quest_id, trainee_id, difficulty)
 VALUES 
-(1, 'MEDIUM'),
-(2, 'HARD'),
-(3, 'EASY');
+(1, 1, 'MEDIUM'),
+(2, 2, 'HARD'),
+(3, 3, 'EASY');
 
 INSERT INTO feedback (quest_id, trainer_id, content)
 VALUES 
@@ -179,4 +181,6 @@ VALUES
 (2, 'New feedback from your trainer.', TRUE),
 (3, 'A new review is available for your last session.', FALSE);
 
-SELECT * FROM task;
+SELECT * FROM user;
+SELECT * FROM trainer;
+SELECT * FROM trainee;

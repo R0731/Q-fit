@@ -14,10 +14,11 @@ public class User {
 	private String phoneNumber;
 	private String email;
 	private String gender;
-	private String birthdate;
+	private String birthDate;
 	private String userImg;
 	private String createdAt; 
 	protected int userType;
+	private boolean isAgreed;
 	
 	public User() {
 		// TODO Auto-generated constructor stub
@@ -33,7 +34,7 @@ public class User {
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 		this.gender = gender;
-		this.birthdate = birthdate;
+		this.birthDate = birthdate;
 		this.createdAt = createdAt;
 		this.userType = userType;
 	}
@@ -95,11 +96,11 @@ public class User {
 	}
 
 	public String getBirthdate() {
-		return birthdate;
+		return birthDate;
 	}
 
 	public void setBirthdate(String birthdate) {
-		this.birthdate = birthdate;
+		this.birthDate = birthdate;
 	}
 
 	public String getUserImg() {
@@ -125,5 +126,14 @@ public class User {
 	public void setUserType(int userType) {
 		this.userType = userType;
 	}
-		
+
+	public boolean isAgreed() {
+		return isAgreed;
+	}
+
+	public void setAgreed(boolean isAgreed) {
+		this.isAgreed = isAgreed;
+	}
+
+	
 }

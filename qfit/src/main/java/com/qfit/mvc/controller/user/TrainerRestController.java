@@ -11,12 +11,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qfit.mvc.model.dto.user.LoginRequest;
 import com.qfit.mvc.model.dto.user.Trainer;
 import com.qfit.mvc.model.dto.user.User;
+import com.qfit.mvc.model.service.user.LoginService;
 import com.qfit.mvc.model.service.user.TrainerService;
+import com.qfit.mvc.model.service.user.UserService;
+
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
-@RequestMapping("/qfit/trainer")
+@RequestMapping("/trainer")
 public class TrainerRestController {
 	
 	private final TrainerService trainerService;
@@ -26,7 +31,9 @@ public class TrainerRestController {
 		this.trainerService = trainerService;
 	}
 	
-	@PutMapping("/{trainerId}/gym")
+	// 체육관 등록
+	@PutMapping("/{trainerId}/add-gym")
+	@Operation(summary = "체육관 정보 업데이트", description = "트레이너의 체육관 정보를 업데이트합니다.")
 	public ResponseEntity<String> updateGym(@PathVariable("trainerId") int trainerId, @RequestBody Trainer trainer){
 		boolean isUpdated = trainerService.updateGym(trainerId, trainer.getGym());
 		
@@ -35,12 +42,4 @@ public class TrainerRestController {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update Failed");
 	}
 	
-	@DeleteMapping("/resign/{id}")
-	public ResponseEntity<?> deleteUser(@PathVariable(value="id") int id){
-		boolean isDeleted = trainerService.resign(id);
-
-		if(isDeleted) return ResponseEntity.status(HttpStatus.OK).body("Delete Success");
-		
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-	}
 }
