@@ -15,34 +15,39 @@ import com.qfit.mvc.model.dto.Review;
 import com.qfit.mvc.model.service.ReviewService;
 
 @RestController
-@RequestMapping("/reviews")
+@RequestMapping("/review")
 public class ReviewController {
 	
-	// 서비스 의존성 주입
 	private final ReviewService reviewService;
 	
 	public ReviewController(ReviewService reviewService) {
 		this.reviewService = reviewService;
 	}
 	
-	// 리뷰 읽어오기
+	/**
+	 * 리뷰 읽어오기 메서드
+	 * @param questId 읽어올 리뷰의 questId
+	 * @return 성공 시 OK (200), 해당 퀘스트 리뷰 없을 시 NO_CONTENT, 실패 시 INTERNAL_SERVER_ERROR 반환
+	 */
 	@GetMapping("/{questId}")
 	public ResponseEntity<?> getReviewById(@PathVariable("questId") int questId) {
-		System.out.println(questId);
 		try {
 			Review review = reviewService.readReview(questId);
-			System.out.println(review);
 			if (review != null) {
 				return new ResponseEntity<Review>(review, HttpStatus.OK);
 			}
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
-	// 리뷰 작성
+	/**
+	 * 리뷰 작성 메서드
+	 * @param review 등록할 리뷰
+	 * @return 성공 시 CREATED (201), 잘못된 데이터 입력시, 이미 리뷰가 등록되어있을 시 BAD_REQUEST(400),
+	 *         실패 시 INTERNAL_SERVER_ERROR(500) 반환
+	 */
 	@PostMapping("")
 	public ResponseEntity<String> writeReview(@RequestBody Review review){
 		try {
@@ -50,6 +55,8 @@ public class ReviewController {
 			return new ResponseEntity<String>("", HttpStatus.CREATED);
 		} catch (IllegalArgumentException e) {
 			return new ResponseEntity<String>("Invalid review data", HttpStatus.BAD_REQUEST);
+		} catch(IllegalStateException e) {
+			return new ResponseEntity<String>("A review for this quest has already been submitted", HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -59,29 +66,31 @@ public class ReviewController {
 	 /**
 	 * 리뷰 삭제 메서드
 	 * @param questId 삭제할 리뷰의 questId
-	 * @return 성공 시 OK (200), 실패 시 INTERNAL_SERVER_ERROR 반환
+	 * @return 성공 시 OK (200), 리뷰 없을 시 NOT_FOUND(404), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
 	@DeleteMapping("/{questId}")
 	public ResponseEntity<String> removeReview(@PathVariable("questId") int questId) {
 		try {
-			if (reviewService.removeReview(questId)) {
-				return new ResponseEntity<String>("삭제되었습니다.", HttpStatus.OK);
-			}
-			return new ResponseEntity<String>("실패하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-			// return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Review not found.");
+			reviewService.removeReview(questId);
+			return new ResponseEntity<String>("Delete complete", HttpStatus.OK);
+		} catch (IllegalStateException e) {
+			return new ResponseEntity<String>("Review doesn't exist", HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
-	// 리뷰 수정
+	/**
+	 * 리뷰 수정 메서드
+	 * @param questId 수정할 리뷰의 questId, 수정할 난이도 내용 difficulty
+	 * @return 성공 시 OK (200), 데이터 잘못 입력 시 BAD_REQUEST(400), 리뷰 없을 시 NOT_FOUND(404),
+	 *         실패 시 INTERNAL_SERVER_ERROR(500) 반환
+	 */
 	@PutMapping("/{questId}")
-	public ResponseEntity<String> modifyReview(@PathVariable int questId, @RequestBody Review review) {
+	public ResponseEntity<String> modifyReview(@PathVariable("questId") int questId, @RequestBody Review review) {
 		try {
-			
-			reviewService.modifyReview(review);
+			reviewService.modifyReview(questId, review.getDifficulty());
 			return new ResponseEntity<String>("", HttpStatus.OK);
-			
 		} catch (IllegalArgumentException e) {
 			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {

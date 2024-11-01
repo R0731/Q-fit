@@ -1,22 +1,20 @@
 package com.qfit.mvc.model.service;
 
 import com.qfit.mvc.model.dto.Review;
+import com.qfit.mvc.model.dto.Review.Difficulty;
 
 public interface ReviewService {
 	
 	// 리뷰 읽어오기
-	/**
-	 * 이 메서드는 리뷰를 Dao로부터 읽어와서 반환해줍니다...
-	 */
 	public Review readReview(int questId);
 	
 	// 리뷰 작성
-	public void writeReview(Review review) throws IllegalArgumentException;
+	public void writeReview(Review review) throws IllegalArgumentException, IllegalStateException;
 	
 	// 리뷰 삭제
-	public boolean removeReview(int questId);
+	public void removeReview(int questId) throws IllegalStateException;
 	
 	// 리뷰 수정
-	public void modifyReview(Review review) throws IllegalArgumentException;
+	public void modifyReview(int questId, Difficulty difficulty) throws IllegalArgumentException, IllegalStateException;
 	
 }
