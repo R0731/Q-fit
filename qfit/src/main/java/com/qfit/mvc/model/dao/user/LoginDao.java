@@ -11,6 +11,6 @@ public interface LoginDao {
 
 	public int passwordCheck();
 
-	public int loginCheck(Map<String, String> info);
+	public Integer loginCheck(Map<String, Object> info);
 	
 }

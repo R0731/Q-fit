@@ -5,7 +5,8 @@
 
 	<!-- userType이 1일 시 trainer 테이블에도 추가 -->
 	<insert id="addTrainer" parameterType="int">
-		INSERT INTO trainer (id) VALUES (#{id});
+		INSERT INTO trainer (id) 
+		VALUES (#{id});
 	</insert>
 	
  	<!-- trainer 테이블에 gym 정보 추가 -->
@@ -20,4 +21,5 @@
  		DELETE FROM trainer
  		WHERE id = #{id};
  	</delete>
+ 	
   </mapper>

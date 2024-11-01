@@ -23,20 +23,28 @@ public class LoginServiceImpl implements LoginService{
 	}
 	
 	@Override
-	public boolean coreectPassword(String userPassword) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean correctPassword(int id, String userPassword) {
+		Map<String, Object> info = new HashMap<>();
+		info.put("id", id);
+		info.put("userPassword", userPassword);
+		int passwordCorrect = loginDao.loginCheck(info);
+		
+		if(passwordCorrect == 1) {
+			return true;
+		}
+		
+		throw new IllegalArgumentException("Wrong Password");
 	}
 
 	@Override
 	@Transactional
 	public User login(String userId, String password) {
-		Map<String, String> info = new HashMap<>();
+		Map<String, Object> info = new HashMap<>();
 		info.put("userId", userId);
 		info.put("userPassword", password);
-		int loginSuccess = loginDao.loginCheck(info);
+		Integer loginSuccess = loginDao.loginCheck(info);
 		
-		if(loginSuccess == 1) {
+		if(loginSuccess != null) {
 			return userService.getUserbyId(userId);
 		}
 		

@@ -8,7 +8,6 @@ public class Trainer extends User {
 	private String gym;
 
 	public Trainer() {
-		super();
 	}
 	
 	public Trainer(int id) {
