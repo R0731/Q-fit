@@ -59,7 +59,7 @@ CREATE TABLE exercise(
 CREATE TABLE task (
 	task_id INT PRIMARY KEY AUTO_INCREMENT,
     quest_id INT NOT NULL,
-    order_index INT AUTO_INCREMENT,
+    order_index INT,
     is_completed BOOLEAN DEFAULT FALSE,
     count INT,
     weight_kg INT,      -- Weight에서 사용 (무게)
@@ -78,15 +78,17 @@ CREATE TABLE review (
     -- , FOREIGN KEY (quest_id) REFERENCES today_quest(quest_id)
 );
 
+SELECT * FROM review;
+
 -- feedback 테이블 (review에 대한 트레이너의 피드백)
 CREATE TABLE feedback (
     feedback_id INT PRIMARY KEY AUTO_INCREMENT,
     quest_id INT NOT NULL,
-    trainer_id INT NOT NULL,
+    -- trainer_id INT NOT NULL,
     content TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (quest_id) REFERENCES today_quest(quest_id),
-    FOREIGN KEY (trainer_id) REFERENCES trainer(id)
+    FOREIGN KEY (quest_id) REFERENCES today_quest(quest_id)
+    -- FOREIGN KEY (trainer_id) REFERENCES trainer(id)
 );
 
 -- notification 테이블 (사용자에게 발송된 알림 정보)
