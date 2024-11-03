@@ -31,14 +31,17 @@ public class TrainerRestController {
 		this.trainerService = trainerService;
 	}
 	
-	// 체육관 등록
+	/**
+	 * 트레이너 테이블에 체육관 업데이트 메서드
+	 * @param trainerId 체육관을 업데이트할 트레이너의 ID
+	 * @param trainer   업데이트할 체육관 정보를 담고 있는 트레이너 객체
+	 * @return 성공 시 OK(200), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
+	 */
 	@PutMapping("/{trainerId}/add-gym")
 	@Operation(summary = "체육관 정보 업데이트", description = "트레이너의 체육관 정보를 업데이트합니다.")
 	public ResponseEntity<String> updateGym(@PathVariable("trainerId") int trainerId, @RequestBody Trainer trainer){
 		boolean isUpdated = trainerService.updateGym(trainerId, trainer.getGym());
-		
 		if(isUpdated) return ResponseEntity.status(HttpStatus.OK).body("Update Success");
-			
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update Failed");
 	}
 	

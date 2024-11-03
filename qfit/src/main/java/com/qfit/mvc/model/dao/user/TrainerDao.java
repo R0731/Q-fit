@@ -11,14 +11,18 @@ import com.qfit.mvc.model.service.user.UserSearchCondition;
 @Mapper
 public interface TrainerDao extends UserDao{
 	
+	// 트레이너 가입 시 트레이너 테이블에 정보 추가 
 	public void addTrainer(int id);
 	
+	// 트레이너 탈퇴 시 트레이너 테이블에 정보 삭제
 	public int deleteTrainer(int id);
 	
-	public void readTrainer(int id);
+//	public void readTrainer(int id);
 	
+	// 트레이너 체육관 정보 업데이트
 	public int addGym(Map<String, Object> info);
 
+	// 트레이너 검색
 	public List<Trainer> trainerSearch(UserSearchCondition condition);
 	
 }

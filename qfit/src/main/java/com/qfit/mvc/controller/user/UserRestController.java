@@ -30,6 +30,11 @@ public class UserRestController {
 		this.loginService = loginService;
 	}
 	
+	/**
+	 * 로그인 메서드(공통)
+	 * @param loginRequest 유저의 로그인 정보를 담은 객체 (userId, userPassword)
+	 * @return 로그인 성공 시 OK(200), 실패 시 UNAUTHORIZED(401) 반환
+	 */
 	@PostMapping("/login")
 	@Operation(summary = "로그인", description = "모든 유저의 로그인을 수행합니다.")
 	public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest){
@@ -37,12 +42,17 @@ public class UserRestController {
 			User loginUser = loginService.login(loginRequest.getUserId(), loginRequest.getUserPassword());
 			return ResponseEntity.ok("login success");
 		}catch (IllegalArgumentException e) {
-			//추후 헤더를 통해 main으로 redirect 되도록 함
+			//추후 헤더를 통해 main으로 redirect 되도록 할 예정
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("login failed");
-			// TODO: handle exception
 		}	
 	}
 	
+	/**
+	 * 유저 정보 업데이트 메서드
+	 * @param id    업데이트할 유저의 ID
+	 * @param user  업데이트할 유저 정보를 담은 객체
+	 * @return 성공 시 OK(200), 실패 시 CONFLICT(409) 반환
+	 */
 	@PutMapping("/update/{id}")
 	@Operation(summary = "유저 업데이트", description = "유저 정보를 업데이트합니다.")
 	public ResponseEntity<String> userUpdate(@PathVariable("id") int id, @RequestBody User user){

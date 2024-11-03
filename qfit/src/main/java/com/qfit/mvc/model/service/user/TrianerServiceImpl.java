@@ -21,6 +21,7 @@ public class TrianerServiceImpl implements TrainerService{
 		this.trainerDao = trainerDao;
 	}
 	
+	// 트레이너의 체육관 정보 업데이트
 	@Override
 	public boolean updateGym(int trainerId, String gym) {
 		Map<String, Object> temp = new HashMap<>();
@@ -30,10 +31,10 @@ public class TrianerServiceImpl implements TrainerService{
 		return result == 1;
 	}
 
-	@Override
-	public List<Trainer> getTrainerSearch(UserSearchCondition condition) {
-		return trainerDao.trainerSearch(condition);
-	}
+//	@Override
+//	public List<Trainer> getTrainerSearch(UserSearchCondition condition) {
+//		return trainerDao.trainerSearch(condition);
+//	}
 
 
 

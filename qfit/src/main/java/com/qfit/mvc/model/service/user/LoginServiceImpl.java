@@ -22,6 +22,7 @@ public class LoginServiceImpl implements LoginService{
 		this.userService = userService;
 	}
 	
+	// 패스워드 일치 여부 확인
 	@Override
 	public boolean correctPassword(int id, String userPassword) {
 		Map<String, Object> info = new HashMap<>();
@@ -36,6 +37,7 @@ public class LoginServiceImpl implements LoginService{
 		throw new IllegalArgumentException("Wrong Password");
 	}
 
+	// userId, password 로그인
 	@Override
 	@Transactional
 	public User login(String userId, String password) {

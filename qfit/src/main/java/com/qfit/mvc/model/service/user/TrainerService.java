@@ -8,6 +8,6 @@ public interface TrainerService {
 		
 	public boolean updateGym(int trainerId, String gym);
 	
-	public List<Trainer> getTrainerSearch(UserSearchCondition conditon);
+//	public List<Trainer> getTrainerSearch(UserSearchCondition conditon);
 	
 }
