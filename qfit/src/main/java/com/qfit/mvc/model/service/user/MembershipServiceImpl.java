@@ -23,15 +23,19 @@ public class MembershipServiceImpl implements MembershipService{
 		this.traineeDao = traineeDao;
 	}
 	
+	// 회원 가입 
 	@Override
 	@Transactional
 	public String registMember(User user) {
+		// userId 중복 확인
 		if(userDao.isUserIdAvailable(user.getUserId()) > 0){
 			throw new IllegalArgumentException("User ID is already taken");
 		}
+		// user 테이블에 공통 정보 등록
 		userDao.addUser(user);
 		int id = user.getId();
 		int userType = user.getUserType();
+		//유저 타입에 따라 알맞은 테이블에 정보 추가
 		if(userType == 1) {
 			trainerDao.addTrainer(id);			
 		}else if(userType == 2) {
@@ -40,16 +44,20 @@ public class MembershipServiceImpl implements MembershipService{
 		return "User regist successfully";
 	}
 
+	// 회원 탈퇴
 	@Override
 	@Transactional
 	public boolean removeMember(int id, String userType) {
 		int foreignkeyDeleted = 0;
+		// 유저 타입에 따라 연관 테이블 정보 삭제
 		if(userType.equals("trainer")) {
 			foreignkeyDeleted = trainerDao.deleteTrainer(id);
 			}else if(userType.equals("trainee")){
 				foreignkeyDeleted = traineeDao.deleteTrainee(id);
 			}
-		int userDeleted = userDao.deleteUser(id);
+		// 연관 테이블 정보 삭제 성공 시 user 테이블 정보 삭제
+		int userDeleted = 0;
+		if(foreignkeyDeleted == 1) userDeleted = userDao.deleteUser(id);
 		return userDeleted == 1;
 	}
 

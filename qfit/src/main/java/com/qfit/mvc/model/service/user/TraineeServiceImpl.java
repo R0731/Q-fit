@@ -23,7 +23,8 @@ public class TraineeServiceImpl implements TraineeService {
 	public TraineeServiceImpl(TraineeDao traineeDao) {
 		this.traineeDao = traineeDao;
 	}
-
+	
+	// 트레이니 테이블에 트레이너 정보 추가
 	@Override
 	@Transactional
 	public boolean addTrainerToTrainee(int traineeId, int trainerId) {

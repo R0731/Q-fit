@@ -30,6 +30,12 @@ public class MemberRestController {
 		this.membershipService = membershipService;
 	}
 	
+	/**
+	 * 새로운 유저 가입 메서드
+	 * @param userType 유저의 타입 (trainer 또는 trainee)
+	 * @param user     등록할 유저의 정보 (Request Body로 전달)
+	 * @return 성공 시 CREATED(201), 유저 타입이 잘못되었을 경우 CONFLICT(409) 반환
+	 */
 	@PostMapping("/{userType}/regist")
 	@Operation(summary = "새로운 유저 가입", description = "유저 타입에 따라 유저 정보를 등록합니다.")
 	public ResponseEntity<?> userRegist(@PathVariable("userType") String userType, @RequestBody User user){
@@ -47,6 +53,12 @@ public class MemberRestController {
 		}
 	}
 	
+	/**
+	 * 유저 탈퇴 메서드
+	 * @param userType 유저의 타입 (trainer 또는 trainee)
+	 * @param id       탈퇴할 유저의 ID
+	 * @return 성공 시 OK(200), 실패 시 CONFLICT(409) 반환
+	 */
 	@DeleteMapping("/{userType}/resign/{id}")
 	@Operation(summary = "유저 탈퇴", description = "유저 타입에 따라 유저 정보를 탈퇴 처리합니다.")
 	public ResponseEntity<?> userResign(@PathVariable(value="userType") String userType, @PathVariable(value="id") int id){
@@ -56,9 +68,7 @@ public class MemberRestController {
 		}else if(userType.equals("trainee")) {
 			result = membershipService.removeMember(id, userType);
 		}
-			
 		if(!result) return ResponseEntity.status(HttpStatus.CONFLICT).body("Delete Failed");
-		
 		return ResponseEntity.status(HttpStatus.OK).body("Delete Completed");
 	}
 }

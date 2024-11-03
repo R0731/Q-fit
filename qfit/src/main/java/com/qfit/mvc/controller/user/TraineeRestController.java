@@ -31,6 +31,12 @@ public class TraineeRestController {
 		this.traineeService = traineeService;
 	}
 	
+	/**
+	 * 트레이니 테이블에서 트레이너 정보 업데이트 메서드
+	 * @param traineeId 트레이니의 ID
+	 * @param trainerId 추가할 트레이너의 ID
+	 * @return 트레이너 추가 성공 시 CREATED(201), 실패 시 NOT_FOUND(404) 반환
+	 */
 	@PutMapping("{traineeId}/add-trainer/{trainerId}")
 	@Operation(summary = "트레이너 정보 업데이트", description = "트레이니에게 트레이너 정보를 업데이트합니다.")
 	public ResponseEntity<String> addTrainerToTrainee(@PathVariable(value="traineeId") int traineeId, @PathVariable(value="trainerId") int trainerId) {

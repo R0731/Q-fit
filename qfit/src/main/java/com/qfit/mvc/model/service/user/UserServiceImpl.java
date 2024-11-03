@@ -23,18 +23,21 @@ public class UserServiceImpl implements UserService{
 	public UserServiceImpl(UserDao userDao) {
 		this.userDao = userDao;
 	}
-
+	
+	// 유저 정보 업데이트
 	@Override
 	public void updateUser(User user) {
 		userDao.updateUser(user);
 	}
-
+	
+	// userId 중복 확인
 	@Override
 	public boolean isUserIdAvailable(String id) {
 		int result = userDao.isUserIdAvailable(id);
 		return result == 1;
 	}
 
+	// userId로 유저 검색
 	@Override
 	public User getUserbyId(String userId) {
 		User user = userDao.selectOnebyId(userId);
