@@ -4,6 +4,7 @@ public class Review {
 	
 	private int reviewId; // 리뷰 고유 ID
 	private int questId; // 연관된 퀘스트의 ID
+	private int traineeId; // 작성 트레이니 아이디
 	private Difficulty difficulty; // 리뷰의 난이도
 	private String createdAt; // 작성일
 	

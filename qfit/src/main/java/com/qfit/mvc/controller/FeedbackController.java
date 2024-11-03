@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.qfit.mvc.model.dto.Feedback;
 import com.qfit.mvc.model.service.FeedbackService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 @RestController
 @RequestMapping("/feedback")
+@Tag(name="FeedbackRestful API", description = "피드백 CRUD")
 public class FeedbackController {
 	
 	private final FeedbackService feedbackService;
@@ -31,13 +35,14 @@ public class FeedbackController {
 	 * @return 성공 시 OK (200), 해당 퀘스트 피드백 없을 시 NO_CONTENT, 실패 시 INTERNAL_SERVER_ERROR 반환
 	 */
 	@GetMapping("/{questId}")
+	@Operation(summary = "피드백 조회", description = "questId에 해당하는 피드백을 가져옵니다. 등록된 피드백이 있다면, 등록이 되지 않도록 하여 퀘스트 하나 당 피드백 하나만 등록될 수 있도록 합니다.")
 	public ResponseEntity<?> getFeedbackById(@PathVariable("questId") int questId) {
 		try {
 			Feedback feedback = feedbackService.readFeedback(questId);
 			if (feedback != null) {
 				return new ResponseEntity<Feedback>(feedback, HttpStatus.OK);
 			}
-			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>("No Feedback", HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -50,6 +55,7 @@ public class FeedbackController {
 	 *         실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
 	@PostMapping("")
+	@Operation(summary = "피드백 작성", description = "작성된 피드백이 없을 시 피드백을 등록합니다.")
 	public ResponseEntity<String> writeFeedback(@RequestBody Feedback feedback){
 		try {
 			feedbackService.writeFeedback(feedback);
@@ -70,6 +76,7 @@ public class FeedbackController {
 	 * @return 성공 시 OK (200), 피드백 없을 시 NOT_FOUND(404), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
 	@DeleteMapping("/{questId}")
+	@Operation(summary = "피드백 삭제", description = "questId에 해당하는 피드백을 삭제합니다.")
 	public ResponseEntity<String> removeFeedback(@PathVariable("questId") int questId) {
 		try {
 			feedbackService.removeFeedback(questId);
@@ -88,6 +95,7 @@ public class FeedbackController {
 	 *         실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
 	@PutMapping("/{questId}")
+	@Operation(summary = "피드백 수정", description = "questId에 해당하는 피드백 내용을 수정합니다. 피드백 내용만 수정 가능하도록 만들어져 있습니다.")
 	public ResponseEntity<String> modifyFeedback(@PathVariable("questId") int questId, @RequestBody Feedback feedback) {
 		try {
 			feedbackService.modifyFeedback(questId, feedback.getContent());

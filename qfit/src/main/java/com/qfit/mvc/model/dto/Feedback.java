@@ -2,11 +2,11 @@ package com.qfit.mvc.model.dto;
 
 public class Feedback {
 	
-	private int feedbackId;
-	private int questId;
-	private int trainerId;
-	private String content;
-	private String createdAt;
+	private int feedbackId; // 피드백 고유 ID
+	private int questId; // 연관된 퀘스트 ID
+	private int trainerId; // 작성 트레이너 ID
+	private String content; // 피드백 내용
+	private String createdAt; // 피드백 작성일
 	
 	// 생성자
 	public Feedback() {

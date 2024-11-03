@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.qfit.mvc.model.dto.Review;
 import com.qfit.mvc.model.service.ReviewService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/review")
+@Tag(name="ReviewRestful API", description = "리뷰 CRUD")
 public class ReviewController {
 	
 	private final ReviewService reviewService;
@@ -30,13 +34,14 @@ public class ReviewController {
 	 * @return 성공 시 OK (200), 해당 퀘스트 리뷰 없을 시 NO_CONTENT, 실패 시 INTERNAL_SERVER_ERROR 반환
 	 */
 	@GetMapping("/{questId}")
+	@Operation(summary = "리뷰 조회", description = "questId에 해당하는 리뷰를 가져옵니다.")
 	public ResponseEntity<?> getReviewById(@PathVariable("questId") int questId) {
 		try {
 			Review review = reviewService.readReview(questId);
 			if (review != null) {
 				return new ResponseEntity<Review>(review, HttpStatus.OK);
 			}
-			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>("No Review", HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -49,6 +54,7 @@ public class ReviewController {
 	 *         실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
 	@PostMapping("")
+	@Operation(summary = "리뷰 작성", description = "작성된 리뷰가 없을 시 리뷰를 등록합니다. 등록된 리뷰가 있다면, 등록이 되지 않도록 하여 퀘스트 하나 당 리뷰 하나만 등록될 수 있도록 합니다.")
 	public ResponseEntity<String> writeReview(@RequestBody Review review){
 		try {
 			reviewService.writeReview(review);
@@ -69,6 +75,7 @@ public class ReviewController {
 	 * @return 성공 시 OK (200), 리뷰 없을 시 NOT_FOUND(404), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
 	@DeleteMapping("/{questId}")
+	@Operation(summary = "리뷰 삭제", description = "questId에 해당하는 리뷰를 삭제합니다.")
 	public ResponseEntity<String> removeReview(@PathVariable("questId") int questId) {
 		try {
 			reviewService.removeReview(questId);
@@ -87,6 +94,7 @@ public class ReviewController {
 	 *         실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
 	@PutMapping("/{questId}")
+	@Operation(summary = "리뷰 수정", description = "questId에 해당하는 리뷰 내용을 수정합니다. 리뷰 내용만 수정 가능하도록 만들어져 있습니다.")
 	public ResponseEntity<String> modifyReview(@PathVariable("questId") int questId, @RequestBody Review review) {
 		try {
 			reviewService.modifyReview(questId, review.getDifficulty());
