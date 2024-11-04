@@ -1,21 +1,32 @@
 package com.qfit.mvc.model.dto;
 
-public class TaskDto {
+public class Task {
 	private int taskId;
 	private int questId;
 	private int orderIndex;
 	private boolean isCompleted;
-	private int count;
-	private int weightKg;
-	private int cardioMinutes;
+	private Integer count;
+	private Integer weightKg;
+	private Integer cardioMinutes;
 	private int exerciseId;
 	
-	public TaskDto() {
-		// TODO Auto-generated constructor stub
+	/*
+	 * 기본 Task 생성자
+	 */
+	public Task() {
 	}
 	
+//	// 전체 생성자
+//	public Task(int questId, boolean isCompleted, Integer count, Integer weightKg, Integer cardioMinutes, int exerciseId) {
+//		this.questId = questId;
+//		this.count = count;
+//		this.weightKg = weightKg;
+//		this.exerciseId = exerciseId;
+//	}
+	
 	// 무산소 생성자
-	public TaskDto(int questId, boolean isCompleted, int count, int weightKg, int cardioMinutes, int exerciseId) {
+	public Task(int questId, Integer count, Integer weightKg, int exerciseId) {
+		super();
 		this.questId = questId;
 		this.count = count;
 		this.weightKg = weightKg;
@@ -23,7 +34,7 @@ public class TaskDto {
 	}
 	
 	// 유산소 생성자
-	public TaskDto(int questId, int cardioMinutes, int exerciseId) {
+	public Task(int questId, Integer cardioMinutes, int exerciseId) {
 		super();
 		this.questId = questId;
 		this.cardioMinutes = cardioMinutes;
@@ -54,22 +65,22 @@ public class TaskDto {
 	public void setCompleted(boolean isCompleted) {
 		this.isCompleted = isCompleted;
 	}
-	public int getCount() {
+	public Integer getCount() {
 		return count;
 	}
-	public void setCount(int count) {
+	public void setCount(Integer count) {
 		this.count = count;
 	}
-	public int getWeightKg() {
+	public Integer getWeightKg() {
 		return weightKg;
 	}
-	public void setWeightKg(int weightKg) {
+	public void setWeightKg(Integer weightKg) {
 		this.weightKg = weightKg;
 	}
-	public int getCardioMinutes() {
+	public Integer getCardioMinutes() {
 		return cardioMinutes;
 	}
-	public void setCardioMinutes(int cardioMinutes) {
+	public void setCardioMinutes(Integer cardioMinutes) {
 		this.cardioMinutes = cardioMinutes;
 	}
 	public int getExerciseId() {
@@ -81,7 +92,7 @@ public class TaskDto {
 
 	@Override
 	public String toString() {
-		return "TaskDto [taskId=" + taskId + ", questId=" + questId + ", orderIndex=" + orderIndex + ", isCompleted="
+		return "Task [taskId=" + taskId + ", questId=" + questId + ", orderIndex=" + orderIndex + ", isCompleted="
 				+ isCompleted + ", count=" + count + ", weightKg=" + weightKg + ", cardioMinutes=" + cardioMinutes
 				+ ", exerciseId=" + exerciseId + "]";
 	}

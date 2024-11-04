@@ -3,7 +3,7 @@ package com.qfit.mvc.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qfit.mvc.model.dto.TaskDto;
+import com.qfit.mvc.model.dto.Task;
 import com.qfit.mvc.model.service.TaskService;
 
 import java.security.PublicKey;
@@ -34,60 +34,50 @@ public class TaskRestController {
 	}
 	//전체 조회 필요 없음? => 전체 조회에서 퀘스트 ID로 조건 걸어야 하나?
 	//전체 조회
-	@GetMapping("")
-	public ResponseEntity<List<TaskDto>> list(){
-		List<TaskDto> list = taskService.getTaskList();
+	@GetMapping
+	public ResponseEntity<List<Task>> list(){
+		List<Task> list = taskService.getTaskList();
 		System.out.println(list.toString());
 		return new ResponseEntity<>(list,HttpStatus.OK);
 	}
-	// 유산소 등록	
-	// 이 부분 어렵다.. 유산소와 무산소 태스크를 나눈 것이 잘 못인가..
-	//URL은 어떻게 처리해야 하지?
-	@PostMapping("/add-cardio-task")
-	public ResponseEntity<?> addCardio(@ModelAttribute TaskDto taskDto){
-		taskService.addCardioTask(taskDto);
-		System.out.println(taskDto);
-		return new ResponseEntity<TaskDto>(taskDto, HttpStatus.CREATED);
-		}
+	// 태스크 등록	
+	@PostMapping
+    public ResponseEntity<String> createTask(@RequestBody Task task) {
+        try {
+            taskService.createTask(task); // 태스크 생성 로직
+            return new ResponseEntity<>("태스크가 성공적으로 생성되었습니다.", HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 	
-	//무산소 등록
-	@PostMapping("/add-weight-task")
-	public ResponseEntity<?> addWeight(@ModelAttribute TaskDto taskDto){
-		taskService.addWeightTask(taskDto);
-		System.out.println(taskDto);
-		return new ResponseEntity<TaskDto>(taskDto, HttpStatus.CREATED);
-	}
-	
-	//
+	// 태스크 삭제
 	@DeleteMapping("/{taskId}")
 	public ResponseEntity<String> delete(@PathVariable("taskId") int id){
 		System.out.println(id);
 		boolean isDeleted = taskService.deleteTask(id);
 		
 		if(isDeleted) {
-			return ResponseEntity.status(HttpStatus.OK).body("Task deleted");
+			return ResponseEntity.status(HttpStatus.OK).body("태스크가 삭제되었습니다.");
 		}
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed");
 	}
 	
-	@PutMapping("/cardio/{id}")
-	public ResponseEntity<Void> updateCardio(@PathVariable("taskId") int id, @RequestBody TaskDto taskDto){
-		taskDto.setTaskId(id);
-		taskService.updateCardioTask(taskDto);
-		
-		return new ResponseEntity<Void>(HttpStatus.OK);
-	}
+	// 태스크 수정
+    @PutMapping("/{taskId}")
+    public ResponseEntity<String> updateTask(@PathVariable int taskId, @RequestBody Task task) {
+        try {
+            task.setTaskId(taskId);
+            taskService.updateTask(task);
+            return new ResponseEntity<>("태스크가 성공적으로 수정되었습니다.", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 	
-	@PutMapping("/weight/{id}")
-	public ResponseEntity<Void> updateWeight(@PathVariable("taskId") int id, @RequestBody TaskDto taskDto){
-		taskDto.setTaskId(id);
-		taskService.updateWeightTask(taskDto);
-		
-		return new ResponseEntity<Void>(HttpStatus.OK);
-	}
-	
-	@PutMapping("/{id}")
-	public ResponseEntity<Void> updateOrder(@PathVariable("taskId") int id, @RequestBody TaskDto taskDto){
+    //순서 수정
+	@PutMapping("/order/{taskId}")
+	public ResponseEntity<Void> updateOrder(@PathVariable("taskId") int id, @RequestBody Task taskDto){
 		taskDto.setTaskId(id);
 		taskService.updateOrder(taskDto);
 		
