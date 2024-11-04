@@ -26,20 +26,29 @@ public class MembershipServiceImpl implements MembershipService{
 	// 회원 가입 
 	@Override
 	@Transactional
-	public String registMember(User user) {
+	public String registMember(User user, String userType) {
 		// userId 중복 확인
 		if(userDao.isUserIdAvailable(user.getUserId()) > 0){
 			throw new IllegalArgumentException("User ID is already taken");
 		}
 		// user 테이블에 공통 정보 등록
-		userDao.addUser(user);
-		int id = user.getId();
-		int userType = user.getUserType();
 		//유저 타입에 따라 알맞은 테이블에 정보 추가
-		if(userType == 1) {
-			trainerDao.addTrainer(id);			
-		}else if(userType == 2) {
-			traineeDao.addTrainee(id);
+		int id;
+		switch(userType) {
+			case "trainer":
+				user.setUserType(1);
+				userDao.addUser(user);
+				id = user.getId();
+				trainerDao.addTrainer(id);
+				break;
+			case "trainee":
+				user.setUserType(2);
+				userDao.addUser(user);
+				id = user.getId();
+				traineeDao.addTrainee(id);
+				break;
+			default:
+				return "존재하지 않는 유저 타입입니다.";
 		}
 		return "User regist successfully";
 	}
@@ -50,11 +59,17 @@ public class MembershipServiceImpl implements MembershipService{
 	public boolean removeMember(int id, String userType) {
 		int foreignkeyDeleted = 0;
 		// 유저 타입에 따라 연관 테이블 정보 삭제
-		if(userType.equals("trainer")) {
-			foreignkeyDeleted = trainerDao.deleteTrainer(id);
-			}else if(userType.equals("trainee")){
+		switch(userType) {
+			case "trainer":
+				foreignkeyDeleted = trainerDao.deleteTrainer(id);
+				break;
+			case "trainee":
 				foreignkeyDeleted = traineeDao.deleteTrainee(id);
-			}
+				break;
+			default:
+				System.out.println("존재하지 않는 유저 타입입니다.");
+				return false;
+		}		
 		// 연관 테이블 정보 삭제 성공 시 user 테이블 정보 삭제
 		int userDeleted = 0;
 		if(foreignkeyDeleted == 1) userDeleted = userDao.deleteUser(id);

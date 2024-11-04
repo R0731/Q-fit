@@ -19,8 +19,8 @@
 	
 	<!-- 리뷰 삽입 -->
 	<insert id="insertReview" parameterType="Review">
-		INSERT INTO review (quest_id, difficulty)
-		VALUES (#{questId}, #{difficulty})
+		INSERT INTO review (quest_id, trainee_id, difficulty)
+		VALUES (#{questId}, #{traineeId}, #{difficulty})
 	</insert>
 	
 	<!-- 리뷰 삭제 -->
