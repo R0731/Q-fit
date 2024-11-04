@@ -56,14 +56,20 @@ public class ReviewController {
 	@PostMapping("")
 	@Operation(summary = "리뷰 작성", description = "작성된 리뷰가 없을 시 리뷰를 등록합니다. 등록된 리뷰가 있다면, 등록이 되지 않도록 하여 퀘스트 하나 당 리뷰 하나만 등록될 수 있도록 합니다.")
 	public ResponseEntity<String> writeReview(@RequestBody Review review){
+		System.out.println("@@@작성완료");
 		try {
 			reviewService.writeReview(review);
+			System.out.println("@문제가");
 			return new ResponseEntity<String>("", HttpStatus.CREATED);
 		} catch (IllegalArgumentException e) {
+			System.out.println("@어디서");
 			return new ResponseEntity<String>("Invalid review data", HttpStatus.BAD_REQUEST);
 		} catch(IllegalStateException e) {
+			System.out.println("@났을까");
 			return new ResponseEntity<String>("A review for this quest has already been submitted", HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
+			System.out.println("@정말 모르겠다");
+			System.out.println(e);
 			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

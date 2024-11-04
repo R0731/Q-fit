@@ -40,13 +40,13 @@ public class MemberRestController {
 	@Operation(summary = "새로운 유저 가입", description = "유저 타입에 따라 유저 정보를 등록합니다.")
 	public ResponseEntity<?> userRegist(@PathVariable("userType") String userType, @RequestBody User user){
 		try {
-			if(userType.equals("trainer")) {
-				user.setUserType(1);
-				membershipService.registMember(user);
-			}else if(userType.equals("trainee")) {
-				user.setUserType(2);
-				membershipService.registMember(user);
-			}
+//			if(userType.equals("trainer")) {
+//				user.setUserType(1);
+				membershipService.registMember(user, userType);
+//			}else if(userType.equals("trainee")) {
+//				user.setUserType(2);
+//				membershipService.registMember(user);
+//			}
 			return new ResponseEntity<User>(user, HttpStatus.CREATED);
 		}catch(IllegalArgumentException e){
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
@@ -63,11 +63,7 @@ public class MemberRestController {
 	@Operation(summary = "유저 탈퇴", description = "유저 타입에 따라 유저 정보를 탈퇴 처리합니다.")
 	public ResponseEntity<?> userResign(@PathVariable(value="userType") String userType, @PathVariable(value="id") int id){
 		boolean result = false;
-		if(userType.equals("trainer")) {
-			result = membershipService.removeMember(id, userType);
-		}else if(userType.equals("trainee")) {
-			result = membershipService.removeMember(id, userType);
-		}
+		result = membershipService.removeMember(id, userType);
 		if(!result) return ResponseEntity.status(HttpStatus.CONFLICT).body("Delete Failed");
 		return ResponseEntity.status(HttpStatus.OK).body("Delete Completed");
 	}

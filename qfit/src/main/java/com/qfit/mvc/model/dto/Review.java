@@ -17,8 +17,9 @@ public class Review {
 	public Review() {
 	}
 	
-	public Review(int questId, Difficulty difficulty) {
+	public Review(int questId, int traineeId, Difficulty difficulty) {
 		this.questId = questId;
+		this.traineeId = traineeId;
 		this.difficulty = difficulty;
 	}
 	
@@ -37,6 +38,15 @@ public class Review {
 
 	public void setQuestId(int questId) {
 		this.questId = questId;
+	}
+
+	
+	public int getTraineeId() {
+		return traineeId;
+	}
+
+	public void setTraineeId(int traineeId) {
+		this.traineeId = traineeId;
 	}
 
 	public Difficulty getDifficulty() {
