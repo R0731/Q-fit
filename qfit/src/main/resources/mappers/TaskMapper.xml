@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qfit.mvc.model.dao.Task">
+<mapper namespace="com.qfit.mvc.model.dao.TaskDao">
 
 	<!-- 전체 태스크 조회 -->
 	<select id="selectAll" resultType="Task">
@@ -11,15 +11,15 @@
 	</select>
 	
 	<!-- 유산소 태스크 추가 -->
-	<insert id="insertCardioTask" parameterType="Task" keyProperty="task_id" useGeneratedKeys="true">
-		INSERT INTO task (cardio_minutes, exercise_id)
-		VALUES (#{cardio_minutes}, #{exerciseId});
+	<insert id="insertCardioTask" parameterType="Task" keyProperty="taskId" useGeneratedKeys="true">
+		INSERT INTO task (quest_id, cardio_minutes, exercise_id)
+		VALUES (#{questId}, #{cardioMinutes}, #{exerciseId});
 	</insert>
 	
 	<!-- 무산소 태스크 추가 -->
-	<insert id="insertWeightTask" parameterType="Task" keyProperty="task_id" useGeneratedKeys="true">
-		INSERT INTO task (weight_kg, count, exercise_id)
-		VALUES (#{weight_kg}, #{count}, #{exerciseId});
+	<insert id="insertWeightTask" parameterType="Task" keyProperty="taskId" useGeneratedKeys="true">
+		INSERT INTO task (quest_id, weight_kg, count, exercise_id)
+		VALUES (#{questId}, #{weightKg}, #{count}, #{exerciseId});
 	</insert>
 	
 	<!-- 태스크 삭제 -->

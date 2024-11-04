@@ -10,14 +10,14 @@
 		FROM exercise;
 	</select>
 	
-	<!-- 운동id로 운동 조회 -->
+	<!-- 운동 id로 운동 조회 -->
 	<select id="selectExerciseByExId" parameterType="int" resultType="Exercise">
 		SELECT * 
 		FROM exercise
 		WHERE exercise_id = #{exerciseId};
 	</select>
 
-	<!-- 운동id로 운동 조회 -->
+	<!-- 운동 부위로 운동 조회 -->
 	<select id="selectExerciseByParts" parameterType="String" resultType="Exercise">
 		SELECT * 
 		FROM exercise
