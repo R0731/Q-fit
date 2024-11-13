@@ -5,6 +5,10 @@ import TrainerLoginView from '@/views/Trainer/TrainerLoginView.vue';
 import TraineeLoginView from '@/views/Trainee/TraineeLoginView.vue';
 import TrainerHomeView from '@/views/Trainer/TrainerHomeView.vue';
 import TraineeHomeView from '@/views/Trainee/TraineeHomeView.vue';
+import TraineeList from '@/components/Trainer/TraineeList.vue';
+import FeedbackList from '@/components/Trainer/FeedbackList.vue';
+import Quest from '@/components/Trainer/Quest.vue';
+import FeedbackCreate from '@/components/Trainer/FeedbackCreate.vue';
 
 const isAuth = false;
 
@@ -29,7 +33,27 @@ const router = createRouter({
         {
           path: 'login',
           name: 'trainerLogin',
-          component: TrainerLoginView
+          component: TrainerLoginView,
+        },
+        {
+          path: '',
+          name: 'traineeList',
+          component: TraineeList,
+        },
+        {
+          path: 'feedbackList',
+          name: 'feedbackList',
+          component: FeedbackList,
+        },
+        {
+          path: 'quest',
+          name: 'quest',
+          component: Quest,
+        },
+        {
+          path: 'createFeedback',
+          name: 'createFeedback',
+          component: FeedbackCreate,
         },
       ]
     },
