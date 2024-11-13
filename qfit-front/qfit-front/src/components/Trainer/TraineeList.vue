@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>리뷰</h2>
+   <p>list</p>
   </div>
 </template>
 
@@ -9,5 +9,8 @@
 </script>
 
 <style scoped>
-
+.logo {
+  width: 80px;
+  height: 80px;
+}
 </style>

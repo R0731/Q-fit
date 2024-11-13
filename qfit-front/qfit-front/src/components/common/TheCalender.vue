@@ -1,6 +1,6 @@
 <template>
   <div>
-   <h4>Calender</h4>
+   <h4>일주일 달력</h4>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>피드백</h2>
+    <h2>traineeHome</h2>
   </div>
 </template>
 
