@@ -1,11 +1,12 @@
 <template>
   <div>
-    <img src="@/assets/logo.png" alt="logo" class="logo"/>
+    <p>홈2</p>
+    <TheCalender/>
   </div>
 </template>
 
 <script setup>
-
+  import TheCalender from '@/components/common/TheCalender.vue';
 </script>
 
 <style scoped>
