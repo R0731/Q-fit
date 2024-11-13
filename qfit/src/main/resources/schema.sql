@@ -42,7 +42,7 @@ CREATE TABLE quest (
     start_at DATETIME,
     end_at DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (trainee_id) REFERENCES trainee(id),
     FOREIGN KEY (trainer_id) REFERENCES trainer(id)
 );
@@ -148,11 +148,19 @@ VALUES
 (2, 1),
 (3, 2);
 
+<<<<<<< Updated upstream
 INSERT INTO quest (trainee_id, trainer_id, start_at, end_at)
 VALUES 
 (1, 2, '2023-10-31 10:00:00', '2023-10-31 11:00:00'),
 (2, 1, '2023-10-31 14:00:00', '2023-10-31 15:30:00'),
 (3, 2, '2023-10-31 09:00:00', '2023-10-31 10:30:00');
+=======
+INSERT INTO quest (trainee_id, trainer_id, start_at, end_at, difficulty)
+VALUES 
+(1, 2, '2023-10-31 10:00:00', '2023-10-31 11:00:00', 'MEDIUM'),
+(2, 1, '2023-10-31 14:00:00', '2023-10-31 15:30:00', 'HARD'),
+(3, 2, '2023-10-31 09:00:00', '2023-10-31 10:30:00', 'EASY');
+>>>>>>> Stashed changes
 
 INSERT INTO task (quest_id, order_index, is_completed, count, weight_kg, cardio_minutes, exercise_id)
 VALUES 
@@ -181,7 +189,10 @@ VALUES
 (3, 'A new review is available for your last session.', FALSE);
 
 SELECT * FROM user;
+<<<<<<< Updated upstream
 SELECT * FROM exercise;
 DESCRIBE user;
+=======
+>>>>>>> Stashed changes
 SELECT * FROM trainer;
 SELECT * FROM trainee;
