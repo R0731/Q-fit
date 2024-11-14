@@ -52,6 +52,8 @@ public class QuestRestController {
 		try {
             questService.insertQuest(quest);
             return new ResponseEntity<>("Quest created successfully.", HttpStatus.CREATED);
+        } catch (IllegalStateException e) {
+        	return new ResponseEntity<>("Quest is exists", HttpStatus.BAD_REQUEST);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>("Failed to create quest: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

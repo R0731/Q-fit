@@ -1,7 +1,7 @@
 package com.qfit.mvc.model.service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,16 +29,23 @@ public class QuestServiceImpl implements QuestService {
 	// 퀘스트 가져오기
 	@Override
 	public Quest readQuest(int traineeId, String startAt) {
-		Map<String, Object> info = new HashMap<String, Object>();
-		info.put("traineeId", traineeId);
-		info.put("startAt", startAt);
-		return questDao.getQuestByTraineeId(info);
+		return questDao.getQuestByTraineeId(traineeId, startAt);
 	}
 
 	// 퀘스트 생성
 	@Override
 	@Transactional
 	public void insertQuest(Quest quest) {
+		// Qeust가 이미 존재하면 처리
+		if (questDao.questExists(quest.getTraineeId(), quest.getStartAt()) >= 1)
+			throw new IllegalStateException("A feedback for this quest has already been submitted.");
+		
+		// startAt이 null이 아닌 경우 endAt 계산
+        if (quest.getStartAt() != null && !quest.getStartAt().isEmpty()) {
+            String endAt = calculateEndAt(quest.getStartAt());
+            quest.setEndAt(endAt);
+        }
+        
 		// 일단 퀘스트 생성
 		questDao.insertQuest(quest);
 		
@@ -55,4 +62,12 @@ public class QuestServiceImpl implements QuestService {
 		
 	}
 
+	// 24시간 뒤의 endAt 계산
+    private String calculateEndAt(String startAt) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startDateTime = LocalDateTime.parse(startAt, formatter);
+        LocalDateTime endDateTime = startDateTime.plusHours(24); // 24시간 더하기
+        return endDateTime.format(formatter); // "yyyy-MM-dd HH:mm:ss" 형식으로 반환
+    }
+	
 }
