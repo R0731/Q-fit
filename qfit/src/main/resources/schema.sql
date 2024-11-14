@@ -43,8 +43,7 @@ CREATE TABLE quest (
     end_at DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (trainee_id) REFERENCES trainee(id),
-    FOREIGN KEY (trainer_id) REFERENCES trainer(id)
+    FOREIGN KEY (trainee_id) REFERENCES trainee(id)
 );
 
 CREATE TABLE exercise(
@@ -132,9 +131,11 @@ VALUES ('Cardio', 'cardio','런닝 머신'),
 
 INSERT INTO user (user_id, user_pw, user_name, phone_number, email, gender, birth_date, user_img, user_type)
 VALUES 
-('user001', 'password123', 'Alice Smith', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 0),
+('ssafy', 'ssafy', '트레이너싸피', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 1),
+('ssafy2', 'ssafy', '트레이니싸피', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 0),
+('user001', 'password123', 'Alice Smith', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 2),
 ('user002', 'password456', 'Bob Brown', '010-8765-4321', 'bob@example.com', 'Male', '1985-11-23', 'bob.jpg', 1),
-('user003', 'password789', 'Charlie Johnson', '010-5555-6666', 'charlie@example.com', 'Male', '1992-07-08', 'charlie.jpg', 0);
+('user003', 'password789', 'Charlie Johnson', '010-5555-6666', 'charlie@example.com', 'Male', '1992-07-08', 'charlie.jpg', 1);
 
 INSERT INTO trainer (id, gym)
 VALUES 
@@ -148,19 +149,11 @@ VALUES
 (2, 1),
 (3, 2);
 
-<<<<<<< Updated upstream
 INSERT INTO quest (trainee_id, trainer_id, start_at, end_at)
 VALUES 
 (1, 2, '2023-10-31 10:00:00', '2023-10-31 11:00:00'),
 (2, 1, '2023-10-31 14:00:00', '2023-10-31 15:30:00'),
 (3, 2, '2023-10-31 09:00:00', '2023-10-31 10:30:00');
-=======
-INSERT INTO quest (trainee_id, trainer_id, start_at, end_at, difficulty)
-VALUES 
-(1, 2, '2023-10-31 10:00:00', '2023-10-31 11:00:00', 'MEDIUM'),
-(2, 1, '2023-10-31 14:00:00', '2023-10-31 15:30:00', 'HARD'),
-(3, 2, '2023-10-31 09:00:00', '2023-10-31 10:30:00', 'EASY');
->>>>>>> Stashed changes
 
 INSERT INTO task (quest_id, order_index, is_completed, count, weight_kg, cardio_minutes, exercise_id)
 VALUES 
@@ -189,10 +182,7 @@ VALUES
 (3, 'A new review is available for your last session.', FALSE);
 
 SELECT * FROM user;
-<<<<<<< Updated upstream
 SELECT * FROM exercise;
 DESCRIBE user;
-=======
->>>>>>> Stashed changes
 SELECT * FROM trainer;
 SELECT * FROM trainee;
