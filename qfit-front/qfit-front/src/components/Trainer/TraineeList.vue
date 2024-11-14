@@ -3,6 +3,7 @@
   <TheCalender/>
   <div class="card" @click="goQuest">
    <h3>트레이너가 관리하는 회원 조회</h3>
+   <button @click="goFeedbackList">피드백 남기기</button>
     <ul>
       <li v-for="(trainee, index) in trainees" :key="index">
         <span>{{ trainee.name }} {{ trainee.age }}세</span>
@@ -19,6 +20,10 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+
+const goFeedbackList = () => {
+  router.push({ name: 'feedbackList' });
+};
 
 const date = ref('2021-04-21');
 const id = ref('1');

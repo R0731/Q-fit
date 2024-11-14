@@ -53,7 +53,7 @@ public class LoginServiceImpl implements LoginService{
 			User loginUser = userService.getUserbyId(userId);
 			
 			// JWT 토큰 생성
-			String token = jwtUtil.createToken(loginUser.getUserId(), loginUser.getUserName(), loginUser.getUserType());
+			String token = jwtUtil.createToken(loginUser.getId(), loginUser.getUserId(), loginUser.getUserName(), loginUser.getUserType());
 			return token;
 		}
 		

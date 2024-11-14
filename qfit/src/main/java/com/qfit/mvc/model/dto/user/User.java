@@ -2,6 +2,8 @@ package com.qfit.mvc.model.dto.user;
 
 import org.apache.ibatis.type.Alias;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qfit.mvc.model.dao.user.TrainerDao;
 import com.qfit.mvc.model.dao.user.UserDao;
 
@@ -14,12 +16,16 @@ public class User {
 	private String phoneNumber;
 	private String email;
 	private String gender;
-	private String birthDate;
 	private String userImg;
 	private String createdAt; 
 	protected int userType;
 	private boolean isAgreed;
 	
+	// 인식이 제대로 되지 않아 직접 매핑
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonProperty("birthDate")
+	private String birthDate;
+    
 	public User() {
 		// TODO Auto-generated constructor stub
 	}

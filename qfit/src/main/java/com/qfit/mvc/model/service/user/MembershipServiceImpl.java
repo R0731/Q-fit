@@ -56,14 +56,14 @@ public class MembershipServiceImpl implements MembershipService{
 	// 회원 탈퇴
 	@Override
 	@Transactional
-	public boolean removeMember(int id, String userType) {
+	public boolean removeMember(int id, int userType) {
 		int foreignkeyDeleted = 0;
 		// 유저 타입에 따라 연관 테이블 정보 삭제
 		switch(userType) {
-			case "trainer":
+			case 1: // trainer
 				foreignkeyDeleted = trainerDao.deleteTrainer(id);
 				break;
-			case "trainee":
+			case 2: // trainee
 				foreignkeyDeleted = traineeDao.deleteTrainee(id);
 				break;
 			default:
@@ -74,6 +74,20 @@ public class MembershipServiceImpl implements MembershipService{
 		int userDeleted = 0;
 		if(foreignkeyDeleted == 1) userDeleted = userDao.deleteUser(id);
 		return userDeleted == 1;
+	}
+
+	// 왜 유저 중복 체크를 따로 빼니까 다 true로 뜨지???
+	// 유저 아이디 중복 체크
+	@Override
+	public boolean idCheck(String userId) {
+		System.out.println("유저id" + userId);
+		if(userDao.isUserIdAvailable(userId) > 0){
+			System.out.println(userDao.isUserIdAvailable(userId) + "거짓");
+			return false;
+		}
+		System.out.println(userDao.isUserIdAvailable(userId) + "진실");
+
+		return true;
 	}
 
 }
