@@ -10,6 +10,9 @@ import TraineeList from '@/components/Trainer/TraineeList.vue';
 import FeedbackList from '@/components/Trainer/FeedbackList.vue';
 import Quest from '@/components/Trainer/Quest.vue';
 import FeedbackCreate from '@/components/Trainer/FeedbackCreate.vue';
+import TrainerInfo from '@/components/Trainer/TrainerInfo.vue';
+import UserUpdate from '@/components/UserUpdate.vue';
+import TrainerGym from '@/components/Trainer/TrainerGym.vue';
 
 const isAuth = false;
 
@@ -28,13 +31,6 @@ const router = createRouter({
       path: '/trainer/regist',
       name: 'trainerRegist',
       component: TrainerRegist,
-    //   children: [
-    //     {
-    //       path: '',
-    //       name: 'registAgreement',
-    //       component: RegistAgreement,
-    //     }
-    //   ]
     },
 
     // trainer 관련 주소
@@ -67,6 +63,21 @@ const router = createRouter({
           path: 'createFeedback',
           name: 'createFeedback',
           component: FeedbackCreate,
+        },
+        {
+          path: 'info',
+          name: 'trainerInfo',
+          component: TrainerInfo,
+        },
+        {
+          path: 'update',
+          name: 'trainerUpdate',
+          component: UserUpdate,
+        },
+        {
+          path: 'gym',
+          name: 'trainerGym',
+          component: TrainerGym,
         },
       ]
     },

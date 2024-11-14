@@ -6,8 +6,10 @@ import com.qfit.mvc.model.dto.user.User;
 
 public interface MembershipService {
 	
+	public boolean idCheck(String userId);
+	
 	public String registMember(User user, String userType);
 	
-    public boolean removeMember(int id, String userType);                 
+    public boolean removeMember(int id, int userType);                 
     
 }

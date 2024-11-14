@@ -5,7 +5,6 @@
     
     <!-- 메인 콘텐츠 영역 -->
     <div class="content">
-      <button @click="goFeedbackList">피드백 남기기</button>
       <RouterLink :to="{ name: 'traineeList' }"></RouterLink>
       <RouterView />
     </div>
@@ -16,15 +15,12 @@
 </template>
 
 <script setup>
-import TheHeaderNav from "@/components/common/TheHeaderNav.vue";
-import TheFooterNav from "@/components/common/TheFooterNav.vue";
+import TheHeaderNav from "@/components/common/TrainerHeaderNav.vue";
+import TheFooterNav from "@/components/common/TrainerFooterNav.vue";
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const goFeedbackList = () => {
-  router.push({ name: 'feedbackList' });
-};
 </script>
 
 <style scoped>

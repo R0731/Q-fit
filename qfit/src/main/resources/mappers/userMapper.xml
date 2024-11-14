@@ -6,7 +6,7 @@
   	<!-- user 테이블에 공통 정보 추가 -->
  	<insert id="addUser" parameterType="User">
  		INSERT INTO user (user_id, user_pw, user_name, phone_number, email, gender, birth_date, user_type, is_agreed)
- 		VALUES (#{userId}, #{userPassword}, #{userName}, #{phoneNumber}, #{email}, #{gender}, #{birthdate}, #{userType}, #{isAgreed});
+ 		VALUES (#{userId}, #{userPassword}, #{userName}, #{phoneNumber}, #{email}, #{gender}, #{birthDate}, #{userType}, #{isAgreed});
 		<!-- 자동으로 생성된 user테이블의 id를 프로퍼티에 저장 -->
  		<selectKey keyProperty="id" resultType="int" order="AFTER">
  			SELECT LAST_INSERT_ID();
@@ -15,7 +15,7 @@
   
   	<!-- userId 중복 체크 -->
   	<select id="isUserIdAvailable" parameterType="String">
-  		SELECT IFNULL(COUNT(*), 0)
+  		SELECT COUNT(*)
   		FROM user
   		WHERE user_id = #{userId};
   	</select>

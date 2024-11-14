@@ -34,6 +34,7 @@ export const useUserStore = defineStore('user', () => {
       // Base64 URL 디코딩
       const payload = JSON.parse(atob(tokenParts[1]));
   
+      const numberId = payload.id;
       const userId = payload.userId;
       const name = payload.name;
       const userType = payload.userType;
@@ -43,9 +44,9 @@ export const useUserStore = defineStore('user', () => {
         sessionStorage.removeItem('access-token');
         return false;
       }
-
+      
       // 로그인 성공 시 정보 저장
-      loginUser.value = { userId, name, userType };
+      loginUser.value = { numberId, userId, name, userType };
   
       // console.log('Decoded Payload:', payload);
   
@@ -85,7 +86,8 @@ export const useUserStore = defineStore('user', () => {
   
       // Base64 URL 디코딩
       const payload = JSON.parse(atob(tokenParts[1]));
-  
+      
+      const id = payload.id;
       const userId = payload.userId;
       const name = payload.name;
       const userType = payload.userType;
@@ -98,7 +100,7 @@ export const useUserStore = defineStore('user', () => {
       }
 
       // 로그인 성공 시 정보 저장
-      loginUser.value = { userId, name, userType };
+      loginUser.value = { id, userId, name, userType };
   
       // console.log('Decoded Payload:', payload);
   
@@ -112,5 +114,11 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-  return { loginUser, trainerLogin, traineeLogin }
+  const logout = () => {
+    sessionStorage.removeItem('access-token'); // 세션스토리지 삭제
+    loginUser.value = null; // 스토어에 저장되어 있던 정보 삭제
+    // 홈으로 보내야 되나...일단 로그인 정보 없으면 자동으로 보내지게 네비게이션 가드 처리할 거니까 추후에...
+  }
+
+  return { loginUser, trainerLogin, traineeLogin, logout }
 })

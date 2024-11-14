@@ -23,8 +23,8 @@
     <!-- 세 번째 아이콘 및 텍스트 (마이 페이지) -->
     <div 
       class="footer-item"
-      :class="{ 'selected': route.name === 'quest' }" 
-      @click="navigateTo('quest')"
+      :class="{ 'selected': route.name === 'trainerInfo' }" 
+      @click="navigateTo('trainerInfo')"
     >
       <i class="bi bi-person-circle"></i>
       <span>마이 페이지</span>
@@ -39,7 +39,8 @@ const router = useRouter();
 const route = useRoute();
 
 /* 라우터를 이용해 페이지 이동 (name 기반) */
-const navigateTo = (routeName) => {
+// route.name(현재경로)와 routeName(이동할경로) 비교 후 다를 경우만 이동
+const navigateTo = (routeName) => { 
   if (route.name !== routeName) {
     router.push({ name: routeName });
   }

@@ -65,12 +65,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { useMemberStore } from '@/stores/member'; 
 
-
-const router = useRouter();
 const route = useRoute();
 
 const memberStore = useMemberStore();
@@ -85,7 +83,6 @@ const birthDay = ref('');
 const gender = ref('');
 const email = ref('');
 const phone = ref('');
-
 
 const register = () => {
   if (password.value !== confirmPassword.value) {
@@ -106,25 +103,19 @@ const registUser = async() => {
     gender: gender.value,
   };
 
-  // const userType = computed(() => {
-  //   const path = window.location.pathname; // 현재 경로로 추출
-  //   if(path.includes('/trainer/regist')){
-  //     return 'trainer';
-  //   }else if(path.includes('/trainee/regist')){
-  //     return 'trainee';
-  //   }else{
-  //     return null;
-  //   }
-  // });
-
-  console.log(route.path)
+  // console.log(route.path)
 
   const userType = route.path.split('/')[1];
 
-  console.log('userType', userType);
-  console.log('회원가입 정보:', user);
+  // console.log('userType', userType);
+  // console.log('회원가입 정보:', user);
 
-  await memberStore.userRegist(userType, user);
+  try {
+    await memberStore.userRegist(userType, user);
+    alert('회원가입 성공');
+  } catch (error) {
+    console.error('회원가입 실패:', error);
+  }
 };
 </script>
 
