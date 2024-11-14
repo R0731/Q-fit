@@ -20,11 +20,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/review")
 @Tag(name="ReviewRestful API", description = "리뷰 CRUD")
-public class ReviewController {
+public class ReviewRestController {
 	
 	private final ReviewService reviewService;
 	
-	public ReviewController(ReviewService reviewService) {
+	public ReviewRestController(ReviewService reviewService) {
 		this.reviewService = reviewService;
 	}
 	

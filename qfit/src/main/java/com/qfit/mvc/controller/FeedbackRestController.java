@@ -21,11 +21,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/feedback")
 @Tag(name="FeedbackRestful API", description = "피드백 CRUD")
-public class FeedbackController {
+public class FeedbackRestController {
 	
 	private final FeedbackService feedbackService;
 	
-	public FeedbackController(FeedbackService feedbackService) {
+	public FeedbackRestController(FeedbackService feedbackService) {
 		this.feedbackService = feedbackService;
 	}
 	
