@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfit.mvc.model.dao.QuestDao">
+	
+	<!-- 퀘스트 존재 여부 확인 -->
+	<select id="questExists" resultType="int" parameterType="map">
+		SELECT COUNT(*)
+		FROM quest
+		WHERE trainee_id=#{traineeId} AND start_at=#{startAt}
+	</select>
+	
+	<!-- 퀘스트 불러오기 -->
+	<select id="getQuestByTraineeId" resultType="Quest">
+		SELECT * 
+		FROM quest 
+		WHERE trainee_id=#{traineeId} AND start_at=#{startAt}
+	</select>
+	<select id="getQuestByTraineeId" resultMap="questResultMap">
+        SELECT 
+	        q.quest_id, q.trainee_id, q.trainer_id, q.start_at, q.end_at, q.created_at, q.updated_at,
+	        r.review_id AS review_id, r.difficulty, r.created_at AS review_created_at,
+	        f.feedback_id AS feedback_id, f.content AS feedback_content, f.created_at AS feedback_created_at,
+	        t.task_id AS task_id, t.order_index, t.is_completed, t.count, t.weight_kg, t.cardio_minutes, t.exercise_id
+	    FROM quest q
+	    LEFT JOIN review r ON q.quest_id = r.quest_id
+	    LEFT JOIN feedback f ON q.quest_id = f.quest_id
+	    LEFT JOIN task t ON q.quest_id = t.quest_id
+	    WHERE q.trainee_id = #{traineeId} AND q.start_at = #{startAt}
+    </select>
+    <!-- resultMap 정의 -->
+    <resultMap id="questResultMap" type="com.qfit.mvc.model.dto.Quest">
+	    <!-- Quest 기본 필드 -->
+	    <id property="questId" column="quest_id"/>
+	    <result property="traineeId" column="trainee_id"/>
+	    <result property="trainerId" column="trainer_id"/>
+	    <result property="startAt" column="start_at"/>
+	    <result property="endAt" column="end_at"/>
+	    <result property="createdAt" column="created_at"/>
+	    <result property="updatedAt" column="updated_at"/>
+	
+	    <!-- Review와 Feedback 매핑 -->
+	    <association property="review" javaType="com.qfit.mvc.model.dto.Review">
+	        <result property="reviewId" column="review_id"/>
+	        <result property="difficulty" column="difficulty"/>
+	        <result property="createdAt" column="review_created_at"/>
+	    </association>
+	
+	    <association property="feedback" javaType="com.qfit.mvc.model.dto.Feedback">
+	        <result property="feedbackId" column="feedback_id"/>
+	        <result property="content" column="feedback_content"/>
+	        <result property="createdAt" column="feedback_created_at"/>
+	    </association>
+	
+	    <!-- Task 컬렉션 매핑 -->
+	    <collection property="tasks" ofType="com.qfit.mvc.model.dto.Task">
+	        <result property="taskId" column="task_id"/>
+	        <result property="orderIndex" column="order_index"/>
+	        <result property="isCompleted" column="is_completed"/>
+	        <result property="count" column="count"/>
+	        <result property="weightKg" column="weight_kg"/>
+	        <result property="cardioMinutes" column="cardio_minutes"/>
+	        <result property="exerciseId" column="exercise_id"/>
+	    </collection>
+	</resultMap>
+
+	
+	<!-- 퀘스트 생성 -->
+	<insert id="insertQuest" parameterType="Quest" useGeneratedKeys="true" keyProperty="questId">
+	    INSERT INTO quest (trainee_id, trainer_id, start_at, end_at)
+	    VALUES #{traineeId}, #{trainerId}, #{startAt}, #{endAt}
+	</insert>
+	
+	<!-- 퀘스트 삭제 -->
+	<!-- 여기도 필요가 없어져버렸어
+	<delete id="deleteQuest" parameterType="int">
+		DELETE FROM quest 
+		WHERE quest_id=#{questId}
+	</delete> -->
+	
+	<!-- 퀘스트 수정-->
+	<!-- 없어도 될 거 같은 수정 부분
+	<update id="updateQuest" parameterType="map">
+		UPDATE quest
+		SET updated_at = #{updatedAt}
+		WHERE quest_id=#{questId}
+	</update> -->
+</mapper>

@@ -42,9 +42,8 @@ CREATE TABLE quest (
     start_at DATETIME,
     end_at DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME,
-    FOREIGN KEY (trainee_id) REFERENCES trainee(id), 
-    FOREIGN KEY (trainer_id) REFERENCES trainer(id)
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (trainee_id) REFERENCES trainee(id)
 );
 
 CREATE TABLE exercise(
