@@ -37,15 +37,17 @@ public class UserRestController {
 	 */
 	@PostMapping("/login")
 	@Operation(summary = "로그인", description = "모든 유저의 로그인을 수행합니다.")
-	public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest){
+	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
 		try {
-			User loginUser = loginService.login(loginRequest.getUserId(), loginRequest.getUserPassword());
-			return ResponseEntity.ok("login success");
+			// 로그인 시 사용자 정보와 JWT 토큰을 함께 반환
+			String token = loginService.login(loginRequest.getUserId(), loginRequest.getUserPassword());
+//			User loginUser = loginService.login(loginRequest.getUserId(), loginRequest.getUserPassword());
+			return ResponseEntity.status(HttpStatus.OK).body(token);
 		}catch (IllegalArgumentException e) {
 			//추후 헤더를 통해 main으로 redirect 되도록 할 예정
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("login failed");
 		}	
-	}
+	}	
 	
 	/**
 	 * 유저 정보 업데이트 메서드

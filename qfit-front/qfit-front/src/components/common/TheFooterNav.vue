@@ -1,30 +1,30 @@
 <template>
   <div class="footer-container">
-    <!-- 첫 번째 아이콘 및 텍스트 -->
+    <!-- 첫 번째 아이콘 및 텍스트 (회원 관리) -->
     <div 
       class="footer-item"
-      :class="{ 'selected': route.path === '/members' }" 
-      @click="navigateTo('/login')"
+      :class="{ 'selected': route.name === 'trainerLogin' }" 
+      @click="navigateTo('trainerLogin')"
     >
       <i class="bi bi-people"></i>
       <span>회원 관리</span>
     </div>
 
-    <!-- 두 번째 아이콘 및 텍스트 -->
+    <!-- 두 번째 아이콘 및 텍스트 (홈) -->
     <div 
       class="footer-item"
-      :class="{ 'selected': route.path === '/' }" 
+      :class="{ 'selected': route.name === 'traineeList' }" 
       @click="navigateTo('traineeList')"
     >
       <i class="bi bi-house-door"></i>
       <span>홈</span>
     </div>
 
-    <!-- 세 번째 아이콘 및 텍스트 -->
+    <!-- 세 번째 아이콘 및 텍스트 (마이 페이지) -->
     <div 
       class="footer-item"
-      :class="{ 'selected': route.path === '/profile' }" 
-      @click="navigateTo('/quest')"
+      :class="{ 'selected': route.name === 'quest' }" 
+      @click="navigateTo('quest')"
     >
       <i class="bi bi-person-circle"></i>
       <span>마이 페이지</span>
@@ -38,16 +38,18 @@ import { useRouter, useRoute } from 'vue-router';
 const router = useRouter();
 const route = useRoute();
 
-/* 라우터를 이용해 페이지 이동 */
-const navigateTo = (path) => {
-  router.push({name: path});
+/* 라우터를 이용해 페이지 이동 (name 기반) */
+const navigateTo = (routeName) => {
+  if (route.name !== routeName) {
+    router.push({ name: routeName });
+  }
 };
 </script>
 
 <style scoped>
 .footer-container {
   display: flex;
-  justify-content: space-around; /* 양 끝에 요소를 배치하고 간격 균등 */
+  justify-content: space-around;
   align-items: center;
   padding: 10px;
   width: 100%;
@@ -73,12 +75,10 @@ const navigateTo = (path) => {
 
 /* 선택된 항목 스타일 */
 .selected {
-  color: #8504e8; /* 보라색으로 강조 */
+  color: #8504e8;
 }
 
 .selected i {
   color: #8504e8;
 }
 </style>
-
-
