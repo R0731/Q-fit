@@ -1,4 +1,5 @@
 <template>
+  <img src="@/assets/logo.png" alt="logo" class="logo" />
   <div class="login-container">
     <!-- 로그인 폼 -->
     <form class="login-form">
@@ -35,7 +36,7 @@
         <span class="divider">|</span>
         <a href="#">아이디 찾기</a>
         <span class="divider">|</span>
-        <a href="#">회원가입</a>
+        <a href="javascript:void(0);" @click="goToRegist">회원가입</a>
       </div>
     </form>
   </div>
@@ -51,14 +52,30 @@ export default {
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user';
+import { useRouter } from 'vue-router';
+import TrainerRegist from './TrainerRegist.vue';
+import { useViewStore } from '@/stores/viewStore';
 
 const userStore = useUserStore();
 
 const id = ref("")
 const password = ref("")
 
-const login = () =>{
-    userStore.userLogin(id.value, password.value)
+const router = useRouter();
+const viewStore = useViewStore();
+
+const goToRegist = () => {
+  viewStore.resetView();
+  // console.log("Router 인스턴스:", router);
+  router.push('/trainer/regist').catch(err => console.error(err));
+};
+
+const login = async() =>{
+    const success = await userStore.trainerLogin(id.value, password.value)
+    
+    if(!success){
+      alert('로그인에 실패했습니다.')
+    }
 }
 </script>
 
