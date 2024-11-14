@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@/views/Trainer/TrainerLoginView.vue'
 import HomeView from '@/views/HomeView.vue'
+import TrainerRegist from '@/views/Trainer/TrainerRegist.vue';
 import TrainerLoginView from '@/views/Trainer/TrainerLoginView.vue';
 import TraineeLoginView from '@/views/Trainee/TraineeLoginView.vue';
 import TrainerHomeView from '@/views/Trainer/TrainerHomeView.vue';
@@ -22,19 +23,31 @@ const router = createRouter({
       component: HomeView
 
     },
-
+    // trainer 회원가입 관련
+    {
+      path: '/trainer/regist',
+      name: 'trainerRegist',
+      component: TrainerRegist,
+    //   children: [
+    //     {
+    //       path: '',
+    //       name: 'registAgreement',
+    //       component: RegistAgreement,
+    //     }
+    //   ]
+    },
 
     // trainer 관련 주소
+    {
+      path: '/trainer/login',
+      name: 'trainerLogin',
+      component: TrainerLoginView,
+    },
     {
       path: '/trainer',
       name: 'trainerHome',
       component: TrainerHomeView,
       children: [
-        {
-          path: 'login',
-          name: 'trainerLogin',
-          component: TrainerLoginView,
-        },
         {
           path: '',
           name: 'traineeList',
@@ -58,18 +71,19 @@ const router = createRouter({
       ]
     },
 
+    // trainee 회원가입 관련
 
     // trainee 관련 주소
+    {
+      path: '/trainee/login',
+      name: 'traineeLogin',
+      component: TraineeLoginView
+    },
     {
       path: '/trainee',
       name: 'traineeHome',
       component: TraineeHomeView,
       children: [
-        {
-          path: 'login',
-          name: 'traineeLogin',
-          component: TraineeLoginView
-        },
       ]
     },
   ]
