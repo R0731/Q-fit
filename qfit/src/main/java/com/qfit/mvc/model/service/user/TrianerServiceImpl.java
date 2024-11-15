@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.qfit.mvc.model.dao.user.TrainerDao;
+import com.qfit.mvc.model.dto.user.Trainee;
 import com.qfit.mvc.model.dto.user.Trainer;
 
 @Service
@@ -29,6 +30,11 @@ public class TrianerServiceImpl implements TrainerService{
 		temp.put("gym", gym);
 		int result = trainerDao.addGym(temp);
 		return result == 1;
+	}
+
+	@Override
+	public List<Trainee> getTraineeList(int trainerId) {
+		return trainerDao.getTrainee(trainerId);
 	}
 
 //	@Override

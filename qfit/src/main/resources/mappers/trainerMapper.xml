@@ -22,4 +22,10 @@
  		WHERE id = #{id};
  	</delete>
  	
+ 	<!-- trainerId로 traieeList 조회 -->
+ 	<select id="getTrainee" parameterType="int" resultType="Trainee">
+ 		SELECT * FROM trainee
+ 		WHERE trainer_id = #{trainerId}
+ 	</select>
+ 	
   </mapper>

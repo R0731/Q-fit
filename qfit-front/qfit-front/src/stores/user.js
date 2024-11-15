@@ -1,56 +1,27 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
-import axios from 'axios'
-import router from '@/router'
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
+import axios from 'axios';
+import router from '@/router';
 
-const REST_API_URL = `http://localhost:8080/user`
+const REST_API_URL = `http://localhost:8080/user`;
+
 export const useUserStore = defineStore('user', () => {
   const loginUser = ref(null);
 
+  // 트레이너 로그인
   const trainerLogin = async (id, password) => {
     try {
-      // console.log(id, password)
       const res = await axios.post(`${REST_API_URL}/login`, {
         userId: id,
         userPassword: password,
       });
-  
-      // console.log('Response:', res.data);
-  
-      // 서버에서 받은 토큰이 존재하는지 확인
-      const accessToken = res.data;
-      if (!accessToken) {
-        throw new Error('No access token received');
-      }
-  
-      sessionStorage.setItem('access-token', accessToken);
-  
-      // 토큰 디코딩
-      const tokenParts = accessToken.split('.');
-      if (tokenParts.length !== 3) {
-        throw new Error('Invalid token format');
-      }
-  
-      // Base64 URL 디코딩
-      const payload = JSON.parse(atob(tokenParts[1]));
-  
-      const numberId = payload.id;
-      const userId = payload.userId;
-      const name = payload.name;
-      const userType = payload.userType;
 
-      // userType이 1인 아닌 경우 경고 및 로그인 중단
-      if(userType !== 1){
-        sessionStorage.removeItem('access-token');
-        return false;
-      }
+      const accessToken = res.data;
+      if (!accessToken) throw new Error('No access token received');
       
-      // 로그인 성공 시 정보 저장
-      loginUser.value = { numberId, userId, name, userType };
-  
-      // console.log('Decoded Payload:', payload);
-  
-      // 로그인 성공 시 페이지 이동
+      sessionStorage.setItem('access-token', accessToken);
+      setUserFromToken(accessToken); // 토큰에서 유저 정보 설정
+
       await router.push({ name: 'traineeList' });
       return true;
     } catch (err) {
@@ -59,66 +30,63 @@ export const useUserStore = defineStore('user', () => {
       return false;
     }
   };
-  
-  const traineeLogin = async (id, password) => {
+
+  // 회원 로그아웃
+  const logout = () => {
+    sessionStorage.removeItem('access-token');
+    loginUser.value = null;
+  };
+
+  // 패스워드 체크 기능 (기존 코드 유지)
+  const passwordCheck = async (check) => {
     try {
-      console.log(id, password)
-      const res = await axios.post(`${REST_API_URL}/login`, {
-        userId: id,
-        userPassword: password,
-      });
-  
-      // console.log('Response:', res.data);
-  
-      // 서버에서 받은 토큰이 존재하는지 확인
-      const accessToken = res.data;
-      if (!accessToken) {
-        throw new Error('No access token received');
-      }
-  
-      sessionStorage.setItem('access-token', accessToken);
-  
-      // 토큰 디코딩
-      const tokenParts = accessToken.split('.');
-      if (tokenParts.length !== 3) {
-        throw new Error('Invalid token format');
-      }
-  
-      // Base64 URL 디코딩
-      const payload = JSON.parse(atob(tokenParts[1]));
-      
-      const id = payload.id;
-      const userId = payload.userId;
-      const name = payload.name;
-      const userType = payload.userType;
-
-      // userType이 2인 아닌 경우 경고 및 로그인 중단
-      if(userType !== 2){
-        sessionStorage.removeItem('access-token');
-        console.log('이쪽인가')
-        return false;
-      }
-
-      // 로그인 성공 시 정보 저장
-      loginUser.value = { id, userId, name, userType };
-  
-      // console.log('Decoded Payload:', payload);
-  
-      // 로그인 성공 시 페이지 이동
-      await router.push({ name: 'traineeHome' });
-      return true;
+      const url = `${REST_API_URL}/password-correct`;
+      const res = await axios.post(url, check);
+      return res.data;
     } catch (err) {
-      console.error('Login failed:', err);
-      await router.push({ name: 'traineeLogin' });
-      return false;
+      console.error('패스워드 체크 실패:', err);
+      throw err;
     }
   };
 
-  const logout = () => {
-    sessionStorage.removeItem('access-token'); // 세션스토리지 삭제
-    loginUser.value = null; // 스토어에 저장되어 있던 정보 삭제
-    // 홈으로 보내야 되나...일단 로그인 정보 없으면 자동으로 보내지게 네비게이션 가드 처리할 거니까 추후에...
-  }
+  // 유저 정보 가져오기
+  const getUserDetails = async (userId) => {
+    try {
+      console.log('getUserDetails 호출:', userId);
+      const res = await axios.get(`${REST_API_URL}/info/${userId}`);
+      return res.data;
+    } catch (err) {
+      console.error('유저 정보 가져오기 실패:', err);
+      throw err;
+    }
+  };
 
-  return { loginUser, trainerLogin, traineeLogin, logout }
-})
+  // 세션에서 토큰을 사용해 유저 정보 설정
+  const setUserFromToken = (token) => {
+    const tokenParts = token.split('.');
+    if (tokenParts.length !== 3) throw new Error('Invalid token format');
+    
+    const payload = JSON.parse(atob(tokenParts[1]));
+    loginUser.value = {
+      numberId: payload.id,
+      userId: payload.userId,
+      name: payload.name,
+      userType: payload.userType,
+    };
+  };
+
+  // 세션에서 토큰을 이용해 유저 정보 로드
+  const loadUserFromToken = async () => {
+    const token = sessionStorage.getItem('access-token');
+    if (token) setUserFromToken(token);
+  };
+
+  return {
+    loginUser,
+    trainerLogin,
+    logout,
+    passwordCheck,
+    getUserDetails,
+    loadUserFromToken,
+  };
+});
