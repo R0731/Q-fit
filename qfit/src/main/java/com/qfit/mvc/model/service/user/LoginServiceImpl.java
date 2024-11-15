@@ -27,17 +27,21 @@ public class LoginServiceImpl implements LoginService{
 	
 	// 패스워드 일치 여부 확인
 	@Override
-	public boolean correctPassword(int id, String userPassword) {
+	public boolean correctPassword(String id, String userPassword) {
 		Map<String, Object> info = new HashMap<>();
-		info.put("id", id);
+		info.put("userId", id);
 		info.put("userPassword", userPassword);
-		int passwordCorrect = loginDao.loginCheck(info);
+		Integer passwordCorrect = loginDao.loginCheck(info);
+	    System.out.println("@@@정보확인" + info);
+
+	    System.out.println("@@@@결과확인" + passwordCorrect);
 		
-		if(passwordCorrect == 1) {
-			return true;
-		}
-		
-		throw new IllegalArgumentException("Wrong Password");
+	    if (passwordCorrect == null) {
+	        System.out.println("null발생");
+	        return false;
+	    }
+	    
+		return passwordCorrect == 1;
 	}
 
 	// userId, password 로그인

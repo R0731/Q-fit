@@ -4,10 +4,10 @@
   <mapper namespace="com.qfit.mvc.model.dao.user.LoginDao">
   	
 	<!-- password 확인 -->
-	<select id="passwordCheck" parameterType="String">
-		SELECT COUNT(*)
+	<select id="passwordCheck" parameterType="map" resultType="java.lang.Integer">
+		SELECT COALESCE(COUNT(*), 0)
 		FROM user
-		WHERE id = #{id} AND user_pw = #{userPw};
+		WHERE user_id = #{userId} AND user_pw = #{userPassword};
 	</select>
 
 	<!-- userId & password 확인 -->
