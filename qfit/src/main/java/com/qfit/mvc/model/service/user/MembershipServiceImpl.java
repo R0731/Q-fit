@@ -58,11 +58,13 @@ public class MembershipServiceImpl implements MembershipService{
 	@Override
 	@Transactional
 	public boolean removeMember(int id, int userType) {
+		System.out.println("@@@@" + id + " " + userType);
 		int foreignkeyDeleted = 0;
 		// 유저 타입에 따라 연관 테이블 정보 삭제
 		switch(userType) {
 			case 1: // trainer
 				foreignkeyDeleted = trainerDao.deleteTrainer(id);
+				System.out.println("삭제성공");
 				break;
 			case 2: // trainee
 				foreignkeyDeleted = traineeDao.deleteTrainee(id);

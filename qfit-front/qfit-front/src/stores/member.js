@@ -38,5 +38,20 @@ export const useMemberStore = defineStore('member', () => {
     }
   } 
 
+    // 아이디 중복 체크 기능
+    const userIdCheck = async(userId) => {
+      try{
+        const url = `${REST_API_URL}/idCheck`;
+        const res = await axios.post(url, {userId});
+        if(res){
+          console.log('중복 아이디')
+        }else{
+          console.log('사용가능 아이디')
+        }
+      }catch(err){
+        console.log('에러발생 :', err);
+      }
+    };
+    
   return { userRegist, userResign };
 });

@@ -23,28 +23,28 @@ CREATE TABLE user (
 CREATE TABLE trainer (
     id INT PRIMARY KEY,
     gym VARCHAR(100),
-    FOREIGN KEY (id) REFERENCES user(id)
+    FOREIGN KEY (id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 -- trainee 테이블 (훈련생 정보, user와 1:1 관계)
 CREATE TABLE trainee (
     id INT PRIMARY KEY,
     trainer_id INT,
-    FOREIGN KEY (id) REFERENCES user(id),
-    FOREIGN KEY (trainer_id) REFERENCES trainer(id)
+    FOREIGN KEY (id) REFERENCES user(id) ON DELETE CASCADE,
+    FOREIGN KEY (trainer_id) REFERENCES trainer(id) ON DELETE SET NULL
 );
 
 -- today_quest 테이블 (훈련생이 받은 퀘스트 정보)
 CREATE TABLE quest (
     quest_id INT PRIMARY KEY AUTO_INCREMENT,
-    trainee_id INT NOT NULL,
-    trainer_id INT NOT NULL,
+    trainee_id INT,
+    trainer_id INT,
     start_at DATETIME,
     end_at DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME,
-    FOREIGN KEY (trainee_id) REFERENCES trainee(id), 
-    FOREIGN KEY (trainer_id) REFERENCES trainer(id)
+    FOREIGN KEY (trainee_id) REFERENCES trainee(id) ON DELETE SET NULL, 
+    FOREIGN KEY (trainer_id) REFERENCES trainer(id) ON DELETE SET NULL
 );
 
 CREATE TABLE exercise(
@@ -57,47 +57,47 @@ CREATE TABLE exercise(
 -- task 테이블 (퀘스트 내 개별 작업)
 CREATE TABLE task (
     task_id INT PRIMARY KEY AUTO_INCREMENT,
-    quest_id INT NOT NULL,
+    quest_id INT,
     order_index INT,
     is_completed BOOLEAN DEFAULT FALSE,
     count INT,
     weight_kg INT,      -- Weight에서 사용 (무게)
     cardio_minutes INT, -- Cardio에서 사용 (시간)
-    exercise_id INT NOT NULL,
-    FOREIGN KEY (quest_id) REFERENCES quest(quest_id),
-    FOREIGN KEY (exercise_id) REFERENCES exercise(exercise_id)
+    exercise_id INT,
+    FOREIGN KEY (quest_id) REFERENCES quest(quest_id) ON DELETE SET NULL,
+    FOREIGN KEY (exercise_id) REFERENCES exercise(exercise_id) ON DELETE SET NULL
 );
 
 -- review 테이블 (quest와 관련된 리뷰)
 CREATE TABLE review (
     review_id INT PRIMARY KEY AUTO_INCREMENT,
-    quest_id INT NOT NULL,
-    trainee_id INT NOT NULL,
+    quest_id INT,
+    trainee_id INT,
     difficulty ENUM('EASY', 'MEDIUM', 'HARD'),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (quest_id) REFERENCES quest(quest_id),
-    FOREIGN KEY (trainee_id) REFERENCES trainee(id)
+    FOREIGN KEY (quest_id) REFERENCES quest(quest_id) ON DELETE SET NULL,
+    FOREIGN KEY (trainee_id) REFERENCES trainee(id) ON DELETE SET NULL
 );
 
 -- feedback 테이블 (review에 대한 트레이너의 피드백)
 CREATE TABLE feedback (
     feedback_id INT PRIMARY KEY AUTO_INCREMENT,
-    quest_id INT NOT NULL,
-    trainer_id INT NOT NULL,
+    quest_id INT,
+    trainer_id INT,
     content TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (quest_id) REFERENCES quest(quest_id),
-    FOREIGN KEY (trainer_id) REFERENCES trainer(id)
+    FOREIGN KEY (quest_id) REFERENCES quest(quest_id) ON DELETE SET NULL,
+    FOREIGN KEY (trainer_id) REFERENCES trainer(id) ON DELETE SET NULL
 );
 
 -- notification 테이블 (사용자에게 발송된 알림 정보)
 CREATE TABLE notification (
     notification_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
+    user_id INT,
     message TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     is_read BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL
 );
 
 INSERT INTO exercise(exercise_type, exercise_parts, exercise_name)
