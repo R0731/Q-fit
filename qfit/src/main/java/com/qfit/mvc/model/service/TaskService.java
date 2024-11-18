@@ -9,23 +9,21 @@ public interface TaskService {
 	// 전체 태스크 조회
 	public List<Task> getTaskList();
 	
-	//태스크 생성
+	// questId로 태스크 조회
+	public List<Task> getTaskListdByQuestId(int questId);
+	
+	// isComplete true로 변경
+	public void updateTaskCompleted(Task task);
+	
+	// 태스크 생성
 	public void createTask(Task task);
 	
-//	// 태스크 추가
-//	public void addCardioTask(Task task);
-//	// 태스크 추가
-//	public void addWeightTask(Task task);
 	// 태스크 삭제
 	public boolean deleteTask(int taskId);
 	
 	//태스크 수정
 	public void updateTask(Task task);
 	
-//	// 태스크 수정
-//	public void updateCardioTask(Task task);
-//	// 태스크 수정
-//	public void updateWeightTask(Task task);
 	// 순서 수정
 	public void updateOrder(Task task);
 

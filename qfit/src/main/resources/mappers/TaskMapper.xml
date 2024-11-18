@@ -10,6 +10,13 @@
 		FROM task;
 	</select>
 	
+	<!-- 퀘스트 ID로 태스크 조회 -->
+	<select id="selectQuestId" resultType="Task">
+		SELECT * 
+		FROM task
+		WHERE quest_id = #{questId};
+	</select>
+	
 	<!-- 유산소 태스크 추가 -->
 	<insert id="insertCardioTask" parameterType="Task" keyProperty="taskId" useGeneratedKeys="true">
 		INSERT INTO task (quest_id, cardio_minutes, exercise_id)
@@ -46,6 +53,13 @@
 	<update id="updateOrder" parameterType="Task">
 		UPDATE task
 		SET order_index = #{orderIndex}
+		WHERE task_id = #{taskId};
+	</update>
+	
+	<!-- isComplete 수정 -->
+	<update id="updateTaskCompleted" parameterType="Task">
+		UPDATE task
+		SET is_completed = #{isCompleted}
 		WHERE task_id = #{taskId};
 	</update>
 </mapper>
