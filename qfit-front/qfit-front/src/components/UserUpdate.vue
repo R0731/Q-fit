@@ -166,10 +166,20 @@ const resignCheck = async () => {
 
 const resignUser = async () => {
   try {
-    await memberStore.userResign(userStore.loginUser.value.userType, userStore.loginUser.value.numberId);
+
+    if (!userStore.loginUser) {
+      console.error('로그인된 유저 정보가 없습니다.');
+      return;
+    }
+
+    const { userType, numberId } = userStore.loginUser;
+
+    console.log('정보조회:', userType, numberId)
+
+    await memberStore.userResign(userType, numberId);
     userStore.logout();
     alert('회원 탈퇴가 완료되었습니다.');
-    router.push('/login');
+    router.push({name: 'trainerLogin'});
   } catch (error) {
     console.error('회원 탈퇴 실패:', error);
     alert('회원 탈퇴에 실패했습니다.');

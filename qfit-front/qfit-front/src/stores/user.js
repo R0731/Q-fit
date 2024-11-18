@@ -42,7 +42,7 @@ export const useUserStore = defineStore('user', () => {
     loginUser.value = null;
   };
 
-  // 패스워드 체크 기능 (기존 코드 유지)
+  // 패스워드 체크 기능
   const passwordCheck = async (check) => {
     try {
       const url = `${REST_API_URL}/password-correct`;

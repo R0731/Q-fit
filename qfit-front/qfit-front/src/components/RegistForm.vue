@@ -8,7 +8,7 @@
         <input type="text" id="userId" v-model="userId" required />
       </div>
 
-      <button>중복 확인</button>
+      <button @click="userIdAvailable">중복 확인</button>
 
       <!-- 비밀번호 입력 -->
       <div>
@@ -121,6 +121,15 @@ const registUser = async() => {
     console.error('회원가입 실패:', error);
   }
 };
+
+const userIdAvailable = async() => {
+  const isDuplicate = userStore.userIdCheck(userId.value);
+  if(isDuplicate){
+    alert('중복된 아이디입니다.')
+  }else{
+    alert('사용가능한 아이디입니다')
+  }
+}
 </script>
 
 <style scoped>
