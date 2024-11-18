@@ -23,7 +23,7 @@ public interface UserDao {
 	public User selectOnebyId(String userId); 
 	
 	// 유저 정보 업데이트
-	public void updateUser(User user);
+	public int updateUser(User user);
 	
 	// user_id 중복 확인
 	public int isUserIdAvailable(String userId);

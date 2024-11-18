@@ -18,5 +18,8 @@ public interface TraineeDao {
 	// 트레이니 테이블에 트레이너 정보 등록
 	public int addTrainerInfo(Map<String, Integer> info);
 
+	// 트레이니 테이블에서 트레이너 정보 삭제
+	public int deleteTrainer(int traineeId);
+
 	
 }

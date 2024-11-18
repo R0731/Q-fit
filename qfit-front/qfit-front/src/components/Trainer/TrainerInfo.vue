@@ -33,6 +33,8 @@
     <h4>체육관 정보 수정</h4>
     <!-- 체육관 수정 버튼 복구 -->
     <button @click="navigateTo('trainerGym')">체육관 정보</button>
+
+    <button @click="logout">로그아웃</button>
   </div>
 </template>
 
@@ -91,6 +93,15 @@ const navigateTo = (routeName) => {
     router.push({ name: routeName });
   }
 };
+
+const logout = async() =>{
+  try{
+    await userStore.logout();
+    alert('로그아웃 완료')
+  }catch{
+    console.log('로그아웃실패')
+  }
+}
 </script>
 
 <style scoped>

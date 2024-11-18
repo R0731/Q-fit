@@ -88,18 +88,23 @@ const gender = ref('');
 const email = ref('');
 const phone = ref('');
 
+// 컴포넌트가 마운트될 때 유저 정보 로드
+onMounted(async () => {
+  await loadUserData();
+});
+
 // 유저 정보 로드 함수
 const loadUserData = async () => {
   try {
     const loginUser = userStore.loginUser;
     // 로그인된 유저가 있는지 확인
-    if (!loginUser || !loginUser.value) {
-      console.error('로그인된 유저 정보가 없습니다.');
+    if (!loginUser) {
+      console.error('로드하는데 로그인된 유저가 없습니다.');
       return;
     }
 
     // 유저 ID 가져오기
-    const userIdValue = loginUser.value.userId;
+    const userIdValue = loginUser.userId;
     console.log('폼에서 유저 ID:', userIdValue);
 
     const userData = await userStore.getUserDetails(userIdValue);
@@ -124,10 +129,6 @@ const loadUserData = async () => {
   }
 };
 
-// 컴포넌트가 마운트될 때 유저 정보 로드
-onMounted(async () => {
-  await loadUserData();
-});
 
 // 회원정보 수정 함수
 const updateUser = async () => {
@@ -147,12 +148,13 @@ const updateUser = async () => {
   };
 
   try {
-    await memberStore.updateUser(route.path.split('/')[1], updatedUser);
-    alert('회원정보가 수정되었습니다.');
-    router.push('/profile');
+    const result = await userStore.updateUser(userStore.loginUser.numberId, updatedUser);
+    if (result) {
+      alert('회원정보가 성공적으로 수정되었습니다.');
+    }
   } catch (error) {
     console.error('회원정보 수정 실패:', error);
-    alert('회원정보 수정에 실패했습니다.');
+    alert('회원정보 수정에 실패하였습니다.');
   }
 };
 

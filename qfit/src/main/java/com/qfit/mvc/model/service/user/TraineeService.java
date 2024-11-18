@@ -10,4 +10,6 @@ public interface TraineeService{
 
 	public boolean addTrainerToTrainee(int traineeId, int trainerId);
 
+	public boolean deleteTrainer(int traineeId);
+
 }

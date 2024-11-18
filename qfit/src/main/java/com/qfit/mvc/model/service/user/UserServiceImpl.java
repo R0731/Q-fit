@@ -26,8 +26,9 @@ public class UserServiceImpl implements UserService{
 	
 	// 유저 정보 업데이트
 	@Override
-	public void updateUser(User user) {
-		userDao.updateUser(user);
+	public boolean updateUser(User user) {
+		int result = userDao.updateUser(user);
+		return result == 1;
 	}
 	
 	// userId 중복 확인

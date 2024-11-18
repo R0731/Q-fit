@@ -48,4 +48,36 @@ public class TraineeRestController {
         }
     }
 
+	/**
+	 * 트레이니 테이블에서 트레이너 정보 삭제 메서드
+	 * @param traineeId 트레이너를 삭제할 트레이니의 ID
+	 * @return 트레이너 삭제 성공 시 CREATED(201), 실패 시 NOT_FOUND(404) 반환
+	 */
+	@DeleteMapping("{traineeId}/delete")
+	@Operation(summary = "트레이너 정보 삭제", description = "트레이니 테이블에서 트레이너 정보를 삭제합니다.")
+	public ResponseEntity<?> deleteTrainer(@PathVariable(value="traineeId") int traineeId, @PathVariable(value="traineeId") int trainerId) {
+        boolean result = traineeService.deleteTrainer(traineeId);
+        if (result) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("Trainer delete successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete trainer");
+        }
+    }
+	
+	/**
+	 * 트레이니 추가를 위한 검색 메서드
+	 * @param traineeId 트레이너를 삭제할 트레이니의 ID
+	 * @return 트레이너 삭제 성공 시 CREATED(201), 실패 시 NOT_FOUND(404) 반환
+	 */
+//	@DeleteMapping("{traineeId}/delete")
+//	@Operation(summary = "트레이너 정보 삭제", description = "트레이니 테이블에서 트레이너 정보를 삭제합니다.")
+//	public ResponseEntity<?> deleteTrainer(@PathVariable(value="traineeId") int traineeId, @PathVariable(value="traineeId") int trainerId) {
+//        boolean result = traineeService.deleteTrainer(traineeId);
+//        if (result) {
+//            return ResponseEntity.status(HttpStatus.CREATED).body("Trainer delete successfully");
+//        } else {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete trainer");
+//        }
+//    }
+//	
 }

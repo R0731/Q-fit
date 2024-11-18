@@ -39,4 +39,15 @@ public class TraineeServiceImpl implements TraineeService {
 	    }
     }
 
+	@Override
+	@Transactional
+	public boolean deleteTrainer(int traineeId) {
+		try {
+			int result = traineeDao.deleteTrainer(traineeId);
+			return result == 1;
+		}catch(DataAccessException e){
+            throw new IllegalArgumentException("Database Error");
+		}
+	}
+
 }

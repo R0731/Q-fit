@@ -60,7 +60,7 @@ public class UserRestController {
 		try {
 			String userId = loginRequest.getUserId();
 			String password = loginRequest.getUserPassword();
-			System.out.println("확인" + userId + " " + password);
+//			System.out.println("확인" + userId + " " + password);
 			boolean isCorrect = loginService.correctPassword(userId, password);
 			return ResponseEntity.status(HttpStatus.OK).body(isCorrect);
 		}catch (IllegalArgumentException e) {
@@ -77,11 +77,13 @@ public class UserRestController {
 	 */
 	@PutMapping("/update/{id}")
 	@Operation(summary = "유저 업데이트", description = "유저 정보를 업데이트합니다.")
-	public ResponseEntity<String> userUpdate(@PathVariable("id") int id, @RequestBody User user){
+	public ResponseEntity<?> userUpdate(@PathVariable("id") int id, @RequestBody User user){
 		try {
+//			System.out.println("받은 id" + id);
 			user.setId(id);
-			userService.updateUser(user);
-			return ResponseEntity.status(HttpStatus.OK).body("User update success");
+			boolean res = userService.updateUser(user);
+//			System.out.println("결과값" + res);
+			return ResponseEntity.ok(res);
 		}catch(IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("User update failed");
 		}
@@ -96,7 +98,9 @@ public class UserRestController {
 	@Operation(summary = "유저 정보 조회", description = "유저의 개인정보를 조회합니다.")
 	public ResponseEntity<?> userInfo(@PathVariable("userId") String userId){
 		try {
+//			System.out.println("유저id들어온거" + userId);
 			User user = userService.getUserbyId(userId);
+//			System.out.println("유저 정보" + user);
 			return ResponseEntity.status(HttpStatus.OK).body(user);
 		}catch(IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("User Not found");

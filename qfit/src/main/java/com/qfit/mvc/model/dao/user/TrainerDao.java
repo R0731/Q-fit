@@ -25,5 +25,7 @@ public interface TrainerDao extends UserDao{
 	public List<Trainer> trainerSearch(UserSearchCondition condition);
 
 	public List<Trainee> getTrainee(int trainerId);
+
+	public Trainer readGym(int trainerId);
 	
 }

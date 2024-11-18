@@ -52,6 +52,6 @@ export const useMemberStore = defineStore('member', () => {
         console.log('에러발생 :', err);
       }
     };
-    
-  return { userRegist, userResign };
+
+  return { userRegist, userResign, userIdCheck };
 });

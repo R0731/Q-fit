@@ -18,7 +18,7 @@ import TraineeRegist from '@/views/Trainee/TraineeRegist.vue';
 import TraineeQuest from '@/components/Trainee/TraineeQuest.vue';
 import TraineeReview from '@/components/Trainee/TraineeReview.vue';
 import TraineeMain from '@/components/Trainee/TraineeMain.vue';
-
+import Record from '@/components/Trainee/Record.vue';
 
 const isAuth = false;
 
@@ -124,6 +124,11 @@ const router = createRouter({
           path: 'review',
           name: 'traineeReview',
           component: TraineeReview,
+        },
+        {
+          path: 'record',
+          name: 'record',
+          component: Record,
         },
       ]
     },

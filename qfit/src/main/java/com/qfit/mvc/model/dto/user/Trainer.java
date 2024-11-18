@@ -13,7 +13,7 @@ public class Trainer extends User {
 	public Trainer(int id) {
 		this.id = id;
 	}
-
+	
 	public String getGym() {
 		return gym;
 	}

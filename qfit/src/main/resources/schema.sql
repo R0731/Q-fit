@@ -184,6 +184,6 @@ VALUES
 
 SELECT * FROM user;
 SELECT * FROM exercise;
-DESCRIBE user;
-SELECT * FROM trainer;
+DESCRIBE user; 
 SELECT * FROM trainee;
+SELECT * FROM trainer;

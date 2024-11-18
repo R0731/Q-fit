@@ -28,6 +28,21 @@ public class TrainerRestController {
 	}
 	
 	/**
+	 * 트레이너 테이블에 체육관 읽어오기
+	 * @param trainerId 체육관을 업데이트할 트레이너의 ID
+	 * @param trainer   업데이트할 체육관 정보를 담고 있는 트레이너 객체
+	 * @return 성공 시 OK(200), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
+	 */
+	@GetMapping("/{trainerId}/gym")
+	@Operation(summary = "체육관 정보 조회", description = "트레이너의 체육관 정보를 조회합니다.")
+	public ResponseEntity<?> updateGym(@PathVariable("trainerId") int trainerId){
+		Trainer trainer = trainerService.getGym(trainerId);
+		System.out.println(trainer.getId() + trainer.getGym() + "정보조회");
+		if(trainer != null) return ResponseEntity.status(HttpStatus.OK).body(trainer);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update Failed");
+	}
+	
+	/**
 	 * 트레이너 테이블에 체육관 업데이트 메서드
 	 * @param trainerId 체육관을 업데이트할 트레이너의 ID
 	 * @param trainer   업데이트할 체육관 정보를 담고 있는 트레이너 객체
