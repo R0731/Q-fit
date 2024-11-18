@@ -5,9 +5,16 @@
 
 	<!-- userType이 1일 시 trainer 테이블에도 추가 -->
 	<insert id="addTrainer" parameterType="int">
-		INSERT INTO trainer (id) VALUES (#{id});
+		INSERT INTO trainer (id) 
+		VALUES (#{id});
 	</insert>
 	
+ 	<!-- trainer 테이블에서 gym 정보 조회 -->
+ 	<select id="readGym" parameterType="int" resultType="Trainer">
+ 		SELECT * FROM trainer
+ 		WHERE id = #{id};
+ 	</select>
+ 	
  	<!-- trainer 테이블에 gym 정보 추가 -->
  	<update id="addGym" parameterType="map">
  		UPDATE trainer
@@ -20,4 +27,11 @@
  		DELETE FROM trainer
  		WHERE id = #{id};
  	</delete>
+ 	
+ 	<!-- trainerId로 traieeList 조회 -->
+ 	<select id="getTrainee" parameterType="int" resultType="Trainee">
+ 		SELECT * FROM trainee
+ 		WHERE trainer_id = #{trainerId}
+ 	</select>
+ 	
   </mapper>

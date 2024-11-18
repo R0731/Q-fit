@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.qfit.mvc.model.dao.user.UserDao">
+  	
+  	<!-- user 테이블에 공통 정보 추가 -->
+ 	<insert id="addUser" parameterType="User">
+ 		INSERT INTO user (user_id, user_pw, user_name, phone_number, email, gender, birth_date, user_type, is_agreed)
+ 		VALUES (#{userId}, #{userPassword}, #{userName}, #{phoneNumber}, #{email}, #{gender}, #{birthdate}, #{userType}, #{isAgreed});
+		<!-- 자동으로 생성된 user테이블의 id를 프로퍼티에 저장 -->
+ 		<selectKey keyProperty="id" resultType="int" order="AFTER">
+ 			SELECT LAST_INSERT_ID();
+ 		</selectKey>
+ 	</insert>
+  
+  	<!-- userId 중복 체크 -->
+  	<select id="isUserIdAvailable" parameterType="String">
+  		SELECT IFNULL(COUNT(*), 0)
+  		FROM user
+  		WHERE user_id = #{userId};
+  	</select>
+  	
+  	<!-- 회원 탈퇴 -->
+  	<delete id="deleteUser" parameterType="int">
+  		DELETE FROM user 
+  		WHERE id = #{id};
+  	</delete>
+  	
+  	<!-- userId로 회원조회 -->
+  	<select id="selectOnebyId" parameterType="String" resultType="User">
+  		SELECT *
+  		FROM user
+  		WHERE user_id = #{userId};
+  	</select>
+  	
+  	<update id="updatePassword" parameterType="String">
+  		UPDATE user
+		SET user_pw = #{password}
+		WHERE user_id = #{user_id};
+  	</update>
+  	
+  	<update id="updateUser" parameterType="User">
+  		UPDATE user
+		SET
+			user_pw = #{userPassword},
+	        user_name = #{userName},
+	        phone_number = #{phoneNumber},
+	        email = #{email},
+	        gender = #{gender},
+	        birth_date = #{birthDate},
+	        user_img = #{userImg},
+	        user_type = #{userType},
+	        is_agreed = #{isAgreed}
+		WHERE user_id = #{userId};
+  	</update>
+  	
+  </mapper>

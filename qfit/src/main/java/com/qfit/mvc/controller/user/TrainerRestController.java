@@ -1,22 +1,23 @@
 package com.qfit.mvc.controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.qfit.mvc.model.dto.user.Trainee;
 import com.qfit.mvc.model.dto.user.Trainer;
-import com.qfit.mvc.model.dto.user.User;
 import com.qfit.mvc.model.service.user.TrainerService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
-@RequestMapping("/qfit/trainer")
+@RequestMapping("/trainer")
 public class TrainerRestController {
 	
 	private final TrainerService trainerService;
@@ -26,21 +27,50 @@ public class TrainerRestController {
 		this.trainerService = trainerService;
 	}
 	
-	@PutMapping("/{trainerId}/gym")
-	public ResponseEntity<String> updateGym(@PathVariable("trainerId") int trainerId, @RequestBody Trainer trainer){
-		boolean isUpdated = trainerService.updateGym(trainerId, trainer.getGym());
-		
-		if(isUpdated) return ResponseEntity.status(HttpStatus.OK).body("Update Success");
-			
+	/**
+	 * 트레이너 테이블에 체육관 읽어오기
+	 * @param trainerId 체육관을 업데이트할 트레이너의 ID
+	 * @param trainer   업데이트할 체육관 정보를 담고 있는 트레이너 객체
+	 * @return 성공 시 OK(200), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
+	 */
+	@GetMapping("/{trainerId}/gym")
+	@Operation(summary = "체육관 정보 조회", description = "트레이너의 체육관 정보를 조회합니다.")
+	public ResponseEntity<?> updateGym(@PathVariable("trainerId") int trainerId){
+		Trainer trainer = trainerService.getGym(trainerId);
+		System.out.println(trainer.getId() + trainer.getGym() + "정보조회");
+		if(trainer != null) return ResponseEntity.status(HttpStatus.OK).body(trainer);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update Failed");
 	}
 	
-	@DeleteMapping("/resign/{id}")
-	public ResponseEntity<?> deleteUser(@PathVariable(value="id") int id){
-		boolean isDeleted = trainerService.resign(id);
-
-		if(isDeleted) return ResponseEntity.status(HttpStatus.OK).body("Delete Success");
-		
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	/**
+	 * 트레이너 테이블에 체육관 업데이트 메서드
+	 * @param trainerId 체육관을 업데이트할 트레이너의 ID
+	 * @param trainer   업데이트할 체육관 정보를 담고 있는 트레이너 객체
+	 * @return 성공 시 OK(200), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
+	 */
+	@PutMapping("/{trainerId}/add-gym")
+	@Operation(summary = "체육관 정보 업데이트", description = "트레이너의 체육관 정보를 업데이트합니다.")
+	public ResponseEntity<String> updateGym(@PathVariable("trainerId") int trainerId, @RequestBody Trainer trainer){
+		boolean isUpdated = trainerService.updateGym(trainerId, trainer.getGym());
+		if(isUpdated) return ResponseEntity.status(HttpStatus.OK).body("Update Success");
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update Failed");
 	}
+	
+	/**
+	 * 트레이너의 트레이니 조회 메서드
+	 * @param trainerId 조회할 트레이너의 ID
+	 * @return 성공 시 OK(200), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
+	 */
+	@GetMapping("/{trainerId}/trainee-list")
+	@Operation(summary = "trainee리스트 조회", description = "트레이너의 id를 기반으로 트레이니를 불러옵니다.")
+	public ResponseEntity<?> traineeList(@PathVariable("trainerId") int trainerId){
+		try {
+			List<Trainee> list = trainerService.getTraineeList(trainerId);
+			if(list.size() < 1) return ResponseEntity.status(HttpStatus.OK).body(null);
+			return ResponseEntity.status(HttpStatus.OK).body(list);
+		}catch(IllegalArgumentException e){
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed");			
+		}
+	}
+	
 }

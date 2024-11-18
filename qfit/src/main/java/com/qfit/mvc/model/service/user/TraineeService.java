@@ -1,16 +1,15 @@
 package com.qfit.mvc.model.service.user;
 
+import java.util.List;
 import java.util.Map;
 
 import com.qfit.mvc.model.dto.user.Trainee;
+import com.qfit.mvc.model.dto.user.Trainer;
 
-public interface TraineeService {
-	
-	public void signUp(int id);
-	
-	public boolean resign(int id);
-	
-	public boolean updateTrainer(int traineeId, int trainerId);
+public interface TraineeService{
 
+	public boolean addTrainerToTrainee(int traineeId, int trainerId);
+
+	public boolean deleteTrainer(int traineeId);
 
 }

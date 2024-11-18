@@ -3,7 +3,7 @@
 	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.qfit.mvc.model.dao.user.TraineeDao">
 	
-	<!-- userType이 2일 시 trainee 테이블에도 추가-->
+	<!-- trainee 테이블에 가입 회원 추가-->
 	<insert id="addTrainee" parameterType="int">
 		INSERT INTO trainee (id) VALUES (#{id});
 	</insert>
@@ -11,8 +11,15 @@
  	 <!-- trainee 테이블에 trainerId 정보 추가 -->
  	<update id="addTrainerInfo" parameterType="map">
  		UPDATE trainee
- 		SET trainer_id = #{trainer_id}
- 		WHERE id = #{trainee_id};
+ 		SET trainer_id = #{trainerId}
+ 		WHERE id = #{traineeId};
+ 	</update>
+ 	
+ 	 <!-- trainee 테이블에 trainerId 정보 삭제 -->
+ 	<update id="deleteTrainer" parameterType="int">
+ 		UPDATE trainee
+ 		SET trainer_id = NULL
+ 		WHERE id = #{traineeId};
  	</update>
  	
  	<!-- user삭제 시 trainee 테이블 정보도 삭제 -->

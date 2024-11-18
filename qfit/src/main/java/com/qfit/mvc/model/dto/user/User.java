@@ -2,6 +2,8 @@ package com.qfit.mvc.model.dto.user;
 
 import org.apache.ibatis.type.Alias;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qfit.mvc.model.dao.user.TrainerDao;
 import com.qfit.mvc.model.dao.user.UserDao;
 
@@ -14,11 +16,16 @@ public class User {
 	private String phoneNumber;
 	private String email;
 	private String gender;
-	private String birthdate;
 	private String userImg;
 	private String createdAt; 
 	protected int userType;
+	private boolean isAgreed;
 	
+	// 인식이 제대로 되지 않아 직접 매핑
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonProperty("birthDate")
+	private String birthDate;
+    
 	public User() {
 		// TODO Auto-generated constructor stub
 	}
@@ -33,7 +40,7 @@ public class User {
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 		this.gender = gender;
-		this.birthdate = birthdate;
+		this.birthDate = birthdate;
 		this.createdAt = createdAt;
 		this.userType = userType;
 	}
@@ -95,11 +102,11 @@ public class User {
 	}
 
 	public String getBirthdate() {
-		return birthdate;
+		return birthDate;
 	}
 
 	public void setBirthdate(String birthdate) {
-		this.birthdate = birthdate;
+		this.birthDate = birthdate;
 	}
 
 	public String getUserImg() {
@@ -125,5 +132,14 @@ public class User {
 	public void setUserType(int userType) {
 		this.userType = userType;
 	}
-		
+
+	public boolean isAgreed() {
+		return isAgreed;
+	}
+
+	public void setAgreed(boolean isAgreed) {
+		this.isAgreed = isAgreed;
+	}
+
+	
 }

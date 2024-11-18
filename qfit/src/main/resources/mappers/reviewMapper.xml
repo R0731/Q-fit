@@ -3,22 +3,36 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qfit.mvc.model.dao.ReviewDao">
 	
-	<select id="getReviewByQuestId" resultType="Review">
-		SELECT * FROM review WHERE quest_id=#{questId}
+	<!-- 리뷰 존재 여부 확인 -->
+	<select id="reviewExists" resultType="int" parameterType="int">
+		SELECT COUNT(*)
+		FROM review
+		WHERE quest_id=#{questId}
 	</select>
 	
+	<!-- 리뷰 불러오기 -->
+	<select id="getReviewByQuestId" resultType="Review">
+		SELECT * 
+		FROM review 
+		WHERE quest_id=#{questId}
+	</select>
+	
+	<!-- 리뷰 삽입 -->
 	<insert id="insertReview" parameterType="Review">
-		INSERT INTO review (quest_id, difficulty)
-		VALUES (#{questId}, #{difficulty})
+		INSERT INTO review (quest_id, trainee_id, difficulty)
+		VALUES (#{questId}, #{traineeId}, #{difficulty})
 	</insert>
 	
+	<!-- 리뷰 삭제 -->
 	<delete id="deleteReview" parameterType="int">
-		DELETE FROM review WHERE quest_id=#{questId}
+		DELETE FROM review 
+		WHERE quest_id=#{questId}
 	</delete>
 	
-	<update id="updateReview" parameterType="Review">
+	<!-- 리뷰 수정 -->
+	<update id="updateReview" parameterType="map">
 		UPDATE review
-		SET quest_id=#{questId}, difficulty=#{difficulty}
+		SET difficulty=#{difficulty}
 		WHERE quest_id=#{questId}
 	</update>
 	

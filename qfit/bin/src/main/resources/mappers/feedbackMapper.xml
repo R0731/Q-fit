@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfit.mvc.model.dao.FeedbackDao">
+	
+	<!-- 피드백 존재 여부 확인 -->
+	<select id="feedbackExists" resultType="int" parameterType="int">
+		SELECT COUNT(*)
+		FROM feedback
+		WHERE quest_id=#{questId}
+	</select>
+	
+	<!-- 피드백 불러오기 -->
+	<select id="getFeedbackByQuestId" resultType="Feedback">
+		SELECT * 
+		FROM feedback
+		WHERE quest_id=#{questId}
+	</select>
+	
+	<!-- 피드백 삽입 -->
+	<insert id="insertFeedback" parameterType="Feedback">
+		INSERT INTO feedback (quest_id, content)
+		VALUES (#{questId}, #{content})
+	</insert>
+	
+	<!-- 피드백 삭제 -->
+	<delete id="deleteFeedback" parameterType="int">
+		DELETE FROM feedback 
+		WHERE quest_id=#{questId}
+	</delete>
+	
+	<!-- 피드백 수정 -->
+	<update id="updateFeedback" parameterType="map">
+		UPDATE feedback
+		SET content=#{content}
+		WHERE quest_id=#{questId}
+	</update>
+	
+</mapper>

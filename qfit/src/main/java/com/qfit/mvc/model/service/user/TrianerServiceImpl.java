@@ -1,6 +1,7 @@
 package com.qfit.mvc.model.service.user;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.qfit.mvc.model.dao.user.TrainerDao;
+import com.qfit.mvc.model.dto.user.Trainee;
+import com.qfit.mvc.model.dto.user.Trainer;
 
 @Service
 public class TrianerServiceImpl implements TrainerService{
@@ -19,20 +22,14 @@ public class TrianerServiceImpl implements TrainerService{
 		this.trainerDao = trainerDao;
 	}
 	
+	// 트레이너의 체육관 정보 조회	
 	@Override
-	public void signUp(int id) {
-		trainerDao.addTrainer(id);
+	public Trainer getGym(int trainerId) {
+		Trainer result = trainerDao.readGym(trainerId);
+		return result;
 	}
 	
-	@Override
-	@Transactional
-	public boolean resign(int id) {
-		int result1 = trainerDao.deleteTrainer(id);
-		int result2 = trainerDao.deleteUser(id);
-		
-		return result1 == 1 && result2 == 1;
-	}
-	
+	// 트레이너의 체육관 정보 업데이트
 	@Override
 	public boolean updateGym(int trainerId, String gym) {
 		Map<String, Object> temp = new HashMap<>();
@@ -41,6 +38,16 @@ public class TrianerServiceImpl implements TrainerService{
 		int result = trainerDao.addGym(temp);
 		return result == 1;
 	}
+
+	@Override
+	public List<Trainee> getTraineeList(int trainerId) {
+		return trainerDao.getTrainee(trainerId);
+	}
+
+//	@Override
+//	public List<Trainer> getTrainerSearch(UserSearchCondition condition) {
+//		return trainerDao.trainerSearch(condition);
+//	}
 
 
 

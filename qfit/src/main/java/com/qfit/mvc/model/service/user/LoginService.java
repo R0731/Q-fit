@@ -1,12 +1,13 @@
 package com.qfit.mvc.model.service.user;
 
+import java.util.Map;
+
 import com.qfit.mvc.model.dto.user.User;
 
 public interface LoginService {
+		
+	boolean correctPassword(String userId, String userPassword);
 	
-	//user가 로그인한 아이디 가져와서 pw 재확인할 때 사용
-	public boolean coreectPassword(String userPassword);
-	
-	public User login(String userId, String userPassword);
+	public String login(String userId, String userPassword);
 	
 }
