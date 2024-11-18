@@ -1,4 +1,5 @@
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useRoute } from 'vue-router'
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import router from '@/router';
@@ -6,6 +7,10 @@ import router from '@/router';
 const REST_API_URL = `http://localhost:8080/user`;
 
 export const useUserStore = defineStore('user', () => {
+
+  const route = useRoute();
+  const userType = computed(() => route.path.split('/')[1]);
+
   const loginUser = ref(null);
 
   // 트레이너 로그인
@@ -82,6 +87,7 @@ export const useUserStore = defineStore('user', () => {
   };
 
   return {
+    userType,
     loginUser,
     trainerLogin,
     logout,
