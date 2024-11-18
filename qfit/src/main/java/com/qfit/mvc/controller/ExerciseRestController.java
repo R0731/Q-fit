@@ -12,15 +12,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.qfit.mvc.model.dto.Exercise;
 import com.qfit.mvc.model.service.ExerciseService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
 @RequestMapping("/exercise")
+@Tag(name="ExcerciseRestful API", description = "운동 CRUD")
 public class ExerciseRestController {
 	
-	// 서비스 의존성 추가
 	private final ExerciseService exerciseService;
 	
 	@Autowired
@@ -28,28 +32,43 @@ public class ExerciseRestController {
 		this.exerciseService = exerciseService;
 	}
 	
-	// 전체 운동 조회
+	/**
+	 * 운동목록 전체 조회 메서드
+	 * @param 없음
+	 * @return 성공 시 OK (200)
+	 */
 	@GetMapping("/list")
+	@Operation(summary = "운동 전체조회", description = "모든 운동을 조회합니다.")
 	public ResponseEntity<List<Exercise>> list(){
 		List<Exercise> list = exerciseService.getExerciseList();
 		System.out.println(list.toString());
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
-	// 운동id로 운동 조회 => 왜 전체조회랑 다르게 처리하지?
+	/**
+	 * id로 운동 조회 메서드
+	 * @param id
+	 * @return 성공 시 OK (200),
+	 *         실패 시 NOT_FOUND(404) 반환
+	 */
 	@GetMapping("/list/{id}")
+	@Operation(summary = "id로 운동 조회", description = "ID로 운동을 조회합니다.")
 	public ResponseEntity<Exercise> detail(@PathVariable("id") int id){
 		Exercise exercise = exerciseService.getExerciseListById(id);
 		
 		if(exercise != null) {
-//			return ResponseEntity.ok(exercise);
 			return new ResponseEntity<>(exercise, HttpStatus.OK);
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
 	
-	// 운동부위별로 exercise 조회
+	/**
+	 * 운동부위별로 exercise 조회 메서드
+	 * @param parts (string)
+	 * @return 성공 시 OK (200)
+	 */
 	@GetMapping("/list/parts")
+	@Operation(summary = "운동부위별 운동조회", description = "운동부위별로 운동을 조회합니다.")
 	public ResponseEntity<List<Exercise>> parts(@RequestParam String parts){
 		System.out.println(parts);
 		List<Exercise> list = exerciseService.getExerciseListByParts(parts);

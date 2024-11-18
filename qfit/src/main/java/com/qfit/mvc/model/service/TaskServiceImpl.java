@@ -29,6 +29,13 @@ public class TaskServiceImpl implements TaskService {
 		return taskDao.selectAll();
 	}
 	
+	//퀘스트 ID로 태스크 조회
+	@Override
+	public List<Task> getTaskListdByQuestId(int questId) {
+		System.out.println(questId+"번 퀘스트의 태스크를 가져왔습니다.");
+		return taskDao.selectQuestId(questId);
+	}
+	
 	//태스크 생성
 	@Override
 	public void createTask(Task task) {
@@ -96,4 +103,11 @@ public class TaskServiceImpl implements TaskService {
 		System.out.println("태스크 순서를 수정했습니다.");
 		taskDao.updateOrder(task);
 	}
+	
+	// isComplete 수정
+	@Override
+	public void updateTaskCompleted(Task task) {
+		taskDao.updateTaskCompleted(task);
+	}
+
 }
