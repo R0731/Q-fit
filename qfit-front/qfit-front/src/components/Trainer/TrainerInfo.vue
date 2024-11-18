@@ -1,6 +1,7 @@
 <template>
   <div>
     <h4>내 프로필</h4>
+    <p>{{ userName }} 회원님, 안녕하세요.</p>
     <!-- 회원정보 수정 버튼 -->
     <button @click="openPasswordModal">회원정보수정</button>
 
@@ -36,7 +37,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 
@@ -46,6 +47,8 @@ const userStore = useUserStore();
 const isModalOpen = ref(false);  // 모달 표시 여부
 const password = ref('');        // 입력된 비밀번호
 const errorMessage = ref('');    // 오류 메시지
+
+const userName = computed(() => userStore.loginUser.name);
 
 // 모달 열기 함수
 const openPasswordModal = () => {

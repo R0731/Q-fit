@@ -38,9 +38,9 @@ public class MemberRestController {
 	 */
 	@PostMapping("/idCheck")
 	@Operation(summary = "userId 중복 체크", description = "회원가입 중 userId 중복 체크")
-	public ResponseEntity<?> idCheck(@RequestBody String userId){
+	public ResponseEntity<?> idCheck(@RequestBody User user){
 		try {
-			boolean isAvailable = membershipService.idCheck(userId);
+			boolean isAvailable = membershipService.idCheck(user.getUserId());
 			return ResponseEntity.ok(isAvailable);
 		}catch(IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

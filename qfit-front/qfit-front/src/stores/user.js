@@ -66,12 +66,20 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-  // 세션에서 토큰을 사용해 유저 정보 설정
+  const decodeBase64Url = (str) => {
+    // Base64Url 포맷에서 '+'를 '-', '/'를 '_', 그리고 '='를 제거한 형태로 변환
+    str = str.replace(/-/g, '+').replace(/_/g, '/');
+    const paddedStr = str.padEnd(str.length + (4 - (str.length % 4)) % 4, '=');
+    return decodeURIComponent(escape(atob(paddedStr)));
+  };
+  
   const setUserFromToken = (token) => {
     const tokenParts = token.split('.');
     if (tokenParts.length !== 3) throw new Error('Invalid token format');
-    
-    const payload = JSON.parse(atob(tokenParts[1]));
+  
+    // 수정된 디코딩 함수 사용
+    const payload = JSON.parse(decodeBase64Url(tokenParts[1]));
+  
     loginUser.value = {
       numberId: payload.id,
       userId: payload.userId,
