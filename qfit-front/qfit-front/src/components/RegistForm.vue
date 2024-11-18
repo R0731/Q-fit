@@ -67,10 +67,12 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useUserStore } from '@/stores/user'
 import { useMemberStore } from '@/stores/member'; 
 
 const route = useRoute();
 
+const userStore = useUserStore();
 const memberStore = useMemberStore();
 
 const userId = ref('');
@@ -105,9 +107,11 @@ const registUser = async() => {
 
   // console.log(route.path)
 
-  const userType = route.path.split('/')[1];
+  // const userType = route.path.split('/')[1];
 
-  // console.log('userType', userType);
+  const userType = userStore.userType;
+
+  console.log('userType확인', userType);
   // console.log('회원가입 정보:', user);
 
   try {

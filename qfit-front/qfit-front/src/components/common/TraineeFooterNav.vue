@@ -3,8 +3,8 @@
     <!-- 첫 번째 아이콘 및 텍스트 (회원 관리) -->
     <div 
       class="footer-item"
-      :class="{ 'selected': route.name === 'trainerLogin' }" 
-      @click="navigateTo('trainerLogin')"
+      :class="{ 'selected': route.name === 'traineeLogin' }" 
+      @click="navigateTo('traineeLogin')"
     >
       <i class="bi bi-people"></i>
       <span>회원 관리</span>
@@ -13,8 +13,8 @@
     <!-- 두 번째 아이콘 및 텍스트 (홈) -->
     <div 
       class="footer-item"
-      :class="{ 'selected': route.name === 'traineeList' }" 
-      @click="navigateTo('traineeList')"
+      :class="{ 'selected': route.name === 'traineeMain' }" 
+      @click="navigateTo('traineeMain')"
     >
       <i class="bi bi-house-door"></i>
       <span>홈</span>
@@ -23,8 +23,8 @@
     <!-- 세 번째 아이콘 및 텍스트 (마이 페이지) -->
     <div 
       class="footer-item"
-      :class="{ 'selected': route.name === 'trainerInfo' }" 
-      @click="navigateTo('trainerInfo')"
+      :class="{ 'selected': route.name === 'traineeInfo' }" 
+      @click="navigateTo('traineeInfo')"
     >
       <i class="bi bi-person-circle"></i>
       <span>마이 페이지</span>

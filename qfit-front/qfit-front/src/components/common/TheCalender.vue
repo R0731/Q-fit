@@ -41,7 +41,10 @@
 </template>
 
 <script setup>
+import { useViewStore } from '@/stores/viewStore';
 import { ref, computed } from 'vue';
+
+const viewStore = useViewStore();
 
 const today = new Date();
 const selectedDate = ref(today);
@@ -60,7 +63,8 @@ function generateDates(baseDate) {
 }
 
 function selectDate(date) {
-  selectedDate.value = date;
+  viewStore.setSelectedDate(date);
+  // selectedDate.value = date;
   visibleDates.value = generateDates(date);
 }
 
@@ -72,13 +76,23 @@ function isToday(date) {
   );
 }
 
+// 선택된 날짜 확인 (Pinia에서 가져옴)
 function isSelected(date) {
+  const selected = viewStore.selectedDate;
   return (
-    date.getDate() === selectedDate.value.getDate() &&
-    date.getMonth() === selectedDate.value.getMonth() &&
-    date.getFullYear() === selectedDate.value.getFullYear()
+    date.getDate() === selected.getDate() &&
+    date.getMonth() === selected.getMonth() &&
+    date.getFullYear() === selected.getFullYear()
   );
 }
+
+// function isSelected(date) {
+//   return (
+//     date.getDate() === selectedDate.value.getDate() &&
+//     date.getMonth() === selectedDate.value.getMonth() &&
+//     date.getFullYear() === selectedDate.value.getFullYear()
+//   );
+// }
 
 function getDayName(date) {
   const days = ['일', '월', '화', '수', '목', '금', '토'];

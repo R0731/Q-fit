@@ -148,7 +148,7 @@ const navigateTo = (routeName) => {
 
 /* 확인 버튼 스타일 */
 .confirm-button {
-  background-color: #4f7ef4;
+  background-color: var(--theme-color);
   color: #fff;
   padding: 12px 20px;
   border: none;
@@ -158,7 +158,7 @@ const navigateTo = (routeName) => {
 }
 
 .confirm-button:hover {
-  background-color: #3d6de0;
+  background-color: var(--theme-color);
 }
 
 /* 취소 버튼 스타일 */

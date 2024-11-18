@@ -11,7 +11,7 @@
 <script setup>
 import Exercise from './Exercise.vue';
 import FeedbackUser from './FeedbackUser.vue';
-import Review from './Review.vue';
+import Review from './TrainerReview.vue';
 
 </script>
 

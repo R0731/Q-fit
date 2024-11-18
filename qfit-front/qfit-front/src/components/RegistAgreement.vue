@@ -67,7 +67,7 @@ textarea {
 button {
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: var(--theme-color);
   color: white;
   border: none;
   cursor: pointer;

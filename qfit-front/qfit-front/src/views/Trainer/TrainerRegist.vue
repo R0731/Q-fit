@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useViewStore } from '@/stores/viewStore';
 import RegistAgreement from '@/components/RegistAgreement.vue';
 import RegistForm from '@/components/RegistForm.vue';

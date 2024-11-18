@@ -32,9 +32,9 @@
 
       <!-- 추가 항목 (비밀번호 찾기, 아이디 찾기, 회원가입) -->
       <div class="additional-links mt-4">
-        <a href="#">비밀번호 찾기</a>
-        <span class="divider">|</span>
         <a href="#">아이디 찾기</a>
+        <span class="divider">|</span>
+        <a href="#">비밀번호 찾기</a>
         <span class="divider">|</span>
         <a href="javascript:void(0);" @click="goToRegist">회원가입</a>
       </div>
