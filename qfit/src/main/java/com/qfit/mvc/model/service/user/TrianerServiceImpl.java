@@ -22,6 +22,13 @@ public class TrianerServiceImpl implements TrainerService{
 		this.trainerDao = trainerDao;
 	}
 	
+	// 트레이너의 체육관 정보 조회	
+	@Override
+	public Trainer getGym(int trainerId) {
+		Trainer result = trainerDao.readGym(trainerId);
+		return result;
+	}
+	
 	// 트레이너의 체육관 정보 업데이트
 	@Override
 	public boolean updateGym(int trainerId, String gym) {

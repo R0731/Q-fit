@@ -4,7 +4,7 @@ import com.qfit.mvc.model.dto.user.User;
 
 public interface UserService {
 	
-	public void updateUser(User user);
+	public boolean updateUser(User user);
 	
 	public boolean isUserIdAvailable(String id);
 

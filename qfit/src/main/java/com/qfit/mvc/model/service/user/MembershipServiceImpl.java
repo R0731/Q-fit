@@ -79,7 +79,6 @@ public class MembershipServiceImpl implements MembershipService{
 		return userDeleted == 1;
 	}
 
-	// 왜 유저 중복 체크를 따로 빼니까 다 true로 뜨지???
 	// 유저 아이디 중복 체크
 	@Override
 	public boolean idCheck(String userId) {

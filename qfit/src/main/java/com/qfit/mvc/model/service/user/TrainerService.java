@@ -7,9 +7,12 @@ import com.qfit.mvc.model.dto.user.Trainer;
 
 public interface TrainerService {
 		
+	public Trainer getGym(int trainerId);
+
 	public boolean updateGym(int trainerId, String gym);
 
 	public List<Trainee> getTraineeList(int trainerId);
+
 	
 //	public List<Trainer> getTrainerSearch(UserSearchCondition conditon);
 	

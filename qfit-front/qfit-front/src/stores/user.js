@@ -94,6 +94,18 @@ export const useUserStore = defineStore('user', () => {
     if (token) setUserFromToken(token);
   };
 
+  const updateUser = async(numberId, user) => {
+    try{
+      const url = `${REST_API_URL}/update/${numberId}`;
+      const res = await axios.put(url, user);
+      console.log('유저정보 수정 성공');
+      return res.data;
+    }catch(err){
+      console.log('수정 중 에러 발생', err);
+      throw new Error('회원 정보 수정에 실패했습니다.');
+    }
+  }
+
   return {
     userType,
     loginUser,
@@ -102,5 +114,6 @@ export const useUserStore = defineStore('user', () => {
     passwordCheck,
     getUserDetails,
     loadUserFromToken,
+    updateUser,
   };
 });

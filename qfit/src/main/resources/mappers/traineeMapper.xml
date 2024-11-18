@@ -15,6 +15,13 @@
  		WHERE id = #{traineeId};
  	</update>
  	
+ 	 <!-- trainee 테이블에 trainerId 정보 삭제 -->
+ 	<update id="deleteTrainer" parameterType="int">
+ 		UPDATE trainee
+ 		SET trainer_id = NULL
+ 		WHERE id = #{traineeId};
+ 	</update>
+ 	
  	<!-- user삭제 시 trainee 테이블 정보도 삭제 -->
  	<delete id="deleteTrainee" parameterType="int">
  		DELETE FROM trainee 
