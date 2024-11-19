@@ -1,3 +1,4 @@
+// quest.js
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import axios from 'axios';
@@ -11,19 +12,19 @@ export const useQuestStore = defineStore('quest', () => {
   /**
    * Date 또는 문자열을 'YYYY-MM-DD' 형식으로 변환
    */
-  const formatDateToYMD = (date) => {
-    if (date instanceof Date) {
-      return date.toISOString().split('T')[0];
-    }
-    if (typeof date === 'string') {
-      const parsedDate = new Date(date);
-      if (isNaN(parsedDate.getTime())) {
-        throw new Error('Invalid date format: Unable to parse startDate');
-      }
-      return parsedDate.toISOString().split('T')[0];
-    }
-    throw new Error('Invalid startDate format: Expected Date or string');
-  };
+  // const formatDateToYMD = (date) => {
+  //   if (date instanceof Date) {
+  //     return date.toISOString().split('T')[0];
+  //   }
+  //   if (typeof date === 'string') {
+  //     const parsedDate = new Date(date);
+  //     if (isNaN(parsedDate.getTime())) {
+  //       throw new Error('Invalid date format: Unable to parse startDate');
+  //     }
+  //     return parsedDate.toISOString().split('T')[0];
+  //   }
+  //   throw new Error('Invalid startDate format: Expected Date or string');
+  // };
 
   /**
    * 퀘스트 데이터를 로드하는 함수
@@ -35,14 +36,14 @@ export const useQuestStore = defineStore('quest', () => {
 
     try {
       // startDate 포맷팅
-      const formattedDate = formatDateToYMD(startDate);
+      // const formattedDate = formatDateToYMD(startDate);
 
       // 요청 로그
-      console.log('API 요청 URL:', REST_API_URL, { traineeId, startAt: formattedDate });
+      console.log('API 요청 URL:', REST_API_URL, { traineeId, startAt: startDate });
 
       // API 호출
       const res = await axios.get(REST_API_URL, {
-        params: { traineeId, startAt: formattedDate },
+        params: { traineeId, startAt: startDate },
       });
 
       // 상태 업데이트
@@ -64,12 +65,46 @@ export const useQuestStore = defineStore('quest', () => {
    */
   const getTasks = computed(() => tasks.value);
 
+  const getQuestsByTraineesAndDate = async (traineeIds, startDate) => {
+    const quests = {};
+  
+    try {
+      // 요청 로그
+      console.log('Batch Quest Fetch:', { traineeIds, startDate });
+  
+      // 여러 퀘스트를 동시에 조회
+      const promises = traineeIds.map(async (traineeId) => {
+        try {
+          const res = await axios.get(REST_API_URL, {
+            params: { traineeId, startAt: startDate },
+          });
+  
+          if (res.status === 200 && res.data) {
+            quests[traineeId] = res.data.status || "미등록"; // 퀘스트 상태 저장
+          } else {
+            quests[traineeId] = "미등록";
+          }
+        } catch (err) {
+          console.error(`Failed to fetch quest for Trainee ID ${traineeId}:`, err);
+          quests[traineeId] = "미등록";
+        }
+      });
+  
+      await Promise.all(promises); // 모든 요청 완료 대기
+    } catch (error) {
+      console.error('Batch Quest Fetch Error:', error);
+    }
+  
+    return quests; // 퀘스트 상태 객체 반환
+  };
+
   // 스토어에 제공할 함수 및 상태
   return { 
     quest, 
     tasks, 
     getQuestByIdAndStartDate, 
+    getQuestsByTraineesAndDate,
     getTasks, 
-    formatDateToYMD 
+    // formatDateToYMD 
   };
 });

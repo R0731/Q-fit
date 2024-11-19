@@ -1,3 +1,4 @@
+// trainer.js
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
@@ -41,5 +42,5 @@ export const useTrainerStore = defineStore('trainer', () => {
     }
   }
 
-  return { trainer, updateGym, getGym, trainees, fetchTraineeList, selectedTrainee }
+  return { trainer, updateGym, getGym, trainees, selectedTrainee, fetchTraineeList }
 })

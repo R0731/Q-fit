@@ -136,7 +136,8 @@ VALUES
 ('ssafy2', 'ssafy2', '트레이니싸피', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 0),
 ('user001', 'password123', 'Alice Smith', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 2),
 ('user002', 'password456', 'Bob Brown', '010-8765-4321', 'bob@example.com', 'Male', '1985-11-23', 'bob.jpg', 1),
-('user003', 'password789', 'Charlie Johnson', '010-5555-6666', 'charlie@example.com', 'Male', '1992-07-08', 'charlie.jpg', 1);
+('user003', 'password789', 'Charlie Johnson', '010-5555-6666', 'charlie@example.com', 'Male', '1992-07-08', 'charlie.jpg', 1),
+('user004', 'password789', 'Charlie Johnson', '010-5555-6666', 'charlie@example.com', 'Male', '1992-07-08', 'charlie.jpg', 1);
 
 INSERT INTO trainer (id, gym)
 VALUES 
@@ -148,7 +149,8 @@ INSERT INTO trainee (id, trainer_id)
 VALUES 
 (1, 2),
 (2, 1),
-(3, 2);
+(3, 2),
+(6, 1);
 
 -- INSERT INTO quest (trainee_id, trainer_id, start_at, end_at)
 -- VALUES 
