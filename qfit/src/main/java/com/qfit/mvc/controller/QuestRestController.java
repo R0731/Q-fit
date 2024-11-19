@@ -31,17 +31,22 @@ public class QuestRestController {
 	 * @param traineeId, startAt 읽어올 퀘스트의 traineeId, startAt
 	 * @return 성공 시 OK (200), 해당 퀘스트 없을 시 NO_CONTENT, 실패 시 INTERNAL_SERVER_ERROR 반환
 	 */
-	@GetMapping("/")
+	@GetMapping("")
 	@Operation(summary = "당일 Quest 조회", description = "traineeId와 startAt에 해당하는 퀘스트를 가져옵니다.")
 	public ResponseEntity<?> getQuestByTraineeId(@RequestParam("traineeId") int traineeId,
 		    @RequestParam("startAt") String startAt) {
+		System.out.println("실행확인" + traineeId + " " + startAt);
 		try {
 			Quest quest = questService.readQuest(traineeId, startAt);
 			if (quest != null) {
+//				System.out.println(quest.toString());
+//				System.out.println(quest.getTasks().toString());
 				return new ResponseEntity<Quest>(quest, HttpStatus.OK);
 			}
+//			System.out.println("퀘스트 없음");
 			return new ResponseEntity<String>("No Quest", HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
+//			System.out.println("문제발생 " + e.getMessage());
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

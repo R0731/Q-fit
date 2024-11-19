@@ -57,6 +57,7 @@ public class ExerciseRestController {
 		Exercise exercise = exerciseService.getExerciseListById(id);
 		
 		if(exercise != null) {
+			System.out.println(exercise.toString());
 			return new ResponseEntity<>(exercise, HttpStatus.OK);
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

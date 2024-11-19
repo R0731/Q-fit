@@ -142,6 +142,7 @@ public class TaskRestController {
 		try {
 			task.setTaskId(taskId);
 			taskService.updateTaskCompleted(task);
+			System.out.println("태스크조회중" + taskId + " " + task.toString());
 			return new ResponseEntity<>("태스크 수행여부가 성공적으로 수정되었습니다.", HttpStatus.OK);
 		} catch (IllegalArgumentException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

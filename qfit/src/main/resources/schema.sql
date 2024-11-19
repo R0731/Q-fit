@@ -150,17 +150,51 @@ VALUES
 (2, 1),
 (3, 2);
 
+-- INSERT INTO quest (trainee_id, trainer_id, start_at, end_at)
+-- VALUES 
+-- (1, 2, '2023-10-31 10:00:00', '2023-10-31 11:00:00'),
+-- (2, 1, '2023-10-31 14:00:00', '2023-10-31 15:30:00'),
+-- (3, 2, '2023-10-31 09:00:00', '2023-10-31 10:30:00');
+
+-- INSERT INTO task (quest_id, order_index, is_completed, count, weight_kg, cardio_minutes, exercise_id)
+-- VALUES 
+-- (1, 1, FALSE, 10, 50, NULL, 1),
+-- (2, 1, FALSE, NULL, NULL, 20, 2),
+-- (3, 1, TRUE, 15, 60, NULL, 3);
+
 INSERT INTO quest (trainee_id, trainer_id, start_at, end_at)
 VALUES 
-(1, 2, '2023-10-31 10:00:00', '2023-10-31 11:00:00'),
-(2, 1, '2023-10-31 14:00:00', '2023-10-31 15:30:00'),
-(3, 2, '2023-10-31 09:00:00', '2023-10-31 10:30:00');
+-- 11월 18일 (어제)
+(1, 2, '2024-11-18 10:00:00', '2024-11-18 11:00:00'),
+(2, 3, '2024-11-18 15:00:00', '2024-11-18 16:00:00'),
+
+-- 11월 19일 (오늘)
+(2, 1, '2024-11-19 09:30:00', '2024-11-19 10:30:00'),
+(1, 2, '2024-11-19 14:00:00', '2024-11-19 15:00:00'),
+
+-- 11월 20일 (내일)
+(2, 3, '2024-11-20 08:00:00', '2024-11-20 09:00:00'),
+(3, 2, '2024-11-20 16:30:00', '2024-11-20 17:30:00');
 
 INSERT INTO task (quest_id, order_index, is_completed, count, weight_kg, cardio_minutes, exercise_id)
 VALUES 
-(1, 1, FALSE, 10, 50, NULL, 1),
-(2, 1, FALSE, NULL, NULL, 20, 2),
-(3, 1, TRUE, 15, 60, NULL, 3);
+-- 11월 18일 (어제)
+(1, 1, FALSE, 12, 40, NULL, 3), -- 벤치 프레스
+(1, 2, FALSE, 10, 50, NULL, 4), -- 딥스
+(2, 1, TRUE, NULL, NULL, 20, 1), -- 런닝 머신
+
+-- 11월 19일 (오늘)
+(3, 1, FALSE, 15, 60, NULL, 5), -- 덤벨 플라이
+(3, 2, FALSE, NULL, NULL, 25, 2), -- 싸이클
+(4, 1, TRUE, 20, 70, NULL, 6), -- 케이블 크로스 오버
+(4, 2, FALSE, 10, 45, NULL, 8), -- 랫풀다운
+
+-- 11월 20일 (내일)
+(5, 1, TRUE, 20, 70, NULL, 9), -- 친업
+(5, 2, FALSE, 8, 40, NULL, 11), -- 풀업
+(6, 1, TRUE, NULL, NULL, 30, 13), -- 오버헤드프레스
+(6, 2, TRUE, 12, 60, NULL, 18); -- 바벨컬
+
 
 SELECT * FROM task;
 
@@ -185,5 +219,5 @@ VALUES
 SELECT * FROM user;
 SELECT * FROM exercise;
 DESCRIBE user; 
-SELECT * FROM trainee;
-SELECT * FROM trainer;
+SELECT * FROM task;
+SELECT * FROM quest;
