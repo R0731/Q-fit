@@ -39,8 +39,10 @@ public class ReviewRestController {
 		try {
 			Review review = reviewService.readReview(questId);
 			if (review != null) {
+				System.out.println("리뷰있음" + " " + review.toString());
 				return new ResponseEntity<Review>(review, HttpStatus.OK);
 			}
+			System.out.println("리뷰없음");
 			return new ResponseEntity<String>("No Review", HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
