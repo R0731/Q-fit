@@ -1,11 +1,11 @@
 <template>
   <div>
   <TheCalender/>
-  <div class="card" @click="goQuest">
+  <div class="card">
    <h3>트레이너가 관리하는 회원 조회</h3>
    <button @click="goFeedbackList">피드백 남기기</button>
     <ul>
-      <li v-for="(trainee, index) in trainees" :key="index">
+      <li v-for="(trainee,) in trainees" :key="trainee.userId" @click="selectTrainee(trainee)">
         <span>{{ trainee.userName }} {{ trainee.age }}세</span>
         <span>{{ trainee.status }}</span>
       </li>
@@ -43,17 +43,11 @@ const goFeedbackList = () => {
   router.push({ name: 'feedbackList' });
 };
 
-const date = ref('2021-04-21');
-const id = ref('1');
-const goQuest = (date, id) => {
-  router.push({name: 'quest', params:{date, id}});
-}
-
-// const trainees = ref([
-//   { name: '김큐핏', age: 28, status: '퀘스트 미등록' },
-//   { name: '박트레이니', age: 30, status: '퀘스트 수행중' },
-//   { name: '이퀘스트', age: 25, status: '퀘스트 완료' },
-// ]);
+const selectTrainee = (trainee) => {
+  // 선택한 훈련생 데이터를 상태로 유지 후 화면 전환
+  trainerStore.selectedTrainee = trainee; // Store에 선택된 훈련생 저장
+  router.push({ name: 'quest' }); // 라우터 이동
+};
 </script>
 
 <style scoped>
