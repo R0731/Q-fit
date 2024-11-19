@@ -219,5 +219,5 @@ VALUES
 SELECT * FROM user;
 SELECT * FROM exercise;
 DESCRIBE user; 
-SELECT * FROM task;
+SELECT * FROM feedback;
 SELECT * FROM quest;
