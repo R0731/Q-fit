@@ -1,7 +1,6 @@
 package com.qfit.mvc.controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.qfit.mvc.model.dto.user.Trainee;
 import com.qfit.mvc.model.dto.user.Trainer;
 import com.qfit.mvc.model.service.user.TrainerService;
 
@@ -54,23 +52,6 @@ public class TrainerRestController {
 		boolean isUpdated = trainerService.updateGym(trainerId, trainer.getGym());
 		if(isUpdated) return ResponseEntity.status(HttpStatus.OK).body("Update Success");
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update Failed");
-	}
-	
-	/**
-	 * 트레이너의 트레이니 조회 메서드
-	 * @param trainerId 조회할 트레이너의 ID
-	 * @return 성공 시 OK(200), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
-	 */
-	@GetMapping("/{trainerId}/trainee-list")
-	@Operation(summary = "trainee리스트 조회", description = "트레이너의 id를 기반으로 트레이니를 불러옵니다.")
-	public ResponseEntity<?> traineeList(@PathVariable("trainerId") int trainerId){
-		try {
-			List<Trainee> list = trainerService.getTraineeList(trainerId);
-			if(list.size() < 1) return ResponseEntity.status(HttpStatus.OK).body(null);
-			return ResponseEntity.status(HttpStatus.OK).body(list);
-		}catch(IllegalArgumentException e){
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed");			
-		}
 	}
 	
 }

@@ -28,4 +28,19 @@
  		WHERE id = #{id};
  	</delete>
  	
+ 	<!-- trainerId로 traieeList 조회 -->
+ 	<select id="getTrainee" parameterType="int" resultType="Trainee">
+ 		SELECT t.*, u.* FROM trainee t
+ 		JOIN user u ON t.id = u.id
+ 		WHERE trainer_id = #{trainerId}
+ 	</select>
+ 	
+ 	<!-- trainee의 userId로 trainee 검색 -->
+ 	<select id="getTraineeByUserId" resultType="User">
+ 		SELECT u.*
+ 		FROM user u
+ 		LEFT JOIN trainee t ON u.id = t.id
+ 		WHERE u.user_id = #{userId] AND t.id IS NULL
+ 	</select>
+ 	
   </mapper>

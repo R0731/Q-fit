@@ -6,7 +6,7 @@
    <button @click="goFeedbackList">피드백 남기기</button>
     <ul>
       <li v-for="(trainee, index) in trainees" :key="index">
-        <span>{{ trainee.name }} {{ trainee.age }}세</span>
+        <span>{{ trainee.userName }} {{ trainee.age }}세</span>
         <span>{{ trainee.status }}</span>
       </li>
     </ul>
@@ -15,11 +15,29 @@
 </template>
 
 <script setup>
+import { useTrainerStore } from "@/stores/trainer";
 import TheCalender from "../common/TheCalender.vue";
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from "@/stores/user";
 
 const router = useRouter();
+
+const userStore = useUserStore();
+const trainerId = userStore.loginUser.numberId;
+
+const trainerStore = useTrainerStore();
+const trainees = ref([]);
+
+onMounted(()=>{
+  trainerStore.fetchTraineeList(trainerId)
+    .then(()=>{
+      trainees.value = trainerStore.trainees;
+    })
+    .catch(err => {
+      console.error(err)
+    })
+});
 
 const goFeedbackList = () => {
   router.push({ name: 'feedbackList' });
@@ -31,11 +49,11 @@ const goQuest = (date, id) => {
   router.push({name: 'quest', params:{date, id}});
 }
 
-const trainees = ref([
-  { name: '김큐핏', age: 28, status: '퀘스트 미등록' },
-  { name: '박트레이니', age: 30, status: '퀘스트 수행중' },
-  { name: '이퀘스트', age: 25, status: '퀘스트 완료' },
-]);
+// const trainees = ref([
+//   { name: '김큐핏', age: 28, status: '퀘스트 미등록' },
+//   { name: '박트레이니', age: 30, status: '퀘스트 수행중' },
+//   { name: '이퀘스트', age: 25, status: '퀘스트 완료' },
+// ]);
 </script>
 
 <style scoped>
