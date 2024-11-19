@@ -86,8 +86,8 @@ public class TaskRestController {
 	 * @return 성공 시 OK (200),
 	 *         실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
-	@Operation(summary = "태스크 삭제", description = "태스크를 삭제합니다.")
 	@DeleteMapping("/{taskId}")
+	@Operation(summary = "태스크 삭제", description = "태스크를 삭제합니다.")
 	public ResponseEntity<String> delete(@PathVariable("taskId") int id){
 		System.out.println(id);
 		boolean isDeleted = taskService.deleteTask(id);

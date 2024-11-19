@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.qfit.mvc.model.dto.Quest;
 import com.qfit.mvc.model.service.QuestService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/quest")
+@Tag(name="QuestRestful API", description = "퀘스트 CRUD")
 public class QuestRestController {
 	
 	private final QuestService questService;
@@ -28,6 +32,7 @@ public class QuestRestController {
 	 * @return 성공 시 OK (200), 해당 퀘스트 없을 시 NO_CONTENT, 실패 시 INTERNAL_SERVER_ERROR 반환
 	 */
 	@GetMapping("/")
+	@Operation(summary = "당일 Quest 조회", description = "traineeId와 startAt에 해당하는 퀘스트를 가져옵니다.")
 	public ResponseEntity<?> getQuestByTraineeId(@RequestParam("traineeId") int traineeId,
 		    @RequestParam("startAt") String startAt) {
 		try {
@@ -48,6 +53,7 @@ public class QuestRestController {
 	 *         실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
 	@PostMapping("/")
+	@Operation(summary = "Quest 등록", description = "trainer가 trainee에게 부여하는 퀘스트를 등록합니다. task를 등록하지 않으면 Quest가 등록되지 않습니다.")
 	public ResponseEntity<String> insertQuest(@RequestBody Quest quest) {
 		try {
             questService.insertQuest(quest);
