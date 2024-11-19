@@ -6,6 +6,7 @@ import router from '@/router'
 const REST_API_URL = `http://localhost:8080/trainer`
 export const useTrainerStore = defineStore('trainer', () => {
   const trainer = ref({gym: ''});
+  const selectedTrainee = ref(null);
 
   const getGym = async(numberId) => {
     try{
@@ -40,5 +41,5 @@ export const useTrainerStore = defineStore('trainer', () => {
     }
   }
 
-  return { trainer, updateGym, getGym, trainees, fetchTraineeList }
+  return { trainer, updateGym, getGym, trainees, fetchTraineeList, selectedTrainee }
 })
