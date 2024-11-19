@@ -28,5 +28,17 @@ export const useTrainerStore = defineStore('trainer', () => {
     }
   } 
 
-  return { trainer, updateGym, getGym }
+
+  const trainees = ref([]);
+
+  const fetchTraineeList = async (trainerId) =>{
+    try{
+      const response = await axios.get(`http://localhost:8080/trainee/${trainerId}/trainee-list`);
+      trainees.value = response.data || [];
+    }catch(err){
+      console.error('Failed to fetch trainee list:', err)
+    }
+  }
+
+  return { trainer, updateGym, getGym, trainees, fetchTraineeList }
 })

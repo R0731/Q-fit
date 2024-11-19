@@ -11,8 +11,6 @@ public interface TrainerService {
 
 	public boolean updateGym(int trainerId, String gym);
 
-	public List<Trainee> getTraineeList(int trainerId);
-
 	
 //	public List<Trainer> getTrainerSearch(UserSearchCondition conditon);
 	

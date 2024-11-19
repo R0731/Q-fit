@@ -13,6 +13,7 @@ import com.qfit.mvc.model.dao.user.TraineeDao;
 import com.qfit.mvc.model.dao.user.TrainerDao;
 import com.qfit.mvc.model.dto.user.Trainee;
 import com.qfit.mvc.model.dto.user.Trainer;
+import com.qfit.mvc.model.dto.user.User;
 
 @Service
 public class TraineeServiceImpl implements TraineeService {
@@ -48,6 +49,18 @@ public class TraineeServiceImpl implements TraineeService {
 		}catch(DataAccessException e){
             throw new IllegalArgumentException("Database Error");
 		}
+	}
+
+	// 트레이너id로 트레이니 리스트 조회
+	@Override
+	public List<Trainee> getTraineeList(int trainerId) {
+		return traineeDao.getTrainee(trainerId);
+	}
+	
+	// 트레이니 userId로 트레이니 검색
+	@Override
+	public User findTraineeByUserId(String userId) {
+		return traineeDao.getTraineeByUserId(userId);
 	}
 
 }

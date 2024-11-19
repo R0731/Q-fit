@@ -39,11 +39,8 @@ public class TrianerServiceImpl implements TrainerService{
 		return result == 1;
 	}
 
-	@Override
-	public List<Trainee> getTraineeList(int trainerId) {
-		return trainerDao.getTrainee(trainerId);
-	}
-
+	// 내 해당 트레이니 검색
+	
 //	@Override
 //	public List<Trainer> getTrainerSearch(UserSearchCondition condition) {
 //		return trainerDao.trainerSearch(condition);
