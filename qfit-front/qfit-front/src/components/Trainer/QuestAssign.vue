@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>피드백 생성</h3>
+    <h5>퀘스트 등록</h5>
   </div>
 </template>
 

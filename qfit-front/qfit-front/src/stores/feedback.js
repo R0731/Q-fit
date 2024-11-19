@@ -19,5 +19,29 @@ export const useFeedbackStore = defineStore('feedback', () => {
     }
   }
 
-  return { getFeedback }
+  const createFeedback = async(newFeedback) => {
+    try{
+      const url = `${REST_API_URL}`
+      console.log('새 피드백', newFeedback)
+      const res = await axios.post(url, newFeedback)
+      console.log('피드백 등록 성공')
+    }catch(err){
+      console.log('피드백등록실패', err)
+      throw err;
+    }
+  }
+
+  const updateFeedback = async(questId, newFeedback) => {
+    try{
+      const url = `${REST_API_URL}/${questId}`
+      console.log('새 피드백', newFeedback)
+      const res = await axios.put(url, newFeedback)
+      console.log('피드백 수정 성공')
+    }catch(err){
+      console.log('피드백수정실패', err)
+      throw err;
+    }
+  }
+  
+  return { getFeedback, createFeedback, updateFeedback }
 })

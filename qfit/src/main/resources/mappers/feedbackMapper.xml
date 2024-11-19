@@ -19,8 +19,8 @@
 	
 	<!-- 피드백 삽입 -->
 	<insert id="insertFeedback" parameterType="Feedback">
-		INSERT INTO feedback (quest_id, content)
-		VALUES (#{questId}, #{content})
+		INSERT INTO feedback (quest_id, trainer_id, content)
+		VALUES (#{questId}, ${trainerId}, #{content})
 	</insert>
 	
 	<!-- 피드백 삭제 -->

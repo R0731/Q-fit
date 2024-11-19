@@ -9,7 +9,6 @@ import TraineeHomeView from '@/views/Trainee/TraineeHomeView.vue';
 import TraineeList from '@/components/Trainer/TraineeList.vue';
 import FeedbackList from '@/components/Trainer/FeedbackList.vue';
 import TrainerQuest from '@/components/Trainer/TrainerQuest.vue';
-import FeedbackCreate from '@/components/Trainer/FeedbackCreate.vue';
 import TrainerInfo from '@/components/Trainer/TrainerInfo.vue';
 import TraineeInfo from '@/components/Trainee/TraineeInfo.vue';
 import UserUpdate from '@/components/UserUpdate.vue';
@@ -19,7 +18,7 @@ import TraineeQuest from '@/components/Trainee/TraineeQuest.vue';
 import TraineeReview from '@/components/Trainee/TraineeReview.vue';
 import TraineeMain from '@/components/Trainee/TraineeMain.vue';
 import Record from '@/components/Trainee/Record.vue';
-
+import QuestAssign from '@/components/Trainer/QuestAssign.vue';
 const isAuth = false;
 
 const router = createRouter({
@@ -66,11 +65,6 @@ const router = createRouter({
           component: TrainerQuest,
         },
         {
-          path: 'createFeedback',
-          name: 'createFeedback',
-          component: FeedbackCreate,
-        },
-        {
           path: 'info',
           name: 'trainerInfo',
           component: TrainerInfo,
@@ -84,6 +78,11 @@ const router = createRouter({
           path: 'gym',
           name: 'trainerGym',
           component: TrainerGym,
+        },
+        {
+          path: 'quest-assign',
+          name: 'questAssign',
+          component: QuestAssign,
         },
       ]
     },

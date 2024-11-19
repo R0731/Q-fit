@@ -1,3 +1,4 @@
+<!-- TraineeList.vue -->
 <template>
   <div>
   <TheCalender/>
