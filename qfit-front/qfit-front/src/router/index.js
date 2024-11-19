@@ -19,6 +19,7 @@ import TraineeReview from '@/components/Trainee/TraineeReview.vue';
 import TraineeMain from '@/components/Trainee/TraineeMain.vue';
 import Record from '@/components/Trainee/Record.vue';
 import QuestAssign from '@/components/Trainer/QuestAssign.vue';
+import Calenderetemp from '@/components/common/Calenderetemp.vue';
 const isAuth = false;
 
 const router = createRouter({
@@ -83,6 +84,11 @@ const router = createRouter({
           path: 'quest-assign',
           name: 'questAssign',
           component: QuestAssign,
+        },
+        {
+          path: 'calender',
+          name: 'Calender',
+          component: Calenderetemp,
         },
       ]
     },
