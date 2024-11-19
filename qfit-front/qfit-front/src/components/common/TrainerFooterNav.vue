@@ -1,6 +1,6 @@
 <template>
   <div class="footer-container">
-      <!-- 임시 아이콘 및 텍스트 (로그인) -->
+      <!-- 임시 아이콘 및 텍스트 (로그인)
       <div 
         class="footer-item"
         :class="{ 'selected': route.name === 'trainerLogin' }" 
@@ -8,7 +8,7 @@
       >
       <i class="bi bi-people"></i>
       <span>임시로그인용</span>
-    </div>
+    </div> -->
     
     <!-- 첫 번째 아이콘 및 텍스트 (회원 관리) -->
     <div 
