@@ -36,6 +36,29 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
+    // 트레이니 로그인
+    const traineeLogin = async (id, password) => {
+      try {
+        const res = await axios.post(`${REST_API_URL}/login`, {
+          userId: id,
+          userPassword: password,
+        });
+  
+        const accessToken = res.data;
+        if (!accessToken) throw new Error('No access token received');
+        
+        sessionStorage.setItem('access-token', accessToken);
+        setUserFromToken(accessToken); // 토큰에서 유저 정보 설정
+  
+        await router.push({ name: 'traineeMain' });
+        return true;
+      } catch (err) {
+        console.error('Login failed:', err);
+        await router.push({ name: 'traineeLogin' });
+        return false;
+      }
+    };
+
   // 회원 로그아웃
   const logout = () => {
     sessionStorage.removeItem('access-token');
@@ -110,6 +133,7 @@ export const useUserStore = defineStore('user', () => {
     userType,
     loginUser,
     trainerLogin,
+    traineeLogin,
     logout,
     passwordCheck,
     getUserDetails,
