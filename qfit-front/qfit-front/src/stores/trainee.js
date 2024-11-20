@@ -80,9 +80,14 @@ export const useTraineeStore = defineStore('trainee', () => {
       const response = await axios.get(`${REST_API_URL}/search-trainee`, {
         params: {userId},
       });
-      console.log(response.data);
       searchResult.value = response.data;
-      console.log(searchResult)
+
+      // `searchResult`에 나이(age) 추가
+      searchResult.value = {
+        ...response.data,
+        age: calculateAge(response.data.birthdate), // 나이 추가
+      };
+
     } catch (err){
       searchResult.value = null;
       console.error('Failed to search trainee: ', err)
@@ -100,6 +105,14 @@ export const useTraineeStore = defineStore('trainee', () => {
     }
   }
 
+  const deleteTrainee = async (traineeId) => {
+    try {
+      await axios.delete(`${REST_API_URL}/${traineeId}/delete`);
+      trainees.value = trainees.value.filter((t) => t.id !== traineeId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return {
     trainees,
@@ -110,5 +123,6 @@ export const useTraineeStore = defineStore('trainee', () => {
     searchTrainee,
     addTrainerToTrainee,
     selectedTrainee,
+    deleteTrainee,
   };
 });
