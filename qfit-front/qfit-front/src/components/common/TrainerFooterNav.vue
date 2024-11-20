@@ -13,8 +13,8 @@
     <!-- 첫 번째 아이콘 및 텍스트 (회원 관리) -->
     <div 
       class="footer-item"
-      :class="{ 'selected': route.name === 'trainerLogin' }" 
-      @click="navigateTo('trainerLogin')"
+      :class="{ 'selected': route.name === 'MyTrainees' }" 
+      @click="navigateTo('MyTrainees')"
     >
       <i class="bi bi-people"></i>
       <span>회원 관리</span>
