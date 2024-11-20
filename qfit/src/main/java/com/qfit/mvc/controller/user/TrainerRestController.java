@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/trainer")
+@Tag(name="TrainerRestful API", description = "트레이너의 체육관 정보 등록 및 조회")
 public class TrainerRestController {
 	
 	private final TrainerService trainerService;

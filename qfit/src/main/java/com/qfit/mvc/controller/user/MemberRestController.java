@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/member")
+@Tag(name="MemberRestful API", description = "유저 가입/탈퇴 및 ID중복 검사")
 public class MemberRestController {
 	
 	private final MembershipService membershipService;

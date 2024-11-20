@@ -21,19 +21,20 @@ import TheCalender from "../common/TheCalender.vue";
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from "@/stores/user";
+import { useTraineeStore } from "@/stores/trainee";
 
 const router = useRouter();
 
 const userStore = useUserStore();
 const trainerId = userStore.loginUser.numberId;
 
-const trainerStore = useTrainerStore();
+const traineeStore = useTraineeStoreStore();
 const trainees = ref([]);
 
 onMounted(()=>{
-  trainerStore.fetchTraineeList(trainerId)
+  traineeStore.fetchTraineeList(trainerId)
     .then(()=>{
-      trainees.value = trainerStore.trainees;
+      trainees.value = traineeStore.trainees;
     })
     .catch(err => {
       console.error(err)
@@ -46,7 +47,7 @@ const goFeedbackList = () => {
 
 const selectTrainee = (trainee) => {
   // 선택한 훈련생 데이터를 상태로 유지 후 화면 전환
-  trainerStore.selectedTrainee = trainee; // Store에 선택된 훈련생 저장
+  traineeStore.selectedTrainee = trainee; // Store에 선택된 훈련생 저장
   router.push({ name: 'quest' }); // 라우터 이동
 };
 </script>

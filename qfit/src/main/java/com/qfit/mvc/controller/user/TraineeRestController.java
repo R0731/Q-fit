@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/trainee")
+@Tag(name="TraineeRestful API", description = "트레이니 검색, 트레이너 추가 및 삭제, 트레이너에 해당하는 트레이니 리스트 조회")
 public class TraineeRestController {
 	
 	private final TraineeService traineeService;

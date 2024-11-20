@@ -90,6 +90,21 @@ const router = createRouter({
           name: 'Calender',
           component: Calenderetemp,
         },
+        {
+          path: 'my-trainees',
+          name: 'MyTrainees',
+          component: MyTrainees,
+        },
+        {
+          path: 'trainee-update',
+          name: 'MyTraineesUpdate',
+          component: MyTraineesUpdate,
+        },
+        {
+          path: 'trainee-delete',
+          name: 'MyTraineesDelete',
+          component: MyTraineesDelete,
+        },
       ]
     },
 
