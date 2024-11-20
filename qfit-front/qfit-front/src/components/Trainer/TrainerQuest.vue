@@ -22,7 +22,6 @@
 </template>
 
 <script setup>
-import { useTrainerStore } from '@/stores/trainer';
 import { useViewStore } from '@/stores/viewStore';
 import { useQuestStore } from '@/stores/quest';
 import Exercise from './Exercise.vue';
@@ -30,16 +29,17 @@ import FeedbackUser from './FeedbackUser.vue';
 import Review from './TrainerReview.vue';
 import { computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { useTraineeStore } from '@/stores/trainee';
 
 const router = useRouter();
 const route = useRoute();
 // Pinia 스토어
 const questStore = useQuestStore();
-const trainerStore = useTrainerStore();
+const traineeStore = useTraineeStore();
 const viewStore = useViewStore();
 
 // 현재 선택된 트레이니
-const trainee = computed(() => trainerStore.selectedTrainee);
+const trainee = computed(() => traineeStore.selectedTrainee);
 
 // 퀘스트 상태 확인 (퀘스트가 null이 아니면 true)
 const hasQuest = computed(() => !!questStore.quest);

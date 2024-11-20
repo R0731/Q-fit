@@ -17,9 +17,11 @@ import com.qfit.mvc.model.service.user.LoginService;
 import com.qfit.mvc.model.service.user.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/user")
+@Tag(name="UserRestful API", description = "로그인 및 비밀번호 확인, 유저 정보 조회 및 업데이트")
 public class UserRestController {
 	
 	private final UserService userService;

@@ -28,25 +28,23 @@
 </template>
 
 <script setup>
-import { useTrainerStore } from "@/stores/trainer";
 import TheCalender from "../common/TheCalender.vue";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
+import { useTraineeStore } from "@/stores/trainee";
 
 const router = useRouter();
 const userStore = useUserStore();
 const trainerId = userStore.loginUser.numberId;
 
-const trainerStore = useTrainerStore();
+const traineeStore = useTraineeStore();
 const trainees = ref([]);
 
-// 컴포넌트 마운트 시 트레이니 리스트 불러오기
-onMounted(() => {
-  trainerStore
-    .fetchTraineeList(trainerId)
-    .then(() => {
-      trainees.value = trainerStore.trainees;
+onMounted(()=>{
+  traineeStore.fetchTraineeList(trainerId)
+    .then(()=>{
+      trainees.value = traineeStore.trainees;
     })
     .catch((err) => {
       console.error(err);
@@ -84,8 +82,9 @@ const goFeedbackList = () => {
 
 // 선택한 트레이니 데이터 저장 후 화면 전환
 const selectTrainee = (trainee) => {
-  trainerStore.selectedTrainee = trainee; // Store에 선택된 트레이니 저장
-  router.push({ name: "quest" }); // 퀘스트 화면으로 이동
+  // 선택한 훈련생 데이터를 상태로 유지 후 화면 전환
+  traineeStore.selectedTrainee = trainee; // Store에 선택된 훈련생 저장
+  router.push({ name: 'quest' }); // 라우터 이동
 };
 </script>
 

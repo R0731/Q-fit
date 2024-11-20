@@ -40,7 +40,7 @@
  		SELECT u.*
  		FROM user u
  		LEFT JOIN trainee t ON u.id = t.id
- 		WHERE u.user_id = #{userId] AND t.id IS NULL
+ 		WHERE u.user_id = #{userId} AND t.trainer_id IS NULL
  	</select>
  	
   </mapper>
