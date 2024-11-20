@@ -13,6 +13,7 @@ import com.qfit.mvc.model.dto.user.Trainer;
 import com.qfit.mvc.model.service.user.TrainerService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/trainer")

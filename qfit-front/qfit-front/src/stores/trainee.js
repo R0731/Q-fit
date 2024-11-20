@@ -8,6 +8,7 @@ const REST_API_URL = `http://localhost:8080/trainee`;
 
 export const useTraineeStore = defineStore('trainee', () => {
   const trainees = ref([]);
+  const selectedTrainee = ref(null);
   const traineeWithQuests = ref([]);
 
   const questStore = useQuestStore();
@@ -108,5 +109,6 @@ export const useTraineeStore = defineStore('trainee', () => {
     searchResult,
     searchTrainee,
     addTrainerToTrainee,
+    selectedTrainee,
   };
 });

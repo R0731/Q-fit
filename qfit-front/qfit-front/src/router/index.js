@@ -20,6 +20,9 @@ import TraineeMain from '@/components/Trainee/TraineeMain.vue';
 import Record from '@/components/Trainee/Record.vue';
 import QuestAssign from '@/components/Trainer/QuestAssign.vue';
 import Calenderetemp from '@/components/common/Calenderetemp.vue';
+import MyTrainees from '@/components/Trainer/MyTrainees.vue';
+import MyTraineesUpdate from '@/components/Trainer/MyTraineesUpdate.vue';
+import MyTraineesDelete from '@/components/Trainer/MyTraineesDelete.vue';
 const isAuth = false;
 
 const router = createRouter({

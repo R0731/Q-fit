@@ -18,6 +18,7 @@ import com.qfit.mvc.model.dto.user.User;
 import com.qfit.mvc.model.service.user.TraineeService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/trainee")
