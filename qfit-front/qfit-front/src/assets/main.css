@@ -1,131 +1,112 @@
-/* 전역 css 변수 정의 */
-:root{
-  --theme-color: #8504e8;
-  /* 예시: color: var(--theme-color); */
+/* @import url('//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css'); */
+
+ @font-face {
+  font-family: 'GowunDodum-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunDodum-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'STUNNING-Bd';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2410-2@1.0/STUNNING-Bd.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'LINESeedKR-Bd';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+:root {
+  --theme-color: #6200ea;
+  --gradient-color: linear-gradient(90deg, #6200ea, #9d47f4);
+  --background-color: #f8f9fc;
+  --text-color: #333333;
+  --hover-color: #ffd700;
 }
 
-/* 기본 박스 사이징 및 리셋 스타일 */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* 부트스트랩과 함께 사용하는 경우 기본 폰트 및 색상 설정 */
 body {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  background-color: #fafafa;
-  color: #333;
-  line-height: 1.5;
-  overflow-x: hidden; /* 가로 스크롤 방지 */
+  font-family: 'LINESeedKR-Bd', sans-serif;
 }
 
-/* 전체 페이지에 적용될 레이아웃 스타일 */
-.home {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  width: 100%;
-  overflow-x: hidden;
-}
-
-/* 헤더 스타일 */
+/* 헤더 */
 .header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 64px;
+  background: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
-  background-color: white;
-  border-bottom: 1px solid #ddd;
-  padding: 0 20px;
-  position: sticky;
-  top: 0;
+  padding: 0 16px;
+  color: white;
   z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* 메인 콘텐츠 스타일 */
-.content {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  padding: 20px;
-}
-
-/* 푸터 스타일 */
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 100px;
-  height: 60px;
-  background-color: white;
-  border-top: 1px solid #ddd;
-  padding: 0 20px;
-}
-
-/* 버튼 스타일 예시 */
-.btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-  color: #fff;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
-}
-
-
-/* 헤더 푸터 관련 설정 */
-/* 플렉스 컨테이너 설정 */
-.header-container {
-  display: flex;
-  align-items: center; /* 세로 가운데 정렬 */
-  justify-content: space-between; /* 양 끝 정렬 */
-  padding: 0 16px; /* 좌우 여백 추가 */
-  height: 60px; /* 헤더 높이 고정 */
-  width: 100%;
-  box-sizing: border-box;
-}
 /* 로고 스타일 */
 .header-logo {
   height: 100%;
 }
 
-/* 아이콘 스타일 */
-.header-bi {
-  font-size: 24px; /* 아이콘 크기 조정 */
-  color: black; /* 아이콘 색상 설정 */
-  cursor: pointer; /* 클릭 가능한 포인터 */
+/* 콘텐츠 */
+.content {
+  flex-grow: 1; /* 콘텐츠가 푸터와 헤더 사이를 채움 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* 상단에 고정 */
+  padding: 20px;
+  width: 100%;
+  background: #ffffff;
 }
 
-.footer-container {
+/* 푸터 */
+.footer {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  height: 64px;
+  background: var(--backgroud-color);
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 10px;
-  width: 100%;
-  box-sizing: border-box;
+  padding: 0 16px;
+  color: white;
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.header i,
+.footer i {
+  font-size: 24px;
+  color: black;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.header i:hover,
+.footer i:hover {
+  color: var(--theme-color);
+  transform: scale(1.1);
+}
+
 
 .footer-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.footer-item i {
-  font-size: 24px;
-  margin-bottom: 4px;
+.footer-item:hover {
+  transform: scale(1.1);
+  color: var(--hover-color);
 }
 
 .footer-item span {
   font-size: 12px;
-  color: #6c757d;
+  color: black;
 }
