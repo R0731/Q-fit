@@ -2,6 +2,8 @@ package com.qfit.mvc.model.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,6 +70,12 @@ public class QuestServiceImpl implements QuestService {
         LocalDateTime startDateTime = LocalDateTime.parse(startAt, formatter);
         LocalDateTime endDateTime = startDateTime.plusHours(24); // 24시간 더하기
         return endDateTime.format(formatter); // "yyyy-MM-dd HH:mm:ss" 형식으로 반환
+    }
+
+    // 퀘스트 수행률 계산
+    @Override
+    public List<Map<String, Object>> getTraineeQuestCompletionRate(int trainerId, String startAt) {
+        return questDao.getTraineeQuestCompletionRate(trainerId, startAt);
     }
 	
 }
