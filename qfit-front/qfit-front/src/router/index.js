@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user';
 import LoginView from '@/views/Trainer/TrainerLoginView.vue'
 import HomeView from '@/views/HomeView.vue'
 import TrainerRegist from '@/views/Trainer/TrainerRegist.vue';
@@ -24,8 +25,10 @@ import TraineeInfoEdit from '@/components/Trainee/TraineeInfoEdit.vue';
 import MyTrainees from '@/components/Trainer/MyTrainees.vue';
 import MyTraineesUpdate from '@/components/Trainer/MyTraineesUpdate.vue';
 import MyTraineesDelete from '@/components/Trainer/MyTraineesDelete.vue';
+import TheBigCalender from '@/components/common/TheBigCalender.vue';
 
-const isAuth = false;
+const isTrainerAuth = false;
+const isTraineeAuth = false;
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,6 +57,7 @@ const router = createRouter({
       path: '/trainer',
       name: 'trainerHome',
       component: TrainerHomeView,
+      meta: { requiresAuth: 'trainer' }, // meta로 인증검사
       children: [
         {
           path: '',
@@ -165,16 +169,47 @@ const router = createRouter({
           name: 'traineeUpdate',
           component: UserUpdate,
         },
+        {
+          path: 'calender',
+          name: 'traineeCalender',
+          component: TheBigCalender,
+        },
       ]
     },
   ]
 })
 
-// router.beforeEach((to, from)=>{
-//   if(!isAuth && to.name !== 'login'){
-//     console.log('로그인이 필요합니다.')
-//     return {name : 'login'}
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore();
+  
+  if(!userStore.loginUser){
+    if(to.name === 'traineeLogin' || to.name === 'trainerLogin'){
+      return next();
+    }
+    if(to.path.includes('/trainee')){
+      console.log('트레이니 로그인 페이지로 이동')
+      return next({name: 'traineeLogin'})
+      
+    }
+    if(to.path.includes('/trainer')){
+      console.log('트레이너 로그인 페이지로 이동')
+      return next({name: 'trainerLogin'})
+    }
+  }
+  
+  const userType = userStore.loginUser.userType;
+
+  if(userType !== 2 && to.path.includes('/trainee')){
+    console.log('트레이너가 트레이니 페이지에 접근')
+    alert('잘못된 접근입니다')
+    return next({name: 'traineeList'});
+  }
+  if(userType !== 1 && to.path.includes('/trainer')){
+    console.log('트레이니가 트레이너 페이지에 접근')
+    alert('잘못된 접근입니다')
+    return next({name: 'traineeMain'})
+  }
+  next();
+})
 
 export default router

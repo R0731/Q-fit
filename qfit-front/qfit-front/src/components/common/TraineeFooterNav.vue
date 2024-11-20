@@ -4,7 +4,7 @@
     <div 
       class="footer-item"
       :class="{ 'selected': route.name === 'traineeLogin' }" 
-      @click="navigateTo('traineeLogin')"
+      @click="navigateTo('traineeCalender')"
     >
       <i class="bi bi-calendar-event"></i>
       <span>기록</span>

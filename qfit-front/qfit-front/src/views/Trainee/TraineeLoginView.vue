@@ -73,7 +73,7 @@ const goToRegist = () => {
 };
 
 const login = async() =>{
-    const success = await userStore.trainerLogin(id.value, password.value)
+    const success = await userStore.traineeLogin(id.value, password.value)
     
     if(!success){
       alert('로그인에 실패했습니다.')
