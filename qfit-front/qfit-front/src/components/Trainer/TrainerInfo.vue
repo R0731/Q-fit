@@ -1,9 +1,12 @@
 <template>
   <div>
-    <h4>내 프로필</h4>
-    <p>{{ userName }} 회원님, 안녕하세요.</p>
-    <!-- 회원정보 수정 버튼 -->
-    <button @click="openPasswordModal">회원정보수정</button>
+    <!-- 내 프로필 섹션 -->
+    <div class="section-container">
+      <h4>내 프로필</h4>
+      <p class="section-content">{{ userName }} 회원님, 안녕하세요.</p>
+      <!-- 회원정보 수정 버튼 -->
+      <button class="small-btn" @click="openPasswordModal">회원정보수정</button>
+    </div>
 
     <!-- 비밀번호 확인 모달 -->
     <div v-if="isModalOpen" class="modal-overlay">
@@ -19,7 +22,7 @@
           class="input-password"
         />
 
-        <!-- 확인 및 취소 버튼을 좌우로 배치 -->
+        <!-- 확인 및 취소 버튼 -->
         <div class="button-container">
           <button class="confirm-button" @click="changeInfo">확인</button>
           <button class="cancel-button" @click="closeModal">취소</button>
@@ -30,11 +33,16 @@
       </div>
     </div>
 
-    <h4>체육관 정보 수정</h4>
-    <!-- 체육관 수정 버튼 복구 -->
-    <button @click="navigateTo('trainerGym')">체육관 정보</button>
+    <!-- 체육관 정보 섹션 -->
+    <div class="section-container">
+      <h4>체육관 정보 수정</h4>
+      <p class="section-content">체육관 정보를 확인하거나 수정할 수 있습니다.</p>
+      <!-- 체육관 정보 수정 버튼 -->
+      <button class="small-btn" @click="navigateTo('trainerGym')">체육관 정보</button>
+    </div>
 
-    <button @click="logout">로그아웃</button>
+    <!-- 로그아웃 버튼 -->
+    <button class="logout-btn" @click="logout">로그아웃</button>
   </div>
 </template>
 
@@ -94,17 +102,26 @@ const navigateTo = (routeName) => {
   }
 };
 
-const logout = async() =>{
-  try{
+const logout = async () => {
+  try {
     await userStore.logout();
-    alert('로그아웃 완료')
-  }catch{
-    console.log('로그아웃실패')
+    alert('로그아웃 완료');
+  } catch {
+    console.log('로그아웃 실패');
   }
-}
+};
 </script>
 
 <style scoped>
+/* 섹션 컨테이너 */
+.section-container {
+  margin-bottom: 20px; /* 섹션 간 간격 */
+  padding: 20px; /* 내부 여백 */
+  border: 1px solid #ddd; /* 섹션 경계선 */
+  border-radius: 10px; /* 섹션 모서리 둥글게 */
+  background-color: #f9f9f9; /* 섹션 배경 */
+}
+
 /* 모달 오버레이 (배경을 반투명하게 덮음) */
 .modal-overlay {
   position: fixed;
@@ -112,7 +129,7 @@ const logout = async() =>{
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.3); /* 반투명 검은색 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,7 +138,7 @@ const logout = async() =>{
 
 /* 모달 컨텐츠 박스 */
 .modal-content {
-  background: #f4f8ff;
+  background: #f4f8ff; /* 부드러운 파란색 배경 */
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -130,17 +147,19 @@ const logout = async() =>{
   width: 90%;
 }
 
-/* 제목 스타일 */
+/* 모달 제목 */
 .modal-content h2 {
-  margin-bottom: 10px;
-  font-size: 24px;
-  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--theme-color); /* 테마 색상 */
 }
 
-/* 설명 텍스트 스타일 */
+/* 모달 설명 텍스트 */
 .modal-content p {
   margin-bottom: 20px;
   color: #666;
+  font-size: 1rem;
 }
 
 /* 입력 필드 스타일 */
@@ -151,6 +170,7 @@ const logout = async() =>{
   border: 1px solid #dcdcdc;
   border-radius: 8px;
   outline: none;
+  font-size: 1rem;
 }
 
 /* 버튼 컨테이너 (버튼을 좌우로 배치) */
@@ -160,40 +180,68 @@ const logout = async() =>{
   gap: 10px;
 }
 
-/* 확인 버튼 스타일 */
+/* 확인 버튼 */
 .confirm-button {
-  background-color: var(--theme-color);
+  background: linear-gradient(90deg, var(--theme-color), #9d47f4); /* 그라데이션 배경 */
   color: #fff;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+  padding: 10px 20px;
+  border: none; /* 테두리 제거 */
+  border-radius: 20px; /* 둥근 모서리 */
   flex: 1;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease; /* 부드러운 애니메이션 */
 }
 
 .confirm-button:hover {
-  background-color: var(--theme-color);
+  background: #fff; /* Hover 시 흰색 배경 */
+  color: var(--theme-color); /* 글자 색상 테마 색상 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
 }
 
-/* 취소 버튼 스타일 */
+/* 취소 버튼 */
 .cancel-button {
-  background-color: #f5f5f5;
+  background: #f5f5f5; /* 흰색 배경 */
   color: #333;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+  border: none; /* 테두리 제거 */
+  padding: 10px 20px;
+  border-radius: 20px;
   flex: 1;
+  text-align: center;
 }
 
 .cancel-button:hover {
-  background-color: #e0e0e0;
+  background: #e0e0e0; /* Hover 시 약간 어두운 배경 */
+  color: #333;
 }
 
-/* 오류 메시지 스타일 */
+/* 오류 메시지 */
 .error {
   color: red;
   margin-top: 10px;
-  font-size: 14px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/* 로그아웃 버튼 */
+.logout-btn {
+  background: linear-gradient(90deg, var(--theme-color), #9d47f4); /* 그라데이션 배경 */
+  color: #fff; /* 텍스트 색상 */
+  font-size: 1.2rem; /* 글자 크기 */
+  font-weight: bold;
+  padding: 15px 0; /* 상하 여백 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  border: none; /* 테두리 제거 */
+  border-radius: 20px; /* 둥근 모서리 */
+  width: 100%; /* 가로를 꽉 채움 */
+  cursor: pointer; /* 클릭 가능한 커서 */
+  transition: all 0.3s ease; /* 부드러운 애니메이션 */
+  margin-top: 35vh; /* 맨 위 항목과 뷰포트 높이 35% 간격 */
+}
+
+.logout-btn:hover {
+  background: #fff; /* Hover 시 흰색 배경 */
+  color: var(--theme-color); /* 텍스트 테마 색상 */
+  border: 1px solid var(--theme-color); /* 테두리 강조 */
 }
 </style>

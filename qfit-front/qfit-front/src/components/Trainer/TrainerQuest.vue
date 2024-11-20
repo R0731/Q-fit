@@ -16,7 +16,7 @@
     <!-- 퀘스트가 없는 경우 -->
     <div v-else class="no-quest">
       <p class="no-quest-message">현재 등록된 퀘스트가 없습니다.</p>
-      <button @click="createQuest" class="create-quest-btn">퀘스트 등록하기</button>
+      <button @click="createQuest" class="register-btn">퀘스트 등록하기</button>
     </div>
   </div>
 </template>
@@ -92,7 +92,7 @@ const createQuest = () => {
 }
 
 .quest-header-title {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: bold;
   color: var(--theme-color);
   margin: 0;
@@ -108,7 +108,7 @@ const createQuest = () => {
 .quest-section {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 50px;
 }
 
 /* 퀘스트가 없는 경우 */

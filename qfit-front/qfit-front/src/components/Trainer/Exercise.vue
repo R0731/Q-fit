@@ -2,7 +2,7 @@
   <div class="container mt-4">
     <!-- 퀘스트가 없는 경우 -->
     <div v-if="tasks.length === 0" class="text-center">
-      <button class="btn btn-primary" @click="createQuest">퀘스트 등록하기</button>
+      <button class="btn btn-primary create-quest-btn" @click="createQuest">퀘스트 등록하기</button>
     </div>
 
     <!-- 퀘스트가 있는 경우 -->
@@ -15,19 +15,24 @@
         >
           <!-- 왼쪽 섹션 -->
           <div class="d-flex align-items-center">
-            <div class="me-2">
-              <span class="text-primary">{{ task.cardioMinutes === null ? exerciseData[task.exerciseId]?.exerciseParts || 'Unknown' : 'cardio' }}</span>
+            <!-- bodyPart 텍스트 -->
+            <div class="body-part">
+              <span class="text-theme">{{ task.cardioMinutes === null ? exerciseData[task.exerciseId]?.exerciseParts || 'Unknown' : 'cardio' }}</span>
             </div>
-            <div>
-              <div>{{ exerciseData[task.exerciseId]?.exerciseName || 'Loading...' }}</div>
-              <div>{{ task.count ? task.count + '회' : task.cardioMinutes + '분' }}</div>
+            <!-- exerciseName -->
+            <div class="exercise-name">
+              {{ exerciseData[task.exerciseId]?.exerciseName || 'Loading...' }}
+            </div>
+            <!-- count -->
+            <div class="exercise-count">
+              {{ task.count ? task.count + '회' : task.cardioMinutes + '분' }}
             </div>
           </div>
 
           <!-- 오른쪽 버튼 -->
           <button 
-            class="btn btn-sm"
-            :class="task.completed ? 'btn-primary' : 'btn-outline-primary'"
+            class="btn btn-sm " disabled
+            :class="task.completed ? 'btn-completed' : 'btn-not-completed'"
           >
             {{ task.completed ? '완료' : '미완료' }}
           </button>
@@ -38,8 +43,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, onMounted } from 'vue';
 import { useExerciseStore } from '@/stores/exercise';
 import { useQuestStore } from '@/stores/quest';
 
@@ -91,3 +95,71 @@ const createQuest = () => {
   console.log('퀘스트 등록 페이지로 이동');
 };
 </script>
+
+<style scoped>
+button {
+  cursor: default; /* 기본 포인터(화살표)로 설정 */
+}
+/* 퀘스트 등록 버튼 */
+.create-quest-btn {
+  background-color: var(--theme-color);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.create-quest-btn:hover {
+  background-color: darken(var(--theme-color), 10%);
+}
+
+/* 완료된 버튼 */
+.btn-completed {
+  background-color: var(--theme-color);
+  color: #fff;
+  border: none;
+}
+
+/* 미완료된 버튼 */
+.btn-not-completed {
+  background-color: #fff;
+  color: var(--theme-color);
+  border: 1px solid var(--theme-color);
+}
+
+/* .btn-not-completed:hover {
+  background-color: var(--theme-color);
+  color: #fff;
+} */
+
+/* 텍스트 테마 색상 */
+.text-theme {
+  color: var(--theme-color);
+}
+
+/* bodyPart와 exerciseName 간의 간격 */
+.body-part {
+  width: 80px; /* bodyPart의 고정된 너비 */
+  flex-shrink: 0; /* bodyPart가 축소되지 않도록 설정 */
+  text-align: left; /* 텍스트 정렬 */
+  margin-right: 8px; /* exerciseName과의 간격 */
+}
+
+/* exercise-name 스타일 */
+.exercise-name {
+  font-weight: bold;
+  color: #333; /* 텍스트 색상 */
+  margin-right: 8px; /* exerciseName과 count 간격 */
+  font-size: 0.95rem; /* 약간 작은 글씨 크기 */
+  white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
+}
+
+/* exercise-count 스타일 */
+.exercise-count {
+  font-size: 0.9rem;
+  color: #666; /* 약간 어두운 텍스트 색상 */
+}
+</style>
