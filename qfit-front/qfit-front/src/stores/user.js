@@ -7,12 +7,27 @@ import router from '@/router';
 const REST_API_URL = `http://localhost:8080/user`;
 
 export const useUserStore = defineStore('user', () => {
-
+  
   const route = useRoute();
   const userType = computed(() => route.path.split('/')[1]);
-
+  
   const loginUser = ref(null);
-
+  
+  // 회원 로그아웃
+  const logout = () => {
+    const userType = loginUser.value.userType;
+    sessionStorage.removeItem('access-token');
+    loginUser.value = null;
+  
+    if (userType === 1) {
+      router.push({ name: 'trainerLogin' }); // 트레이너 로그인 페이지
+    } else if (userType === 2) {
+      router.push({ name: 'traineeLogin' }); // 트레이니 로그인 페이지
+    } else {
+      router.push({ name: 'Home' }); // 기본 홈으로 이동
+    }
+  };
+  
   // 트레이너 로그인
   const trainerLogin = async (id, password) => {
     try {
@@ -27,6 +42,16 @@ export const useUserStore = defineStore('user', () => {
       sessionStorage.setItem('access-token', accessToken);
       setUserFromToken(accessToken); // 토큰에서 유저 정보 설정
 
+      const userType = loginUser.value.userType;
+      console.log('강제로그아웃 전 유저 타입 확인', userType)
+
+      if(userType !== 1){
+        console.warn('잘못된 유저 접근')
+        sessionStorage.removeItem('access-token');
+        loginUser.value = null;
+        return false;
+      }
+
       await router.push({ name: 'traineeList' });
       return true;
     } catch (err) {
@@ -35,35 +60,40 @@ export const useUserStore = defineStore('user', () => {
       return false;
     }
   };
+  
+  // 트레이니 로그인
+  const traineeLogin = async (id, password) => {
+    try {
+      const res = await axios.post(`${REST_API_URL}/login`, {
+        userId: id,
+        userPassword: password,
+      });
+      
+      const accessToken = res.data;
+      if (!accessToken) throw new Error('No access token received');
+      
+      sessionStorage.setItem('access-token', accessToken);
+      setUserFromToken(accessToken); // 토큰에서 유저 정보 설정
+      
+      const userType = loginUser.value.userType;
+      console.log('강제로그아웃 유저 타입 확인', userType)
 
-    // 트레이니 로그인
-    const traineeLogin = async (id, password) => {
-      try {
-        const res = await axios.post(`${REST_API_URL}/login`, {
-          userId: id,
-          userPassword: password,
-        });
-  
-        const accessToken = res.data;
-        if (!accessToken) throw new Error('No access token received');
-        
-        sessionStorage.setItem('access-token', accessToken);
-        setUserFromToken(accessToken); // 토큰에서 유저 정보 설정
-  
-        await router.push({ name: 'traineeMain' });
-        return true;
-      } catch (err) {
-        console.error('Login failed:', err);
-        await router.push({ name: 'traineeLogin' });
+      if(userType !== 2){
+        console.warn('잘못된 유저 접근')
+        sessionStorage.removeItem('access-token');
+        loginUser.value = null;
         return false;
       }
-    };
 
-  // 회원 로그아웃
-  const logout = () => {
-    sessionStorage.removeItem('access-token');
-    loginUser.value = null;
+      await router.push({ name: 'traineeMain' });
+      return true;
+    } catch (err) {
+      console.error('Login failed:', err);
+      await router.push({ name: 'traineeLogin' });
+      return false;
+    }
   };
+
 
   // 패스워드 체크 기능
   const passwordCheck = async (check) => {
@@ -128,7 +158,7 @@ export const useUserStore = defineStore('user', () => {
       }
     }
   };
-  
+
   const updateUser = async(numberId, user) => {
     try{
       const url = `${REST_API_URL}/update/${numberId}`;
