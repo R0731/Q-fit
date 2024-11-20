@@ -4,7 +4,7 @@
     <TheHeaderNav class="header" />
     
     <!-- 메인 콘텐츠 영역 -->
-    <div class="content">
+    <div class="content-trainee">
       <RouterLink :to="{ name: 'traineeList' }"></RouterLink>
       <RouterView />
     </div>
@@ -24,5 +24,13 @@ const router = useRouter();
 </script>
 
 <style scoped>
-
+.content-trainee{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 20px;
+}
 </style>
