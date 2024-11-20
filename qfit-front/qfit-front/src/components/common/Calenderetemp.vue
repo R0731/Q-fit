@@ -140,7 +140,7 @@ export default {
           ),
           inCurrentMonth: true, // 현재 달 날짜
           event1: Math.random() > 0.5, // 이벤트 1 (랜덤)
-          events: ["Event 2", "Event 3", "Event 4"], // 임시 이벤트 데이터
+          events: ["Event 2", "Event 3", "피드백"], // 임시 이벤트 데이터
         });
       }
 
