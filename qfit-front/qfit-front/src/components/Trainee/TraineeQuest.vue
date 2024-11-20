@@ -62,8 +62,8 @@ const taskStore = useTaskStore();
 
 /* 날짜 포맷 (YYYY-MM-DD 형식) */
 const formattedDate = computed(() => {
-  const rawDate = viewStore.selectedDate;
-  return questStore.formatDateToYMD(rawDate);
+  // const rawDate = viewStore.selectedDate;
+  return viewStore.selectedDate;
 });
 
 /* 퀘스트 목록 가져오기 */
