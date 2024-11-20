@@ -20,15 +20,11 @@ import TraineeReview from '@/components/Trainee/TraineeReview.vue';
 import TraineeMain from '@/components/Trainee/TraineeMain.vue';
 import Record from '@/components/Trainee/Record.vue';
 import QuestAssign from '@/components/Trainer/QuestAssign.vue';
-import Calenderetemp from '@/components/common/Calenderetemp.vue';
 import TraineeInfoEdit from '@/components/Trainee/TraineeInfoEdit.vue';
 import MyTrainees from '@/components/Trainer/MyTrainees.vue';
 import MyTraineesUpdate from '@/components/Trainer/MyTraineesUpdate.vue';
 import MyTraineesDelete from '@/components/Trainer/MyTraineesDelete.vue';
 import TheBigCalender from '@/components/common/TheBigCalender.vue';
-
-const isTrainerAuth = false;
-const isTraineeAuth = false;
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -93,11 +89,6 @@ const router = createRouter({
           path: 'quest-assign',
           name: 'questAssign',
           component: QuestAssign,
-        },
-        {
-          path: 'calender',
-          name: 'Calender',
-          component: Calenderetemp,
         },
         {
           path: 'my-trainees',

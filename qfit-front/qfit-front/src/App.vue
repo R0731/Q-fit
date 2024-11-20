@@ -12,13 +12,14 @@
 /* 상위 컨테이너 스타일 */
 .app-container {
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   max-width: 480px;
   width: 100%; /* 가로 스크롤 방지 */
   margin: 0 auto;
   height: 100vh;
-  overflow-y: auto; /* 세로 스크롤만 허용 */
+  overflow-y: visible;
   overflow-x: hidden; /* 👉 가로 스크롤 방지 */
   box-sizing: border-box;
 }

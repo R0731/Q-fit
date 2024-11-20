@@ -215,11 +215,13 @@ VALUES
 INSERT INTO notification (user_id, message, is_read)
 VALUES 
 (1, 'Your training session starts in 1 hour.', FALSE),
-(2, 'New feedback from your trainer.', TRUE),
-(3, 'A new review is available for your last session.', FALSE);
+(2, 'New feedback from your trainer.', false),
+(3, 'A new review is available for your last session.', FALSE),
+(2, 'New feedback from your trainer.', false),
+(2, 'New feedback from your trainer.', false);
 
 SELECT * FROM user;
 SELECT * FROM exercise;
 DESCRIBE user; 
-SELECT * FROM feedback;
+SELECT * FROM notification;
 SELECT * FROM quest;
