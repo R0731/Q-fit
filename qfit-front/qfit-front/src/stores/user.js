@@ -112,11 +112,23 @@ export const useUserStore = defineStore('user', () => {
   };
 
   // 세션에서 토큰을 이용해 유저 정보 로드
-  const loadUserFromToken = async () => {
-    const token = sessionStorage.getItem('access-token');
-    if (token) setUserFromToken(token);
-  };
+  // const loadUserFromToken = async () => {
+  //   const token = sessionStorage.getItem('access-token');
+  //   if (token) setUserFromToken(token);
+  // };
 
+  const loadUserFromToken = () => {
+    const token = sessionStorage.getItem('access-token');
+    if (token) {
+      try {
+        setUserFromToken(token);
+      } catch (err) {
+        console.error('Failed to load user from token:', err);
+        logout(); // 잘못된 토큰인 경우 로그아웃 처리
+      }
+    }
+  };
+  
   const updateUser = async(numberId, user) => {
     try{
       const url = `${REST_API_URL}/update/${numberId}`;
