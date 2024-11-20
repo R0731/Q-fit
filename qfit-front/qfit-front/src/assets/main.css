@@ -26,6 +26,10 @@
   --hover-color: #ffd700;
 }
 
+html,
+body{
+  background-color: #333333;
+}
 body {
   font-family: 'LINESeedKR-Bd', sans-serif;
 }
@@ -48,7 +52,7 @@ body {
 
 /* 로고 스타일 */
 .header-logo {
-  height: 100%;
+  height: 70%;
 }
 
 /* 콘텐츠 */
@@ -75,6 +79,7 @@ body {
   align-items: center;
   padding: 0 16px;
   color: white;
+  background-color: white;
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -109,4 +114,76 @@ body {
 .footer-item span {
   font-size: 12px;
   color: black;
+}
+
+/* 등록하기 버튼 관련 */
+/* 등록하기 버튼 스타일 */
+.register-btn {
+  display: inline-block;
+  padding: 12px 24px; /* 더 넉넉한 내부 여백 */
+  font-size: 1rem; /* 적당한 글씨 크기 */
+  font-weight: bold; /* 두꺼운 글씨 */
+  color: #fff; /* 흰색 텍스트 */
+  border: none; /* 테두리 제거 */
+  border-radius: 30px; /* 더 부드러운 둥근 모서리 */
+  background: linear-gradient(90deg, var(--theme-color), #9d47f4); /* 그라데이션 배경 */
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 기본 그림자 */
+  transition: all 0.3s ease; /* 부드러운 애니메이션 */
+}
+
+/* hover 효과 */
+.register-btn:hover {
+  background: linear-gradient(90deg, #9d47f4, var(--theme-color)); /* 반대 방향의 그라데이션 */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* 그림자 강조 */
+}
+
+/* 클릭 시 눌리는 효과 */
+.register-btn:active {
+  transform: scale(0.97); /* 살짝 작아지는 효과 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 눌렸을 때 그림자 축소 */
+}
+
+/* 등록하기 버튼 컨테이너 스타일 */
+.register-btn-container {
+  text-align: center; /* 버튼을 가운데 정렬 */
+  margin-top: 20px; /* 위쪽 여백 추가 */
+}
+
+/* 피드백 등록 버튼 */
+.small-btn {
+  padding: 8px 16px; /* 간단한 여백 */
+  font-size: 0.9rem; /* 텍스트 크기 */
+  font-weight: bold; /* 굵은 텍스트 */
+  border: none; /* 테두리 제거 */
+  border-radius: 20px; /* 둥근 모서리 */
+  background: linear-gradient(90deg, var(--theme-color), #9d47f4); /* 기본 그라데이션 배경 */
+  color: #fff; /* 기본 텍스트 색상 */
+  cursor: pointer; /* 클릭 가능한 커서 */
+  transition: all 0.3s ease; /* 부드러운 애니메이션 */
+}
+
+.small-btn:hover {
+  background: #fff; /* hover 시 흰색 배경 */
+  color: var(--theme-color); /* hover 시 텍스트 테마 색상 */
+  border: 1px solid var(--theme-color); /* 테두리 추가 */
+}
+
+.red-btn {
+  background: linear-gradient(90deg, #ff4d4f, #ff7875); /* 그라데이션 배경 */
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.red-btn:hover {
+  background: #fff;
+  color: #ff4d4f;
+  border: 1px solid #ff4d4f;
 }

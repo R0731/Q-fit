@@ -8,7 +8,7 @@
         <!-- 타이틀 -->
         <h3>회원 조회</h3>
         <!-- 피드백 버튼 -->
-        <button class="feedback-btn" @click="goFeedbackList">피드백</button>
+        <button class="register-btn" @click="goFeedbackList">피드백</button>
       </div>
       <ul>
         <!-- 트레이니 리스트 -->
@@ -111,22 +111,6 @@ ul {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-}
-
-/* 피드백 버튼 스타일 */
-.feedback-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 20px; /* 양옆 둥근 모양 */
-  background-color: var(--theme-color); /* 테마 색상 */
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.feedback-btn:hover {
-  background-color: #4e00b7;
 }
 
 /* 트레이니 리스트 아이템 */

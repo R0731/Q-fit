@@ -5,7 +5,9 @@
     <!-- 피드백이 없는 경우 -->
     <div v-if="feedback === 'NONE'">
       <p>피드백이 없습니다.</p>
-      <button @click="startCreateFeedback">등록하기</button>
+      <div class="register-btn-container">
+      </div>
+      <button class="register-btn" @click="startCreateFeedback">등록하기</button>
     </div>
 
     <!-- 피드백 작성 모드 -->

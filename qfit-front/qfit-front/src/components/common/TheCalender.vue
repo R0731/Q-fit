@@ -80,12 +80,20 @@ function onDateSelect(date) {
 // 선택된 날짜를 중앙으로 이동하는 함수
 function centerSelectedDate() {
   const dateList = document.querySelector('.date-list');
-  const selectedIndex = visibleDates.value.findIndex(
+
+  // viewStore에서 selectedDate를 가져옴
+  const storeSelectedDate = viewStore.selectedDate
+    ? new Date(viewStore.selectedDate)
+    : today;
+
+  const targetDate = visibleDates.value.find(
     (d) =>
-      d.getDate() === selectedDate.value.getDate() &&
-      d.getMonth() === selectedDate.value.getMonth() &&
-      d.getFullYear() === selectedDate.value.getFullYear()
+      d.getDate() === storeSelectedDate.getDate() &&
+      d.getMonth() === storeSelectedDate.getMonth() &&
+      d.getFullYear() === storeSelectedDate.getFullYear()
   );
+
+  const selectedIndex = visibleDates.value.indexOf(targetDate);
 
   if (dateList && selectedIndex !== -1) {
     const dateItemWidth = 96; // 날짜 아이템 폭(80px + gap 16px)
@@ -178,13 +186,12 @@ function loadNextDates() {
 
 // 컴포넌트 로딩 시 초기화
 onMounted(() => {
-  centerSelectedDate(); // 로딩 시 오늘 날짜를 중앙에 위치
+  centerSelectedDate(); // 로딩 시 selectedDate 또는 오늘 날짜를 중앙에 위치
 });
 </script>
 
-
 <style scoped>
-/* 컨테이너 스타일 */
+/* 기존 스타일 유지 */
 .date-container {
   width: 100%;
   max-width: 480px;
@@ -192,17 +199,14 @@ onMounted(() => {
   padding: 16px;
   background-color: #ffffff;
   border-radius: 16px;
-  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
 }
 
-/* 현재 월 텍스트 */
 .text-center h5 {
   font-size: 20px;
   font-weight: bold;
   color: #333333;
 }
 
-/* 날짜 목록 래퍼 */
 .date-list-wrapper {
   display: flex;
   overflow: hidden;
@@ -214,52 +218,40 @@ onMounted(() => {
   cursor: grabbing;
 }
 
-/* 날짜 목록 */
 .date-list {
   display: flex;
   gap: 16px;
   transition: transform 0.3s ease-out;
 }
 
-/* 날짜 아이템 */
 .date-item {
   text-align: center;
   min-width: 80px;
   cursor: pointer;
 }
 
-/* 요일 이름 스타일 */
 .day-name {
   font-size: 14px;
   color: #666666;
   margin-bottom: 4px;
 }
 
-/* 날짜 숫자 스타일 */
 .date {
   font-size: 20px;
   color: #333333;
   font-weight: bold;
 }
 
-/* 오늘 날짜 강조 */
 .text-primary {
   color: var(--theme-color);
 }
 
-/* 날짜 아이템 hover 효과 */
 .date-item:hover .date {
   color: var(--hover-color);
   transition: color 0.2s ease-in-out;
 }
 
-/* 선택된 날짜 스타일 */
 .selected-date {
   color: var(--theme-color);
-
 }
-
-
 </style>
-
-
