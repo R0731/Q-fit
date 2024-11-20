@@ -87,6 +87,8 @@ public class TraineeRestController {
 	 * @param userId 검색할 트레이니의 userId
 	 * @return 트레이니 검색 성공 시 OK(200), 조회결과 없을 시 NOT_FOUND(404), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
+	@GetMapping("/search-trainee")
+	@Operation(summary = "트레이니 검색", description = "추가할 트레이니 정보를 검색합니다.")
 	public ResponseEntity<?> searchTrainee(@RequestParam String userId) {
         try {
         	User trainee = traineeService.findTraineeByUserId(userId);
