@@ -24,11 +24,6 @@ public class JwtUtil {
 	public String createToken(int id, String userId, String name, int userType) {
 		// 유효기간
 		Date exp = new Date(System.currentTimeMillis() + 1000*60*60); // 1시간
-//		Map<String, Object> claims = new HashMap<>();
-//		claims.put("id", id)
-//		claims.put("userId", userId);
-//		claims.put("name", name);
-//		claims.put("userType", userType);
 		
 		// JWT : 헤더 / 페이로드(데이터) / 서명
 		return Jwts.builder()
@@ -44,7 +39,13 @@ public class JwtUtil {
 	
 	// 유효성 검증(실제로 내용물을 확인하기 위함은 아님)
 	// 이거 실행시 에러나면 유효기간 지난거... 
-	public Jws<Claims> vaildate(String token){
+	public Jws<Claims> validate(String token){
 		return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
 	}
+	
+	// 토큰에서 사용자 ID 추출
+    public int extractId(String token) {
+    	Jws<Claims> claims = validate(token);
+        return ((Claims) claims).get("id", Integer.class);
+    }
 }
