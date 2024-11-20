@@ -19,9 +19,11 @@ import com.qfit.mvc.model.service.user.MembershipService;
 import com.qfit.mvc.model.service.user.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/member")
+@Tag(name="MemberRestful API", description = "유저 가입/탈퇴 및 ID중복 검사")
 public class MemberRestController {
 	
 	private final MembershipService membershipService;

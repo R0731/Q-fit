@@ -8,18 +8,40 @@ const REST_API_URL = `http://localhost:8080/trainee`;
 
 export const useTraineeStore = defineStore('trainee', () => {
   const trainees = ref([]);
+  const selectedTrainee = ref(null);
   const traineeWithQuests = ref([]);
 
   const questStore = useQuestStore();
 
+
+  const calculateAge = (birthDate) => {
+    const today = new Date();
+    const birth = new Date(birthDate);
+    
+    let age = today.getFullYear() - birth.getFullYear(); // 연도 차이 계산
+    const monthDiff = today.getMonth() - birth.getMonth(); // 월 차이 계산
+
+    // 생일이 아직 지나지 않았다면 나이에서 1을 뺍니다.
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+
+    return age;
+  }
+
   const fetchTraineeList = async (trainerId) =>{
     try{
       const response = await axios.get(`${REST_API_URL}/${trainerId}/trainee-list`);
-      trainees.value = response.data || [];
+      // trainees.value = response.data || [];
+      trainees.value = response.data.map((trainee) => ({
+        ...trainee,
+        age: calculateAge(trainee.birthdate), // 나이 추가
+      }));
     }catch(err){
       console.error('Failed to fetch trainee list:', err)
     }
   }
+
 
   /**
    * Load trainees with their quest statuses
@@ -51,10 +73,42 @@ export const useTraineeStore = defineStore('trainee', () => {
   };
   
 
+  const searchResult = ref(null);
+
+  const searchTrainee = async (userId) =>{
+    try {
+      const response = await axios.get(`${REST_API_URL}/search-trainee`, {
+        params: {userId},
+      });
+      console.log(response.data);
+      searchResult.value = response.data;
+      console.log(searchResult)
+    } catch (err){
+      searchResult.value = null;
+      console.error('Failed to search trainee: ', err)
+    }
+  }
+
+  const addTrainerToTrainee = async (traineeId, trainerId) => {
+    try {
+      const response = await axios.put(
+        `${REST_API_URL}/${traineeId}/add-trainer/${trainerId}`
+      );
+      console.log(response.data);
+    } catch (err){
+      console.error('Failed to add trainer to trainee:', err)
+    }
+  }
+
+
   return {
     trainees,
     fetchTraineeList,
     traineeWithQuests,
     loadTraineeWithQuests,
+    searchResult,
+    searchTrainee,
+    addTrainerToTrainee,
+    selectedTrainee,
   };
 });

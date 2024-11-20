@@ -21,6 +21,10 @@ import Record from '@/components/Trainee/Record.vue';
 import QuestAssign from '@/components/Trainer/QuestAssign.vue';
 import Calenderetemp from '@/components/common/Calenderetemp.vue';
 import TraineeInfoEdit from '@/components/Trainee/TraineeInfoEdit.vue';
+import MyTrainees from '@/components/Trainer/MyTrainees.vue';
+import MyTraineesUpdate from '@/components/Trainer/MyTraineesUpdate.vue';
+import MyTraineesDelete from '@/components/Trainer/MyTraineesDelete.vue';
+
 const isAuth = false;
 
 const router = createRouter({
@@ -90,6 +94,21 @@ const router = createRouter({
           path: 'calender',
           name: 'Calender',
           component: Calenderetemp,
+        },
+        {
+          path: 'my-trainees',
+          name: 'MyTrainees',
+          component: MyTrainees,
+        },
+        {
+          path: 'trainee-update',
+          name: 'MyTraineesUpdate',
+          component: MyTraineesUpdate,
+        },
+        {
+          path: 'trainee-delete',
+          name: 'MyTraineesDelete',
+          component: MyTraineesDelete,
         },
       ]
     },
