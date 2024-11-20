@@ -80,7 +80,7 @@ export const useTraineeStore = defineStore('trainee', () => {
       const response = await axios.get(`${REST_API_URL}/search-trainee`, {
         params: {userId},
       });
-      console.log(response)
+      console.log(response.data);
       searchResult.value = response.data;
       console.log(searchResult)
     } catch (err){
