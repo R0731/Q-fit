@@ -28,11 +28,11 @@ import Exercise from './Exercise.vue';
 import FeedbackUser from './FeedbackUser.vue';
 import Review from './TrainerReview.vue';
 import { computed, onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useTraineeStore } from '@/stores/trainee';
 
 const router = useRouter();
-const route = useRoute();
+
 // Pinia 스토어
 const questStore = useQuestStore();
 const traineeStore = useTraineeStore();
@@ -94,7 +94,7 @@ const createQuest = () => {
 .quest-header-title {
   font-size: 1.6rem;
   font-weight: bold;
-  color: var(--theme-color);
+  color: #242424;
   margin: 0;
 }
 

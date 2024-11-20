@@ -30,7 +30,7 @@
   </template>
   
   <script setup>
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { useTraineeStore } from "@/stores/trainee";
@@ -56,6 +56,7 @@ onMounted(() => {
 });
 
 const trainees = traineeStore.trainees;
+
 </script>
 
 <style scoped>
