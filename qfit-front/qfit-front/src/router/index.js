@@ -160,6 +160,11 @@ const router = createRouter({
           name: 'record',
           component: Record,
         },
+        {
+          path: 'update',
+          name: 'traineeUpdate',
+          component: UserUpdate,
+        },
       ]
     },
   ]
