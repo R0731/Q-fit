@@ -14,7 +14,6 @@
 </template>
 
 <script setup>
-import { useTrainerStore } from "@/stores/trainer";
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from "@/stores/user";

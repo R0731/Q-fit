@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qfit.mvc.model.dto.user.Trainee;
@@ -87,13 +87,15 @@ public class TraineeRestController {
 	 * @param userId 검색할 트레이니의 userId
 	 * @return 트레이니 검색 성공 시 OK(200), 조회결과 없을 시 NOT_FOUND(404), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
-	@GetMapping("/search-trainee")
-	@Operation(summary = "트레이니 검색", description = "추가할 트레이니 정보를 검색합니다.")
-	public ResponseEntity<?> searchTrainee(@RequestBody String userId) {
+	public ResponseEntity<?> searchTrainee(@RequestParam String userId) {
         try {
         	User trainee = traineeService.findTraineeByUserId(userId);
-        	if (trainee != null) return ResponseEntity.ok(trainee);
-        	else return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Trainee not found or already assigned to a trainer.");
+        	if (trainee != null) {
+        		return ResponseEntity.ok(trainee);
+        	}
+        	else {
+        		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Trainee not found or already assigned to a trainer.");
+        	}
         } catch (Exception e) {
         	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed");
         }
