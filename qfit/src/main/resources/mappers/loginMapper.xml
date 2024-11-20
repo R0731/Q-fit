@@ -5,7 +5,7 @@
   	
 	<!-- password 확인 -->
 	<select id="passwordCheck" parameterType="map" resultType="java.lang.Integer">
-		SELECT COALESCE(COUNT(*), 0)
+		SELECT id
 		FROM user
 		WHERE user_id = #{userId} AND user_pw = #{userPassword};
 	</select>

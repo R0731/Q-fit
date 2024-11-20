@@ -41,7 +41,7 @@ public class LoginServiceImpl implements LoginService{
 	        return false;
 	    }
 	    
-		return passwordCorrect == 1;
+		return passwordCorrect > 0;
 	}
 
 	// userId, password 로그인

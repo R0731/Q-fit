@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <!-- 이모지 섹션 -->
     <div class="difficulty-icons d-flex justify-content-center align-items-center">
       <!-- EASY -->
@@ -45,7 +45,7 @@
 
       <!-- 기본 모드 -->
       <div v-else>
-        <button v-if="difficulty === 'NONE'" @click="startSelection" class="btn btn-primary">
+        <button v-if="difficulty === 'NONE'" @click="startSelection" class="small-btn">
           리뷰 등록하기
         </button>
         <button v-else @click="enterEditMode" class="btn btn-secondary">
@@ -171,6 +171,9 @@ const cancelSelection = () => {
 </script>
 
 <style scoped>
+.container{
+  padding: 13px;
+}
 /* 이모지 섹션 */
 .difficulty-icons {
   display: flex;

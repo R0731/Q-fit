@@ -1,18 +1,12 @@
 <template>
-  <div class="container mt-4">
-    <!-- 화면 제목 -->
-    <!-- <h3 class="text-center">트레이니 퀘스트</h3> -->
-
-    <!-- 선택된 날짜 표시 -->
-    <!-- <p class="text-center text-muted">{{ formattedDate }}</p> -->
-
+  <div class="container">
     <!-- 퀘스트가 없는 경우 -->
-    <div v-if="tasks.length === 0" class="text-center">
-      <p>퀘스트가 없습니다.</p>
+    <div v-if="tasks.length === 0" class="no-quest">
+      <p class="no-quest-message">퀘스트가 없습니다.</p>
     </div>
 
     <!-- 퀘스트가 있는 경우 -->
-    <div v-else>
+    <div class>
       <ul class="list-group">
         <li 
           v-for="task in tasks" 
@@ -21,20 +15,24 @@
         >
           <!-- 왼쪽 섹션 -->
           <div class="d-flex align-items-center">
-            <div class="me-2">
-              <span class="text-primary">{{ task.cardioMinutes === null ? exerciseData[task.exerciseId]?.exerciseParts || 'Unknown' : 'cardio' }}</span>
+            <!-- bodyPart 텍스트 -->
+            <div class="body-part">
+              <span class="text-theme">{{ task.cardioMinutes === null ? exerciseData[task.exerciseId]?.exerciseParts || 'Unknown' : 'cardio' }}</span>
             </div>
-            <div>
-              <div>{{ exerciseData[task.exerciseId]?.exerciseName || 'Loading...' }}</div>
-              <div>{{ task.count ? task.count + '회' : task.cardioMinutes + '분' }}</div>
+            <!-- exerciseName -->
+            <div class="exercise-name">
+              {{ exerciseData[task.exerciseId]?.exerciseName || 'Loading...' }}
+            </div>
+            <!-- count -->
+            <div class="exercise-count">
+              {{ task.count ? task.count + '회' : task.cardioMinutes + '분' }}
             </div>
           </div>
 
           <!-- 오른쪽 버튼 -->
           <button 
-            class="btn btn-sm"
-            :class="task.completed ? 'btn-primary' : 'btn-outline-primary'"
-            @click="changeComplete(task)"
+            class="btn btn-sm "
+            :class="task.completed ? 'btn-completed' : 'btn-not-completed'" @click="changeComplete(task)"
           >
             {{ task.completed ? '완료' : '미완료' }}
           </button>
@@ -45,34 +43,25 @@
 </template>
 
 <script setup>
-/* Vue 및 Pinia 관련 유틸리티 */
-import { ref, computed, onMounted, watch } from 'vue';
-import { useExerciseStore } from '@/stores/exercise';
-import { useQuestStore } from '@/stores/quest';
-import { useUserStore } from '@/stores/user';
-import { useViewStore } from '@/stores/viewStore';
-import { useTaskStore } from '@/stores/task';
+import { ref, computed, onMounted, watch } from "vue";
+import { useExerciseStore } from "@/stores/exercise";
+import { useQuestStore } from "@/stores/quest";
+import { useUserStore } from "@/stores/user";
+import { useViewStore } from "@/stores/viewStore";
+import { useTaskStore } from "@/stores/task";
 
-/* Pinia 스토어 인스턴스 */
 const questStore = useQuestStore();
 const userStore = useUserStore();
 const viewStore = useViewStore();
 const exerciseStore = useExerciseStore();
 const taskStore = useTaskStore();
 
-/* 날짜 포맷 (YYYY-MM-DD 형식) */
-const formattedDate = computed(() => {
-  // const rawDate = viewStore.selectedDate;
-  return viewStore.selectedDate;
-});
+const formattedDate = computed(() => viewStore.selectedDate);
 
-/* 퀘스트 목록 가져오기 */
 const tasks = computed(() => questStore.getTasks || []);
 
-/* 운동 정보 로컬 상태 */
 const exerciseData = ref({});
 
-/* 특정 exerciseId의 운동 정보를 가져오기 */
 const loadExerciseInfo = async (exerciseId) => {
   if (exerciseData.value[exerciseId]) return;
 
@@ -81,9 +70,8 @@ const loadExerciseInfo = async (exerciseId) => {
     if (res && res.data) {
       exerciseData.value[exerciseId] = {
         exerciseId: res.data.exerciseId || null,
-        exerciseName: res.data.exerciseName || 'Unknown',
-        exerciseParts: res.data.exerciseParts || 'Unknown',
-        exerciseType: res.data.exerciseType || 'Unknown',
+        exerciseName: res.data.exerciseName || "Unknown",
+        exerciseParts: res.data.exerciseParts || "Unknown",
       };
     }
   } catch (error) {
@@ -91,7 +79,6 @@ const loadExerciseInfo = async (exerciseId) => {
   }
 };
 
-/* 고유한 exerciseId를 기준으로 모든 운동 정보 로드 */
 const loadAllExerciseInfo = async () => {
   const uniqueExerciseIds = [...new Set(tasks.value.map((task) => task.exerciseId))];
   for (const exerciseId of uniqueExerciseIds) {
@@ -99,7 +86,6 @@ const loadAllExerciseInfo = async () => {
   }
 };
 
-/* 퀘스트 및 관련 운동 데이터 로드 */
 const loadQuest = async () => {
   const traineeId = userStore.loginUser.numberId;
 
@@ -107,29 +93,119 @@ const loadQuest = async () => {
     await questStore.getQuestByIdAndStartDate(traineeId, formattedDate.value);
     await loadAllExerciseInfo();
   } catch (error) {
-    console.error('퀘스트 로드 실패:', error);
+    console.error("퀘스트 로드 실패:", error);
   }
 };
 
-/* task.completed 상태 토글 */
-const changeComplete = async(task) => {
+const changeComplete = async (task) => {
   const newStatus = !task.completed;
-  try{
-    await taskStore.updateCompleted(task.taskId, newStatus); 
+  try {
+    await taskStore.updateCompleted(task.taskId, newStatus);
     task.completed = newStatus;
-    console.log('업데이트완료')
-  }catch(err){
-    console.err('업데이트실패', error)
+  } catch (error) {
+    console.error("업데이트 실패", error);
   }
 };
 
-/* 컴포넌트 초기화 */
 onMounted(loadQuest);
 
-/* 날짜 변경 시 데이터 다시 로드 */
 watch(formattedDate, loadQuest);
 </script>
 
 <style scoped>
-/* 스타일은 필요에 따라 추가 */
+button {
+  cursor: default; /* 기본 포인터(화살표)로 설정 */
+}
+/* 퀘스트 등록 버튼 */
+/* 퀘스트 등록 버튼 */
+.create-quest-btn {
+  background-color: var(--theme-color);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.create-quest-btn:hover {
+  background-color: darken(var(--theme-color), 10%);
+}
+
+/* 완료된 버튼 */
+.btn-completed {
+  background: linear-gradient(90deg, var(--theme-color), #9d47f4); /* 그라데이션 배경 */;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.3s ease;
+  transform: scale(1); /* 기본 크기 */
+}
+
+.btn-completed:hover {
+  background-color: white;
+  color: white;
+  border: 1px solid var(--theme-color);
+  content: "미완료"; /* hover 시 미완료로 텍스트 변경 */
+  transform: scale(1.1); /* hover 시 크기 증가 */
+}
+
+/* 미완료된 버튼 */
+.btn-not-completed {
+  background-color: #fff;
+  color: var(--theme-color);
+  border: 1px solid var(--theme-color);
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.3s ease;
+  transform: scale(1); /* 기본 크기 */
+}
+
+.btn-not-completed:hover {
+  background: linear-gradient(90deg, var(--theme-color), #9d47f4); /* 그라데이션 배경 */
+  color: #fff;
+  border: none;
+  content: "완료"; /* hover 시 완료로 텍스트 변경 */
+  transform: scale(1.1); /* hover 시 크기 증가 */
+}
+
+/* 텍스트 테마 색상 */
+.text-theme {
+  color: var(--theme-color);
+}
+
+/* bodyPart와 exerciseName 간의 간격 */
+.body-part {
+  width: 80px; /* bodyPart의 고정된 너비 */
+  flex-shrink: 0; /* bodyPart가 축소되지 않도록 설정 */
+  text-align: left; /* 텍스트 정렬 */
+  margin-right: 8px; /* exerciseName과의 간격 */
+}
+
+/* exercise-name 스타일 */
+.exercise-name {
+  font-weight: bold;
+  color: #333; /* 텍스트 색상 */
+  margin-right: 8px; /* exerciseName과 count 간격 */
+  font-size: 0.95rem; /* 약간 작은 글씨 크기 */
+  white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
+}
+
+/* exercise-count 스타일 */
+.exercise-count {
+  font-size: 0.9rem;
+  color: #666; /* 약간 어두운 텍스트 색상 */
+}
+
+.no-quest-message {
+  font-size: 1.5rem; /* 글자 크기 수정 */
+}
 </style>
