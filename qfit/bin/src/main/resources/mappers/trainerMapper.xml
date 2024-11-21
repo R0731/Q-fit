@@ -9,6 +9,12 @@
 		VALUES (#{id});
 	</insert>
 	
+ 	<!-- trainer 테이블에서 gym 정보 조회 -->
+ 	<select id="readGym" parameterType="int" resultType="Trainer">
+ 		SELECT * FROM trainer
+ 		WHERE id = #{id};
+ 	</select>
+ 	
  	<!-- trainer 테이블에 gym 정보 추가 -->
  	<update id="addGym" parameterType="map">
  		UPDATE trainer

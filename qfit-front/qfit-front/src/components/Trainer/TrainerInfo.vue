@@ -3,6 +3,12 @@
     <!-- 내 프로필 섹션 -->
     <div class="section-container">
       <h4>내 프로필</h4>
+      <!-- 프로필 이미지 -->
+      <img
+        :src="profileImageUrl"
+        alt="Profile"
+        class="profile-img">
+        <button class="small-btn">이미지수정</button>
       <p class="section-content">{{ userName }} 회원님, 안녕하세요.</p>
       <!-- 회원정보 수정 버튼 -->
       <button class="small-btn" @click="openPasswordModal">회원정보수정</button>
@@ -47,12 +53,15 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import { useImageStore } from "@/stores/imageStore";
+import defaultProfileImage from "@/assets/default_profile.png";
 
 const router = useRouter();
 const userStore = useUserStore();
+const imageStore = useImageStore();
 
 const isModalOpen = ref(false);  // 모달 표시 여부
 const password = ref('');        // 입력된 비밀번호
@@ -110,6 +119,32 @@ const logout = async () => {
     console.log('로그아웃 실패');
   }
 };
+
+const profileImageUrl = ref('');
+
+// 프로필 이미지 로드 함수
+const loadProfileImages = async () => {
+  try {
+    const numberId = userStore.loginUser.numberId;
+    console.log('넘버id', numberId);
+    const imgUrl = await userStore.getUserImageUrl(numberId);
+    if (imgUrl) {
+      const blob = await imageStore.loadFile(imgUrl);
+      profileImageUrl.value = URL.createObjectURL(blob); // Blob URL 생성
+      console.log(`이미지 로드 성공: ${profileImageUrl.value}`);
+    } else {
+      throw new Error("사용자 이미지 URL이 없습니다.");
+    }
+  } catch (err) {
+    console.error("이미지 로드 실패:", err);
+    profileImageUrl.value = defaultProfileImage; // 실패 시 기본 이미지 설정
+  }
+};
+
+// 초기 데이터 로드
+onMounted(async () => {
+  await loadProfileImages(); // 프로필 이미지 로드
+});
 </script>
 
 <style scoped>
@@ -243,5 +278,14 @@ const logout = async () => {
   background: #fff; /* Hover 시 흰색 배경 */
   color: var(--theme-color); /* 텍스트 테마 색상 */
   border: 1px solid var(--theme-color); /* 테두리 강조 */
+}
+
+/* 트레이니 프로필 이미지 */
+.profile-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* 원형 이미지 */
+  margin-right: 15px;
+  object-fit: cover;
 }
 </style>

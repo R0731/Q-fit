@@ -15,10 +15,39 @@
  		WHERE id = #{traineeId};
  	</update>
  	
+ 	 <!-- trainee 테이블에 trainerId 정보 삭제 -->
+ 	<update id="deleteTrainer" parameterType="int">
+ 		UPDATE trainee
+ 		SET trainer_id = NULL
+ 		WHERE id = #{traineeId};
+ 	</update>
+ 	
  	<!-- user삭제 시 trainee 테이블 정보도 삭제 -->
  	<delete id="deleteTrainee" parameterType="int">
  		DELETE FROM trainee 
  		WHERE id = #{id};
  	</delete>
+ 	
+ 	<!-- trainerId로 traieeList 조회 -->
+ 	<select id="getTrainee" parameterType="int" resultType="Trainee">
+ 		SELECT t.*, u.* FROM trainee t
+ 		JOIN user u ON t.id = u.id
+ 		WHERE trainer_id = #{trainerId}
+ 	</select>
+ 	
+ 	<!-- trainee의 userId로 trainee 검색 -->
+ 	<select id="getTraineeByUserId" resultType="User">
+ 		SELECT u.*
+ 		FROM user u
+ 		LEFT JOIN trainee t ON u.id = t.id
+ 		WHERE u.user_id = #{userId} AND t.trainer_id IS NULL
+ 	</select>
+ 	
+	 <!-- trainee의 userId로 trainerId 검색 -->
+	<select id="getTrainerByTrainerId" parameterType="int" resultType="int">
+ 		SELECT trainer_id
+ 		FROM trainee
+ 		WHERE id = #{traineeId}
+ 	</select>
  	
   </mapper>

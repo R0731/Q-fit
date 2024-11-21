@@ -16,9 +16,10 @@
           <li v-for="(trainee, index) in trainees" :key="index" class="trainee-item">
             <!-- 프로필 이미지 -->
             <img
-            :src="trainee.profileImageUrl || defaultProfileImage"
-            alt="Profile"
-            class="profile-img"/>
+              v-if="!trainee.isLoading"
+              :src="trainee.profileImageUrl"
+              alt="Profile"
+              class="profile-img">
             <!-- 회원 정보 -->
             <div class="trainee-info">
               <span class="trainee-name">{{ trainee.userName }}</span>
@@ -38,6 +39,7 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { useTraineeStore } from "@/stores/trainee";
 import { useImageStore } from "@/stores/imageStore";
+import defaultProfileImage from "@/assets/default_profile.png";
 
 const router = useRouter();
 
@@ -54,18 +56,38 @@ const viewQuest = (id) => {
 // 사용자 및 트레이니 데이터 로드
 const userStore = useUserStore();
 const traineeStore = useTraineeStore();
-const trainerId = userStore.loginUser.numberId;
-
-onMounted(() => {
-  traineeStore.fetchTraineeList(trainerId).then(() => {
-    trainees.value = traineeStore.trainees; // 데이터 로드 후 동기화
-  });
-});
+const imageStore = useImageStore();
 
 const trainees = ref([]);
 
-// 기본 이미지 경로
-const defaultProfileImage = "@/assets/default_profile.png";
+const loadProfileImages = async () => {
+  // 각 트레이니의 프로필 이미지를 S3에서 로드
+  for (const trainee of trainees.value) {
+    if (trainee.userImg) {
+      console.log(`이미지 파일 이름: ${trainee.userImg}`); // 디버그 로그 추가
+      try {
+        const blob = await imageStore.loadFile(trainee.userImg);
+        trainee.profileImageUrl = URL.createObjectURL(blob); // Blob URL 생성
+        console.log(`이미지 로드 성공: ${trainee.userImg}`); // 디버그 로그 추가
+      } catch (error) {
+        console.error(`이미지 로드 실패 (${trainee.userImg}):`, error);
+        trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
+      }
+    } else {
+      console.log("이미지 파일 이름이 없습니다."); // 디버그 로그 추가
+      trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
+    }
+  }
+};
+
+onMounted(async () => {
+  const trainerId = userStore.loginUser.numberId;
+  // console.log(`트레이너 ID: ${trainerId}`);
+  await traineeStore.fetchTraineeList(trainerId); 
+  trainees.value = traineeStore.trainees;
+  // console.log("트레이니 리스트 로드 완료:", trainees.value);
+  await loadProfileImages();
+});
 
 </script>
 

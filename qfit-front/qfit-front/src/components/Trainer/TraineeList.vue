@@ -14,7 +14,11 @@
         <!-- 트레이니 리스트 -->
         <li v-for="(trainee,) in trainees" :key="trainee.userId" @click="selectTrainee(trainee)" class="trainee-item">
           <!-- 프로필 이미지 -->
-          <img src="@/assets/default_profile.png" alt="Profile" class="profile-img" />
+          <img
+              v-if="!trainee.isLoading"
+              :src="trainee.profileImageUrl"
+              alt="Profile"
+              class="profile-img">
           <!-- 트레이니 정보 -->
           <div class="trainee-info">
             <span class="trainee-name">{{ trainee.userName }}</span>
@@ -33,47 +37,17 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { useTraineeStore } from "@/stores/trainee";
+import { useImageStore } from "@/stores/imageStore";
+import defaultProfileImage from "@/assets/default_profile.png";
 
 const router = useRouter();
 const userStore = useUserStore();
 const trainerId = userStore.loginUser.numberId;
 
 const traineeStore = useTraineeStore();
+const imageStore = useImageStore();
+
 const trainees = ref([]);
-
-onMounted(()=>{
-  traineeStore.fetchTraineeList(trainerId)
-    .then(()=>{
-      trainees.value = traineeStore.trainees;
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-});
-
-// onMounted(() => {
-//   // 실제 데이터를 불러오는 대신 임시 데이터를 설정
-//   trainees.value = [
-//     {
-//       userId: 1,
-//       userName: "김철수",
-//       age: 25,
-//       status: "운동 중",
-//     },
-//     {
-//       userId: 2,
-//       userName: "이영희",
-//       age: 30,
-//       status: "휴식 중",
-//     },
-//     {
-//       userId: 3,
-//       userName: "박민수",
-//       age: 22,
-//       status: "운동 완료",
-//     },
-//   ];
-// });
 
 // 피드백 리스트 화면으로 이동
 const goFeedbackList = () => {
@@ -86,6 +60,43 @@ const selectTrainee = (trainee) => {
   traineeStore.selectedTrainee = trainee; // Store에 선택된 훈련생 저장
   router.push({ name: 'quest' }); // 라우터 이동
 };
+
+
+const loadProfileImages = async () => {
+  // 각 트레이니의 프로필 이미지를 S3에서 로드
+  for (const trainee of trainees.value) {
+    if (trainee.userImg) {
+      console.log(`이미지 파일 이름: ${trainee.userImg}`); // 디버그 로그 추가
+      try {
+        const blob = await imageStore.loadFile(trainee.userImg);
+        trainee.profileImageUrl = URL.createObjectURL(blob); // Blob URL 생성
+        console.log(`이미지 로드 성공: ${trainee.userImg}`); // 디버그 로그 추가
+      } catch (error) {
+        console.error(`이미지 로드 실패 (${trainee.userImg}):`, error);
+        trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
+      }
+    } else {
+      console.log("이미지 파일 이름이 없습니다."); // 디버그 로그 추가
+      trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
+    }
+  }
+};
+
+// onMounted(()=>{
+//   traineeStore.fetchTraineeList(trainerId)
+//     .then(()=>{
+//       trainees.value = traineeStore.trainees;
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//     });
+// });
+
+onMounted(async () => {
+  await traineeStore.fetchTraineeList(trainerId); 
+  trainees.value = traineeStore.trainees;
+  await loadProfileImages();
+});
 </script>
 
 <style scoped>

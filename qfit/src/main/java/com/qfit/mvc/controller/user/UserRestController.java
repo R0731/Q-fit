@@ -110,7 +110,7 @@ public class UserRestController {
 	}
 	
 	/**
-	 * 유저 프로필 업데이트 메서드
+	 * 유저 프로필 사진 업데이트 메서드
 	 * @param id    업데이트할 유저의 ID
 	 * @param user  업데이트할 유저 정보를 담은 객체
 	 * @return 성공 시 OK(200), 실패 시 CONFLICT(409) 반환
@@ -129,7 +129,7 @@ public class UserRestController {
 	}
 	
 	/**
-	 * 유저 프로필 조회 메서드
+	 * 유저 프로필 사진 조회 메서드
 	 * @param id    조회할 유저의 ID
 	 * @return 성공 시 OK(200), 실패 시 CONFLICT(409) 반환
 	 */
