@@ -1,5 +1,8 @@
 package com.qfit.mvc.model.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.qfit.mvc.model.dto.Feedback;
 
 public interface FeedbackService {
@@ -16,4 +19,7 @@ public interface FeedbackService {
 	// 리뷰 수정
 	public void modifyFeedback(int questId, String content) throws IllegalArgumentException, IllegalStateException;
 	
+	// 피드백이 없는 퀘스트 목록을 반환
+    public List<Map<String, Object>> getFeedbackPendingQuests(int trainerId);
+    
 }
