@@ -19,6 +19,9 @@ public interface QuestDao {
 	// 퀘스트 달성률 계산
 	List<Map<String, Object>> getTraineeQuestCompletionRate(int trainerId, String startAt);
 	
+	// 퀘스트 상태 출력
+	public List<Map<String, Object>> getTraineeQuestStatus(int trainerId, String startAt);
+	
 	// 퀘스트 삭제
 	public int deleteQuest(int questId);
 	

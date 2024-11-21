@@ -2,7 +2,7 @@
 <template>
   <div>
     <!-- 공통 캘린더 컴포넌트 -->
-    <TheCalender />
+    <TheCalender @update:selectedDate="onDateSelected" />
     <div class="card">
       <div class="list-header">
         <!-- 타이틀 -->
@@ -12,15 +12,17 @@
       </div>
       <ul>
         <!-- 트레이니 리스트 -->
-        <li v-for="(trainee,) in trainees" :key="trainee.userId" @click="selectTrainee(trainee)" class="trainee-item">
+        <li v-for="trainee in trainees" :key="trainee.id" 
+            @click="selectTrainee(trainee)" 
+            :class="['trainee-item', getStatusClass(trainee.questStatus)]">
           <!-- 프로필 이미지 -->
           <img src="@/assets/default_profile.png" alt="Profile" class="profile-img" />
           <!-- 트레이니 정보 -->
           <div class="trainee-info">
             <span class="trainee-name">{{ trainee.userName }}</span>
             <span class="trainee-age">{{ trainee.age }}세</span>
-            <span class="trainee-status">{{ trainee.status }}</span>
           </div>
+          <div class="trainee-status">{{ trainee.questStatus }}</div>
         </li>
       </ul>
     </div>
@@ -33,6 +35,7 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { useTraineeStore } from "@/stores/trainee";
+import { useViewStore } from "@/stores/viewStore";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -41,39 +44,33 @@ const trainerId = userStore.loginUser.numberId;
 const traineeStore = useTraineeStore();
 const trainees = ref([]);
 
-onMounted(()=>{
-  traineeStore.fetchTraineeList(trainerId)
-    .then(()=>{
+const viewStore = useViewStore();
+const selectedDate = ref(viewStore.selectedDate);
+
+// 컴포넌트가 마운트될 때 데이터 로드
+onMounted(() => {
+  fetchTrainees();
+});
+
+// 날짜 선택 시 호출되는 메서드
+const onDateSelected = (date) => {
+  selectedDate.value = date; // 선택한 날짜 업데이트
+  console.log(selectedDate.value);
+  fetchTrainees(); // 새 날짜에 맞는 데이터를 다시 가져옴
+};
+
+// API 호출 메서드
+const fetchTrainees = () => {
+  console.log(viewStore.selectedDate)
+  traineeStore
+    .fetchTraineesWithQuestStatuses(trainerId, viewStore.selectedDate)
+    .then(() => {
       trainees.value = traineeStore.trainees;
     })
     .catch((err) => {
       console.error(err);
     });
-});
-
-// onMounted(() => {
-//   // 실제 데이터를 불러오는 대신 임시 데이터를 설정
-//   trainees.value = [
-//     {
-//       userId: 1,
-//       userName: "김철수",
-//       age: 25,
-//       status: "운동 중",
-//     },
-//     {
-//       userId: 2,
-//       userName: "이영희",
-//       age: 30,
-//       status: "휴식 중",
-//     },
-//     {
-//       userId: 3,
-//       userName: "박민수",
-//       age: 22,
-//       status: "운동 완료",
-//     },
-//   ];
-// });
+};
 
 // 피드백 리스트 화면으로 이동
 const goFeedbackList = () => {
@@ -86,6 +83,21 @@ const selectTrainee = (trainee) => {
   traineeStore.selectedTrainee = trainee; // Store에 선택된 훈련생 저장
   router.push({ name: 'quest' }); // 라우터 이동
 };
+
+// 퀘스트 상태에 따른 클래스 변화
+const getStatusClass = (status) => {
+  switch (status) {
+    case '퀘스트 미등록':
+      return 'status-unregistered';
+    case '퀘스트 수행중':
+      return 'status-in-progress';
+    case '퀘스트 완료':
+      return 'status-completed';
+    default:
+      return ''; // 기본값 (클래스 없음)
+  }
+};
+
 </script>
 
 <style scoped>
@@ -159,6 +171,23 @@ ul {
 /* 트레이니 상태 */
 .trainee-status {
   margin-top: 5px;
+  margin-left: auto; /* 자동으로 오른쪽 끝으로 밀림 */
   color: #555;
+}
+
+/* 상태별 스타일 */
+/* 퀘스트 미등록 */
+.status-unregistered {
+  background-color: #f8d7da; /* 연한 빨간색 */
+}
+
+/* 퀘스트 수행중 */
+.status-in-progress {
+  background-color: #fff3cd; /* 연한 노란색 */
+}
+
+/* 퀘스트 완료 */
+.status-completed {
+  background-color: #d4edda; /* 연한 녹색 */
 }
 </style>
