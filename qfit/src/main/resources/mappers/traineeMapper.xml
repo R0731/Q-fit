@@ -43,4 +43,11 @@
  		WHERE u.user_id = #{userId} AND t.trainer_id IS NULL
  	</select>
  	
+	 <!-- trainee의 userId로 trainerId 검색 -->
+	<select id="getTrainerByTrainerId" parameterType="int" resultType="int">
+ 		SELECT trainer_id
+ 		FROM trainee
+ 		WHERE id = #{traineeId}
+ 	</select>
+ 	
   </mapper>

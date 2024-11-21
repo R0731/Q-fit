@@ -10,6 +10,7 @@ export const useTraineeStore = defineStore('trainee', () => {
   const trainees = ref([]);
   const selectedTrainee = ref(null);
   const traineeWithQuests = ref([]);
+  const trainer = ref({ trainerId: null });
 
   // 나이 계산
   const calculateAge = (birthDate) => {
@@ -112,6 +113,24 @@ export const useTraineeStore = defineStore('trainee', () => {
     }
   };
 
+  // 트레이니id로 트레이너 조회 메서드
+  const getTrainerId = async(traineeId) => {
+    try{
+      const url = `${REST_API_URL}/${traineeId}/read-trainer`
+      // console.log('조회 url', url)
+      const res = await axios.get(url)
+      return res.data;
+      // console.log('res조회', res)
+      if(res.status === 200){
+        // console.log('res.data 조회', res.data);
+        trainer.value = { trainerId: res.data };
+        // console.log('trainer조회', trainer.value);
+      }
+    }catch(err){
+      console.log(err)
+    }
+  }
+
   return {
     trainees,
     fetchTraineeList,
@@ -122,5 +141,7 @@ export const useTraineeStore = defineStore('trainee', () => {
     selectedTrainee,
     deleteTrainee,
     fetchTraineesWithQuestStatuses,
+    getTrainerId,
+    trainer,
   };
 });

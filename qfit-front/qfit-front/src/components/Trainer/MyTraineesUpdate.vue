@@ -44,6 +44,7 @@ import { ref } from "vue";
 import { useTraineeStore } from "@/stores/trainee";
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
+import { useNotificationStore } from "@/stores/notification";
 
 const searchUserId = ref("");
 const searchResult = ref(null);
@@ -51,6 +52,7 @@ const showModal = ref(false); // 모달 표시 여부
 
 const traineeStore = useTraineeStore();
 const userStore = useUserStore();
+const notificationStore = useNotificationStore();
 const trainerId = userStore.loginUser.numberId;
 
 // 검색 로직
@@ -77,6 +79,8 @@ const addTrainee = async () => {
     await traineeStore.addTrainerToTrainee(searchResult.value.id, trainerId);
     // 회원 추가 성공 시 모달 표시
     showModal.value = true;
+    makeNotification();
+    router.push({name: 'MyTrainees'})
   } catch (error) {
     console.error("회원 추가 실패:", error);
     alert("회원 추가에 실패했습니다.");
@@ -90,6 +94,17 @@ const closeModal = () => {
   searchResult.value = null; // 검색 결과 초기화
   router.push({ name: "MyTrainees" }); // 목록 페이지로 이동
 };
+
+// 알림 생성
+const makeNotification = async() => {
+  try{
+    const notification = {userId: searchResult.value.id, message: `${userStore.loginUser.name}님이 당신을 회원 목록에 추가하였습니다.`}
+    console.log('넘어가는 메시지 확인', notification)
+    await notificationStore.createNotification(notification)
+  }catch(err){
+    console.log('프론트 등록 중 오류 발생', err)
+  }
+}
 </script>
 
 <style scoped>

@@ -51,5 +51,11 @@ public class Notification {
 	public void setRead(boolean isRead) {
 		this.isRead = isRead;
 	}
+
+	@Override
+	public String toString() {
+		return "Notification [notificationId=" + notificationId + ", userId=" + userId + ", message=" + message
+				+ ", createdAt=" + createdAt + ", isRead=" + isRead + "]";
+	}
 	
 }
