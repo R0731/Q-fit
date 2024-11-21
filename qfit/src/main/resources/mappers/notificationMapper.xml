@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfit.mvc.model.dao.NotificationDao">
+	
+	<!-- 알림 저장 -->
+	<insert id="save" parameterType="Notification">
+		INSERT INTO notification (notification_id, user_id, message)
+		VALUES (#{notificationId}, ${userId}, #{message})
+	</insert>
+	
+	<!-- 읽지 않은 알림 목록 출력 -->
+	<select id="getUnreadNotifications" resultType="Notification">
+		SELECT * 
+		FROM notification
+		WHERE user_id = #{userId} AND is_Read = false
+	</select>
+	
+	<!-- 읽음 처리 -->
+	<update id="updateRead" parameterType="int">
+		UPDATE notification
+		SET is_read = true 
+		WHERE notification_id = #{notificationId}
+	</update>
+	
+</mapper>

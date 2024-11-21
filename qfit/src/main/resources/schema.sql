@@ -133,11 +133,11 @@ VALUES ('Cardio', 'cardio','런닝 머신'),
 INSERT INTO user (user_id, user_pw, user_name, phone_number, email, gender, birth_date, user_img, user_type)
 VALUES 
 ('ssafy', 'ssafy', '트레이너싸피', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 1),
-('ssafy2', 'ssafy2', '트레이니싸피', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 0),
+('ssafy2', 'ssafy2', '트레이니싸피', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 2),
 ('user001', 'password123', 'Alice Smith', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 2),
 ('user002', 'password456', 'Bob Brown', '010-8765-4321', 'bob@example.com', 'Male', '1985-11-23', 'bob.jpg', 1),
 ('user003', 'password789', 'Charlie Johnson', '010-5555-6666', 'charlie@example.com', 'Male', '1992-07-08', 'charlie.jpg', 1),
-('user004', 'password789', 'Charlie Johnson', '010-5555-6666', 'charlie@example.com', 'Male', '1992-07-08', 'charlie.jpg', 1);
+('user004', 'password789', 'Charlie Johnson', '010-5555-6666', 'charlie@example.com', 'Male', '1992-07-08', 'charlie.jpg', 2);
 
 INSERT INTO trainer (id, gym)
 VALUES 
@@ -215,11 +215,13 @@ VALUES
 INSERT INTO notification (user_id, message, is_read)
 VALUES 
 (1, 'Your training session starts in 1 hour.', FALSE),
-(2, 'New feedback from your trainer.', TRUE),
-(3, 'A new review is available for your last session.', FALSE);
+(2, 'New feedback from your trainer.', false),
+(3, 'A new review is available for your last session.', FALSE),
+(2, 'New feedback from your trainer.', false),
+(2, 'New feedback from your trainer.', false);
 
 SELECT * FROM user;
 SELECT * FROM exercise;
 DESCRIBE user; 
-SELECT * FROM feedback;
+SELECT * FROM notification;
 SELECT * FROM quest;

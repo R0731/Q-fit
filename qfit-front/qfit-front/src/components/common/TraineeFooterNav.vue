@@ -4,10 +4,10 @@
     <div 
       class="footer-item"
       :class="{ 'selected': route.name === 'traineeLogin' }" 
-      @click="navigateTo('traineeLogin')"
+      @click="navigateTo('traineeCalender')"
     >
-      <i class="bi bi-people"></i>
-      <span>회원 관리</span>
+      <i class="bi bi-calendar-event"></i>
+      <span>기록</span>
     </div>
 
     <!-- 두 번째 아이콘 및 텍스트 (홈) -->

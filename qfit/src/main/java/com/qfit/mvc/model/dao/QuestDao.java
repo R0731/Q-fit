@@ -1,5 +1,8 @@
 package com.qfit.mvc.model.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.qfit.mvc.model.dto.Quest;
 
 public interface QuestDao {
@@ -12,6 +15,9 @@ public interface QuestDao {
 	
 	// 퀘스트 등록
 	public void insertQuest(Quest quest);
+
+	// 퀘스트 달성률 계산
+	List<Map<String, Object>> getTraineeQuestCompletionRate(int trainerId, String startAt);
 	
 	// 퀘스트 삭제
 	public int deleteQuest(int questId);

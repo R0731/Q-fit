@@ -7,12 +7,18 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.qfit.mvc.interceptor.JwtInterceptor;
+import com.qfit.mvc.interceptor.NotificationInterceptor;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer{
 	
-	@Autowired
-	private JwtInterceptor jwtInterceptor;
+	private final JwtInterceptor jwtInterceptor;
+    private final NotificationInterceptor notificationInterceptor;
+
+    public WebConfig(JwtInterceptor jwtInterceptor, NotificationInterceptor notificationInterceptor) {
+        this.jwtInterceptor = jwtInterceptor;
+        this.notificationInterceptor = notificationInterceptor;
+    }
 	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
@@ -23,8 +29,10 @@ public class WebConfig implements WebMvcConfigurer{
 						
 	}
 	
-//	@Override
-//	public void addInterceptors(InterceptorRegistry registry) {
-//		registry.addInterceptor((jwtInterceptor).addPathPatterns("/**");
-//	}
+	@Override
+    public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(notificationInterceptor)
+        .addPathPatterns("/quest", "/review"); // 특정 경로로 제한
+    }
+	
 }

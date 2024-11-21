@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <h5>피드백</h5>
     <div v-if="feedback === 'NONE'">
       <p>피드백이 없습니다.</p>
@@ -42,5 +42,12 @@ watch(
 </script>
 
 <style scoped>
-
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
 </style>

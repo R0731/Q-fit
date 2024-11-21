@@ -72,6 +72,22 @@
 	    VALUES (#{traineeId}, #{trainerId}, #{startAt}, #{endAt})
 	</insert>
 	
+	<!-- 퀘스트 달성률 계산 -->
+	<select id="getTraineeQuestCompletionRate" resultType="java.util.Map">
+	    SELECT q.trainee_id AS traineeId, 
+	           q.quest_id AS questId,
+	           CONCAT(
+	               ROUND(
+	                   (SUM(CASE WHEN t.is_completed = TRUE THEN 1 ELSE 0 END) / COUNT(t.task_id)) * 100,
+	                   2
+	               ), '%'
+	           ) AS questCompletionRate
+	    FROM quest q
+	    LEFT JOIN task t ON q.quest_id = t.quest_id
+	    WHERE q.trainer_id = #{trainerId} AND DATE(q.start_at) = DATE(#{startAt})
+	    GROUP BY q.trainee_id, q.quest_id;
+	</select>
+	
 	<!-- 퀘스트 삭제 -->
 	<!-- 여기도 필요가 없어져버렸어
 	<delete id="deleteQuest" parameterType="int">
