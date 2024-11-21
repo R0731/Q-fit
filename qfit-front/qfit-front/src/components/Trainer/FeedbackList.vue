@@ -6,19 +6,20 @@
     <div class="card">
       <div class="list-header">
         <h3>피드백 리스트</h3>
+        <p v-if="!feedbacks.length" class="no-feedback">등록할 피드백이 없습니다.</p>
       </div>
-      <ul>
+      <ul v-if="feedbacks.length">
         <!-- 트레이니 리스트 -->
-        <li v-for="(feedback,) in feedbacks" :key="feedback.userId" class="feedback-item">
+        <li v-for="(feedback) in feedbacks" :key="feedback.trainee_id" class="feedback-item">
           <!-- 프로필 이미지 -->
           <img src="@/assets/default_profile.png" alt="Profile" class="profile-img" />
           <!-- 트레이니 정보 -->
           <div class="feedback-info">
-            <small class="feedback-date">{{ feedback.feedbackDate }}</small> <!-- 날짜 표시 -->
-            <span class="trainee-name">{{ feedback.userName }}</span> <!-- 이름 -->
+            <small class="feedback-date">{{ feedback.quest_start_at }}</small> <!-- 날짜 표시 -->
+            <span class="trainee-name">{{ feedback.trainee_name }}</span> <!-- 이름 -->
           </div>
           <!-- 피드백 등록 버튼 -->
-          <button class="small-btn" @click="registerFeedback(feedback.userId)">등록</button>
+          <button class="small-btn" @click="selectTrainee(feedback.trainee_id, feedback.quest_start_at)">피드백 등록</button>
         </li>
       </ul>
     </div>
@@ -26,35 +27,42 @@
 </template>
 
 <script setup>
+import { useFeedbackStore } from "@/stores/feedback";
 import TheCalender from "../common/TheCalender.vue";
 import { onMounted, ref } from "vue";
+import { useUserStore } from "@/stores/user";
+import { useTraineeStore } from "@/stores/trainee";
+import { useRouter } from "vue-router";
+import { useViewStore } from "@/stores/viewStore";
 
 // 피드백 리스트 임시 데이터
 const feedbacks = ref([]);
+const feedbackStore = useFeedbackStore();
+const userStore = useUserStore();
+const trainerId = userStore.loginUser.numberId;
+const traineeStore = useTraineeStore();
+const router = useRouter();
+const viewStore = useViewStore();
 
 onMounted(() => {
-  feedbacks.value = [
-    {
-      userId: 1,
-      userName: "김철수",
-      feedbackDate: "2024-11-19",
-    },
-    {
-      userId: 2,
-      userName: "이영희",
-      feedbackDate: "2024-11-18",
-    },
-    {
-      userId: 3,
-      userName: "박민수",
-      feedbackDate: "2024-11-17",
-    },
-  ];
+  feedbackStore
+    .getFeedbackPendingQuests(trainerId)
+    .then(()=>{
+      feedbacks.value = feedbackStore.feedbacks;
+    })
+    .catch((err)=>{
+      console.error(err);
+    })
 });
 
 // 피드백 등록 버튼 클릭 핸들러
-const registerFeedback = (userId) => {
-  console.log(`피드백 등록 버튼 클릭 - User ID: ${userId}`);
+const selectTrainee = (trainee_id, quest_start_at) => {
+  // 선택한 데이터를 상태로 저장 후 화면 전환
+  traineeStore.selectedTrainee = traineeStore.trainees.find((trainee) => trainee.id === trainee_id); // Store에 선택된 훈련생 저장
+  console.log(traineeStore.selectedTrainee)
+  viewStore.selectedDate = quest_start_at;
+  console.log(viewStore.selectedDate)
+  router.push({ name: 'quest' }); // 라우터 이동
 };
 </script>
 

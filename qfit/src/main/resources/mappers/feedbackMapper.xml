@@ -36,4 +36,19 @@
 		WHERE quest_id=#{questId}
 	</update>
 	
+	<!-- 피드백이 없는 퀘스트 목록을 조회 -->
+    <select id="getFeedbackPendingQuests" resultType="map">
+        SELECT q.quest_id AS quest_id,
+	           q.trainee_id AS trainee_id,
+	           u.user_name AS trainee_name,
+        	   u.birth_date AS trainee_birth_date,
+        	   DATE(q.start_at) AS quest_start_at 
+        FROM quest q
+        LEFT JOIN feedback f ON q.quest_id = f.quest_id
+        LEFT JOIN trainee t ON q.trainee_id = t.id
+    	LEFT JOIN user u ON t.id = u.id
+        WHERE f.feedback_id IS NULL
+          AND q.trainer_id = #{trainerId}
+    </select>
+	
 </mapper>
