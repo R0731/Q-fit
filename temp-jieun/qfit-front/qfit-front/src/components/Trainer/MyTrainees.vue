@@ -15,7 +15,10 @@
           <!-- 회원 리스트 -->
           <li v-for="(trainee, index) in trainees" :key="index" class="trainee-item">
             <!-- 프로필 이미지 -->
-            <img src="@/assets/default_profile.png" alt="Profile" class="profile-img" />
+            <img
+            :src="trainee.profileImageUrl || defaultProfileImage"
+            alt="Profile"
+            class="profile-img"/>
             <!-- 회원 정보 -->
             <div class="trainee-info">
               <span class="trainee-name">{{ trainee.userName }}</span>
@@ -34,8 +37,10 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { useTraineeStore } from "@/stores/trainee";
+import { useImageStore } from "@/stores/imageStore";
 
 const router = useRouter();
+
 
 // 페이지 이동 함수
 const goToUpdate = () => router.push({ name: "MyTraineesUpdate" });
@@ -58,6 +63,9 @@ onMounted(() => {
 });
 
 const trainees = ref([]);
+
+// 기본 이미지 경로
+const defaultProfileImage = "@/assets/default_profile.png";
 
 </script>
 

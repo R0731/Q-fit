@@ -109,5 +109,38 @@ public class UserRestController {
 		}
 	}
 	
+	/**
+	 * 유저 프로필 업데이트 메서드
+	 * @param id    업데이트할 유저의 ID
+	 * @param user  업데이트할 유저 정보를 담은 객체
+	 * @return 성공 시 OK(200), 실패 시 CONFLICT(409) 반환
+	 */
+	@PutMapping("/image-update")
+	@Operation(summary = "유저 프로필 업데이트", description = "유저 프로필 정보를 업데이트합니다.")
+	public ResponseEntity<?> userProfileUpdate(@RequestBody User user){
+		try {
+			int id = user.getId();
+			String url = user.getUserImg();
+			boolean res = userService.updateUserProfile(id, url);
+			return ResponseEntity.ok(res);
+		}catch(IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("User Profile update failed");
+		}
+	}
 	
+	/**
+	 * 유저 프로필 조회 메서드
+	 * @param id    조회할 유저의 ID
+	 * @return 성공 시 OK(200), 실패 시 CONFLICT(409) 반환
+	 */
+	@GetMapping("/image-load/{id}")
+	@Operation(summary = "유저 프로필 조회", description = "유저 프로필 정보를 조회합니다.")
+	public ResponseEntity<?> userProfileLoad(@PathVariable("id") int id){
+		try {
+			String res = userService.loadUserProfile(id);
+			return ResponseEntity.ok(res);
+		}catch(IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("User Profile load failed");
+		}
+	}
 }

@@ -24,6 +24,7 @@ import MyTrainees from '@/components/Trainer/MyTrainees.vue';
 import MyTraineesUpdate from '@/components/Trainer/MyTraineesUpdate.vue';
 import MyTraineesDelete from '@/components/Trainer/MyTraineesDelete.vue';
 import TheBigCalender from '@/components/common/TheBigCalender.vue';
+import ImageUploader from '@/components/common/ImageUploader.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -158,6 +159,11 @@ const router = createRouter({
           path: 'calender',
           name: 'traineeCalender',
           component: TheBigCalender,
+        },
+        {
+          path: 'image',
+          name: 'image-uploader',
+          component: ImageUploader,
         },
       ]
     },

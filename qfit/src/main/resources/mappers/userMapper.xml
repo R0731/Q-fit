@@ -49,4 +49,18 @@
 		WHERE user_id = #{userId};
   	</update>
   	
+  	<!-- 유저 프로필 업데이트 -->
+  	<update id="updateUserProfile" parameterType="map">
+  		UPDATE user
+		SET user_img = #{userImg}
+		WHERE id = #{id};
+  	</update>
+  	
+  	<!-- 유저 프로필 조회 -->
+  	<select id="selectImagebyId" resultType="string">
+  		SELECT user_img
+		FROM user
+		WHERE id = #{id};
+  	</select>
+  	
   </mapper>
