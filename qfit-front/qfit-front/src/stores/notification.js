@@ -38,9 +38,32 @@ export const useNotificationStore = defineStore('notification', () => {
   
       console.log('알람 읽음 성공');
     } catch (err) {
-      console.error('알림 중 오류 발생:', err);
+      console.error('알림 중 오류 발생', err);
     }
   };
+  
+  // 실시간으로 알림 삭제 확인 반영
+  const removeNotification = (notificationId) => {
+    const index = notifications.value.findIndex(
+      (n) => n.notificationId === notificationId
+    );
+    if (index > -1) {
+      notifications.value.splice(index, 1); // 알림 삭제
+    }
+  };
+
+  // 알림 생성
+  const createNotification = async(notification) => {
+    try{
+      console.log('알림이 잘 넘어왔나요', notification)
+      const url = `${REST_API_URL}`
+      const res = await axios.post(url, notification);
+      console.log('알림 생성 성공')
+    }catch(err){
+      console.log('알림 생성 중 오류 발생', err);
+      throw err;
+    }
+  }
   
 
   return {
@@ -49,5 +72,7 @@ export const useNotificationStore = defineStore('notification', () => {
     error,
     fetchUnreadNotifications,
     markAsRead,
+    removeNotification,
+    createNotification,
   };
 });

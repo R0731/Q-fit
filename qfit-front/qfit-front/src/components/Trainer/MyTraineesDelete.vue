@@ -35,9 +35,15 @@
 <script setup>
 import { ref } from "vue";
 import { useTraineeStore } from "@/stores/trainee";
+import { useNotificationStore } from "@/stores/notification";
+import { useUserStore } from "@/stores/user";
+import { useRouter } from "vue-router";
 
 const traineeStore = useTraineeStore();
 const trainees = traineeStore.trainees;
+const notificationStore = useNotificationStore();
+const userStore = useUserStore();
+const router = useRouter();
 
 // 모달 상태 및 선택된 회원
 const showDeleteModal = ref(false);
@@ -56,8 +62,8 @@ const confirmDelete = async () => {
   try {
     await traineeStore.deleteTrainee(selectedTrainee.value.id);
     alert(`${selectedTrainee.value.userName} 님이 삭제되었습니다.`);
-    // 목록 갱신
-    traineeStore.fetchTraineeList();
+    makeNotification();
+    router.push({name: 'MyTrainees'})
   } catch (error) {
     console.error("회원 삭제에 실패했습니다:", error);
     alert("삭제 중 오류가 발생했습니다.");
@@ -71,6 +77,17 @@ const closeDeleteModal = () => {
   showDeleteModal.value = false;
   selectedTrainee.value = null;
 };
+
+// 알림 생성
+const makeNotification = async() => {
+  try{
+    const notification = {userId: selectedTrainee.value.id, message: `${userStore.loginUser.name}님이 당신을 회원 목록에서 삭제하였습니다.`}
+    console.log('넘어가는 메시지 확인', notification)
+    await notificationStore.createNotification(notification)
+  }catch(err){
+    console.log('프론트 등록 중 오류 발생', err)
+  }
+}
 </script>
 
 <style scoped>

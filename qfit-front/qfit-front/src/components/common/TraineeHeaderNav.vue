@@ -24,6 +24,7 @@
   <li
     v-for="notification in notifications"
     :key="notification.notificationId"
+    :data-id="notification.notificationId"
     @click="() => handleNotificationClick(notification.notificationId)"
     class="notification-item"
   >
@@ -33,20 +34,6 @@
     알림이 없습니다.
   </li>
 </ul>
-      <!-- <ul class="notification-list">
-        <li
-          v-for="notification in notifications"
-          :key="notification.id"
-          @click="handleNotificationClick(notification.id)"
-          class="notification-item"
-        >
-          {{ notification.message }}
-        </li>
-
-        <li v-if="notifications.length === 0" class="no-notifications">
-          알림이 없습니다.
-        </li>
-      </ul> -->
     </div>
   </div>
 </template>
@@ -92,11 +79,18 @@ const fetchNotifications = async () => {
 // 개별 알림 읽음 처리
 const handleNotificationClick = async (notificationId) => {
   try {
-    console.log('알림아이디확인', notificationId)
-    console.log('스토어의 markAsRead 확인:', notificationStore.markAsRead);
-console.log('notificationStore 확인:', notificationStore);
-    await notificationStore.markAsRead(notificationId); // 알림 읽음 처리
-    console.log('markAsRead 호출됨', notificationId);
+    const item = document.querySelector(`[data-id="${notificationId}"]`); // 알림 DOM 찾기
+    if (item) {
+      item.classList.add('slide-out'); // 애니메이션 클래스 추가
+
+      // 애니메이션 완료 후 실행
+      setTimeout(() => {
+        notificationStore.removeNotification(notificationId); // 로컬 상태 업데이트
+      }, 300); // 애니메이션 시간과 일치
+      
+      // 서버에 읽음 요청
+      await notificationStore.markAsRead(notificationId);
+    }
   } catch (error) {
     console.error('알림 읽음 처리 중 오류 발생:', error);
   }
@@ -223,6 +217,7 @@ onMounted(fetchNotifications);
   padding: 16px;
   margin: 0;
   color: var(--text-color);
+  transition: all 0.3s ease; /* 높이 변화를 부드럽게 처리 */
 }
 
 .notification-list li {
@@ -230,12 +225,30 @@ onMounted(fetchNotifications);
   border-bottom: 1px solid #ddd;
 }
 
-.notification-item {
-  cursor: pointer;
-}
 .notification-list .no-notifications {
   text-align: center;
   color: #999;
   padding: 12px;
+}
+
+/* 알림 왼쪽으로 사라지는 애니메이션 */
+@keyframes slide-out-left {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+.notification-item {
+  cursor: pointer;
+  /* transition: transform 0.3s ease, opacity 0.3s ease; */
+}
+
+.notification-item.slide-out {
+  animation: slide-out-left 0.3s forwards;
 }
 </style>

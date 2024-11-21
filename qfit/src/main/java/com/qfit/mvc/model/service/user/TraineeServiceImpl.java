@@ -63,4 +63,14 @@ public class TraineeServiceImpl implements TraineeService {
 		return traineeDao.getTraineeByUserId(userId);
 	}
 
+	@Override
+	public int getTrainerId(int traineeId) {
+		try {
+			int result = traineeDao.getTrainerByTrainerId(traineeId);
+			return result;
+		}catch(DataAccessException e) {
+			throw new IllegalArgumentException("Database Error");
+		}
+	}
+
 }

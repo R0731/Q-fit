@@ -81,6 +81,22 @@ public class TraineeRestController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed");			
 		}
 	}
+	
+	/**
+	 * 트레이니의 트레이너 조회 메서드
+	 * @param traineeId 조회할 트레이니의 ID
+	 * @return 성공 시 OK(200), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
+	 */
+	@GetMapping("/{traineeId}/read-trainer")
+	@Operation(summary = "trainerId조회", description = "트레이니의 id를 기반으로 트레이너 id를 찾습니다.")
+	public ResponseEntity<?> readTrainerId(@PathVariable("traineeId") int traineeId){
+		try {
+			int trainerId = traineeService.getTrainerId(traineeId);
+			return ResponseEntity.status(HttpStatus.OK).body(trainerId);
+		}catch(IllegalArgumentException e){
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed");			
+		}
+	}
 
 	/**
 	 * 트레이니 추가를 위한 검색 메서드

@@ -112,6 +112,7 @@ export const useUserStore = defineStore('user', () => {
     try {
       console.log('getUserDetails 호출:', userId);
       const res = await axios.get(`${REST_API_URL}/info/${userId}`);
+      console.log('user정보조회', res)
       return res.data;
     } catch (err) {
       console.error('유저 정보 가져오기 실패:', err);

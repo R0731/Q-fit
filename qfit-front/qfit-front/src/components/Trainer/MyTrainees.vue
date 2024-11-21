@@ -30,7 +30,7 @@
   </template>
   
   <script setup>
-import { onMounted, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { useTraineeStore } from "@/stores/trainee";
@@ -52,10 +52,12 @@ const traineeStore = useTraineeStore();
 const trainerId = userStore.loginUser.numberId;
 
 onMounted(() => {
-  traineeStore.fetchTraineeList(trainerId);
+  traineeStore.fetchTraineeList(trainerId).then(() => {
+    trainees.value = traineeStore.trainees; // 데이터 로드 후 동기화
+  });
 });
 
-const trainees = traineeStore.trainees;
+const trainees = ref([]);
 
 </script>
 

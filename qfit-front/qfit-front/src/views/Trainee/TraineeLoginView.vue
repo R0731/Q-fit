@@ -57,8 +57,10 @@ import { ref } from 'vue'
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
 import { useViewStore } from '@/stores/viewStore';
+import { useTraineeStore } from '@/stores/trainee';
 
 const userStore = useUserStore();
+const traineeStore = useTraineeStore();
 
 const id = ref("")
 const password = ref("")
@@ -74,12 +76,13 @@ const goToRegist = () => {
 
 const login = async() =>{
     const success = await userStore.traineeLogin(id.value, password.value)
-    
     if(!success){
       alert('로그인에 실패했습니다.')
     }
-
-    router.push({name: 'traineeMain'})
+    
+    await traineeStore.getTrainerId(userStore.loginUser.numberId);
+    // console.log('프론트 결과 조회', traineeStore.trainer.value);
+    router.push({name: 'traineeMain'});
 }
 </script>
 

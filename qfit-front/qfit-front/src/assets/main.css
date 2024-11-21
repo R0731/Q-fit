@@ -1,17 +1,3 @@
-/* @import url('//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css'); */
-
- @font-face {
-  font-family: 'GowunDodum-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunDodum-Regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'STUNNING-Bd';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2410-2@1.0/STUNNING-Bd.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
 @font-face {
   font-family: 'LINESeedKR-Bd';
   src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
@@ -37,12 +23,14 @@ body {
 /* 헤더 */
 .header {
   /* position: sticky; */
+  position: relative; /* position 수정 */
   top: 0;
   width: 100%;
   height: 64px;
   background: white;
   display: flex;
   align-items: center;
+  flex-direction: row;
   justify-content: space-between;
   padding: 0 16px;
   color: white;
@@ -52,7 +40,9 @@ body {
 
 /* 로고 스타일 */
 .header-logo {
+  left: 10px;
   height: 70%;
+  padding-left: 20px;
 }
 
 /* 콘텐츠 */

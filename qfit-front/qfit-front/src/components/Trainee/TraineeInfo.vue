@@ -8,6 +8,17 @@
       <button class="small-btn" @click="openPasswordModal">회원정보수정</button>
     </div>
 
+    <!-- 나의 트레이너 -->
+    <div class="section-container">
+      <h4>나의 체육관</h4>
+      <p v-if="trainerStore.trainer.gym">
+        {{ trainerStore.trainer.gym }}에서 활동 중입니다
+      </p>
+      <p v-else>
+        아직 트레이너가 등록되지 않았습니다.
+      </p>
+      <!-- <p class="section-content">{{ trainerDetail.id }} 회원님, 안녕하세요.</p> -->
+    </div>
     <!-- 비밀번호 확인 모달 -->
     <div v-if="isModalOpen" class="modal-overlay">
       <div class="modal-content">
@@ -39,12 +50,16 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import { useTrainerStore } from '@/stores/trainer';
+import { useTraineeStore } from '@/stores/trainee';
 
 const router = useRouter();
 const userStore = useUserStore();
+const trainerStore = useTrainerStore();
+const traineeStore = useTraineeStore();
 
 const isModalOpen = ref(false);  // 모달 표시 여부
 const password = ref('');        // 입력된 비밀번호
@@ -103,6 +118,20 @@ const logout = async () => {
     console.log('로그아웃 실패');
   }
 };
+
+// const gym = ref();
+
+async function fetchTrainerDetail() {
+  const trainerId = await traineeStore.getTrainerId(userStore.loginUser.numberId);
+  console.log('트레이너아이디 조회:', trainerId);
+  await trainerStore.getGym(trainerId);
+  // gym = trainerStore.trainer.gym
+  console.log('체육관', trainerStore.trainer.gym)
+}
+
+onMounted(() => {
+  fetchTrainerDetail();
+});
 </script>
 
 <style scoped>
