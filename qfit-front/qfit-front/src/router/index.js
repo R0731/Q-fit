@@ -20,7 +20,6 @@ import TraineeReview from '@/components/Trainee/TraineeReview.vue';
 import TraineeMain from '@/components/Trainee/TraineeMain.vue';
 import Record from '@/components/Trainee/Record.vue';
 import QuestAssign from '@/components/Trainer/QuestAssign.vue';
-import TraineeInfoEdit from '@/components/Trainee/TraineeInfoEdit.vue';
 import MyTrainees from '@/components/Trainer/MyTrainees.vue';
 import MyTraineesUpdate from '@/components/Trainer/MyTraineesUpdate.vue';
 import MyTraineesDelete from '@/components/Trainer/MyTraineesDelete.vue';
@@ -109,12 +108,12 @@ const router = createRouter({
           component: MyTrainees,
         },
         {
-          path: 'trainee-update',
+          path: 'update-trainee',
           name: 'MyTraineesUpdate',
           component: MyTraineesUpdate,
         },
         {
-          path: 'trainee-delete',
+          path: 'delete-trainee',
           name: 'MyTraineesDelete',
           component: MyTraineesDelete,
         },
@@ -147,11 +146,6 @@ const router = createRouter({
           path: 'info',
           name: 'traineeInfo',
           component: TraineeInfo,
-        },
-        {
-          path: 'edit-info',
-          name: 'editInfo',
-          component: TraineeInfoEdit,
         },
         {
           path: 'quest',

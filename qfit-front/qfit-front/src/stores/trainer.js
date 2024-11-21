@@ -12,7 +12,7 @@ export const useTrainerStore = defineStore('trainer', () => {
     try{
       const url = `${REST_API_URL}/${numberId}/gym`
       const res = await axios.get(url);
-      console.log('체육관 정보 조회 성공', res)
+      console.log('체육관 정보 조회 성공', res.data)
       trainer.value.gym = res.data.gym;
     }catch(err){
       console.log('체육관 정보 조회 실패')
@@ -29,5 +29,5 @@ export const useTrainerStore = defineStore('trainer', () => {
     }
   } 
 
-  return { trainer, updateGym, getGym, }
+  return { trainer, updateGym, getGym }
 })

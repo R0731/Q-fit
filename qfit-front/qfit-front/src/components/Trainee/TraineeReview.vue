@@ -61,10 +61,14 @@ import { ref, computed, watch } from 'vue';
 import { useQuestStore } from '@/stores/quest';
 import { useReviewStore } from '@/stores/review';
 import { useUserStore } from '@/stores/user';
+import { useNotificationStore } from '@/stores/notification';
+import { useTraineeStore } from '@/stores/trainee';
 
 const questStore = useQuestStore();
 const reviewStore = useReviewStore();
 const userStore = useUserStore();
+const traineeStore = useTraineeStore();
+const notificationStore = useNotificationStore();
 
 // 현재 퀘스트 정보
 const quest = computed(() => questStore.quest);
@@ -131,6 +135,8 @@ const saveReview = async () => {
       await reviewStore.createReview(newReview); // 새로운 리뷰 생성
       alert('리뷰가 성공적으로 저장되었습니다.');
       isSelecting.value = false; // 선택 모드 종료
+      // 알림 생성
+      makeNotification('등록');
     }
   } catch (err) {
     console.error('리뷰 저장 실패:', err);
@@ -153,6 +159,7 @@ const updateReview = async () => {
       alert('리뷰가 성공적으로 수정되었습니다.');
       isSelecting.value = false; // 선택 모드 종료
       isEditing.value = false; // 수정 모드 종료
+      makeNotification('수정');
     }
   } catch (err) {
     console.error('리뷰 수정 실패:', err);
@@ -168,6 +175,21 @@ const cancelSelection = () => {
   }
   isEditing.value = false; // 수정 모드 종료
 };
+
+
+const trainerId = traineeStore.trainer.trainerId;
+
+console.log('트레이너아이디', trainerId);
+// 알림 생성
+const makeNotification = async(msg) => {
+  try{
+    const notification = {userId: trainerId, message: `${userStore.loginUser.name}님이 리뷰를 ${msg}하였습니다.`}
+    console.log('넘어가는 메시지 확인', notification)
+    await notificationStore.createNotification(notification)
+  }catch(err){
+    console.log('프론트 등록 중 오류 발생', err)
+  }
+}
 </script>
 
 <style scoped>

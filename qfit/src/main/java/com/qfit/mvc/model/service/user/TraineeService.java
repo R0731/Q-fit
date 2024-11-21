@@ -14,5 +14,7 @@ public interface TraineeService{
 	public List<Trainee> getTraineeList(int trainerId);
 	
 	public User findTraineeByUserId(String userId);
+	
+	public int getTrainerId(int traineeId);
 
 }

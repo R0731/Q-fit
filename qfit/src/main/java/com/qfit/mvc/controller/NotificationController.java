@@ -35,6 +35,7 @@ public class NotificationController {
     // 알림 생성
     @PostMapping
     public ResponseEntity<Void> createNotification(@RequestBody Notification notification) {
+    	System.out.println("@@@알림객체 조회" + " " + notification.getUserId() + notification.getMessage());
         notificationService.sendNotification(notification.getUserId(), notification.getMessage());
         return ResponseEntity.ok().build();
     }
