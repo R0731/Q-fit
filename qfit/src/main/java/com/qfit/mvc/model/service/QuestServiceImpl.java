@@ -51,10 +51,6 @@ public class QuestServiceImpl implements QuestService {
 		// 일단 퀘스트 생성
 		questDao.insertQuest(quest);
 		
-		// task가 비어있으면 예외 던져 롤백
-		if (quest.getTasks() == null | quest.getTasks().isEmpty()) {
-			throw new IllegalArgumentException("No Tasks");
-		}
 		
 		// 각 task 생성
 		for (Task task : quest.getTasks()) {
@@ -62,6 +58,10 @@ public class QuestServiceImpl implements QuestService {
 			taskService.createTask(task);
 		}
 		
+		// task가 비어있으면 예외 던져 롤백
+		if (quest.getTasks() == null | quest.getTasks().isEmpty()) {
+			throw new IllegalArgumentException("No Tasks");
+		}
 	}
 
 	// 24시간 뒤의 endAt 계산

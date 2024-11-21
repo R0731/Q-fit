@@ -99,11 +99,6 @@ const router = createRouter({
           component: QuestSetting,
         },
         {
-          path: 'calender',
-          name: 'Calender',
-          component: Calenderetemp,
-        },
-        {
           path: 'my-trainees',
           name: 'MyTrainees',
           component: MyTrainees,

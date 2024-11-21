@@ -19,10 +19,12 @@ public class Quest {
 	public Quest() {
 	}
 
-	public Quest(int questId, int traineeId, int trainerId, List<Task> tasks) {
+	public Quest(int questId, int traineeId, int trainerId, String startAt, String endAt, List<Task> tasks) {
 		this.questId = questId;
 		this.traineeId = traineeId;
 		this.trainerId = trainerId;
+		this.startAt = startAt;
+		this.endAt = endAt;
 		this.tasks = tasks;
 	}
 
