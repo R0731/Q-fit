@@ -24,6 +24,7 @@ import TraineeInfoEdit from '@/components/Trainee/TraineeInfoEdit.vue';
 import MyTrainees from '@/components/Trainer/MyTrainees.vue';
 import MyTraineesUpdate from '@/components/Trainer/MyTraineesUpdate.vue';
 import MyTraineesDelete from '@/components/Trainer/MyTraineesDelete.vue';
+import QuestSetting from '@/components/Trainer/QuestSetting.vue';
 
 const isAuth = false;
 
@@ -89,6 +90,11 @@ const router = createRouter({
           path: 'quest-assign',
           name: 'questAssign',
           component: QuestAssign,
+        },
+        {
+          path: 'quest-setting',
+          name: 'questSetting',
+          component: QuestSetting,
         },
         {
           path: 'calender',
