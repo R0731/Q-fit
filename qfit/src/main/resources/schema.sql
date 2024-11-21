@@ -215,13 +215,18 @@ VALUES
 INSERT INTO notification (user_id, message, is_read)
 VALUES 
 (1, 'Your training session starts in 1 hour.', FALSE),
-(2, 'New feedback from your trainer.', false),
-(3, 'A new review is available for your last session.', FALSE),
-(2, 'New feedback from your trainer.', false),
-(2, 'New feedback from your trainer.', false);
+(2, '테스트1', false),
+(1, 'A new review is available for your last session.', FALSE),
+(2, '테스테스테스트세트스테슽스.', false),
+(2, 'A new review is available for your last session.', false);
 
 SELECT * FROM user;
-SELECT * FROM exercise;
+SELECT * FROM trainer;
+SELECT * FROM trainee;
 DESCRIBE user; 
 SELECT * FROM notification;
-SELECT * FROM quest;
+SELECT * FROM trainee;
+
+DELETE FROM review WHERE review_id >= 4;
+DELETE FROM notification WHERE notification_id >= 6; 
+INSERT INTO notification (user_id, message) VALUES (1, 'TEST');

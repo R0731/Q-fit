@@ -70,11 +70,15 @@ function getDayName(date) {
   return days[date.getDay()];
 }
 
+const emit = defineEmits(['update:selectedDate']);
 // 날짜 선택 함수
 function onDateSelect(date) {
   selectedDate.value = date; // 선택된 날짜 업데이트
   viewStore.setSelectedDate(date); // Pinia 상태 업데이트
   centerSelectedDate(); // 선택한 날짜를 중앙으로 이동
+  
+  // 부모 컴포넌트로 이벤트 전달
+  emit('update:selectedDate', date);
 }
 
 // 선택된 날짜를 중앙으로 이동하는 함수

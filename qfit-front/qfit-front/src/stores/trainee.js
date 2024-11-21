@@ -2,18 +2,16 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import { useQuestStore } from '@/stores/quest';
 
 const REST_API_URL = `http://localhost:8080/trainee`;
+const QUEST_API_URL = `http://localhost:8080/quest`;
 
 export const useTraineeStore = defineStore('trainee', () => {
   const trainees = ref([]);
   const selectedTrainee = ref(null);
   const traineeWithQuests = ref([]);
 
-  const questStore = useQuestStore();
-
-
+  // 나이 계산
   const calculateAge = (birthDate) => {
     const today = new Date();
     const birth = new Date(birthDate);
@@ -29,6 +27,7 @@ export const useTraineeStore = defineStore('trainee', () => {
     return age;
   }
 
+  // 트레이너에 해당하는 트레이니 찾기
   const fetchTraineeList = async (trainerId) =>{
     try{
       const response = await axios.get(`${REST_API_URL}/${trainerId}/trainee-list`);
@@ -42,37 +41,7 @@ export const useTraineeStore = defineStore('trainee', () => {
     }
   }
 
-
-  /**
-   * Load trainees with their quest statuses
-   */
-  const loadTraineeWithQuests = async (trainerId, startDate) => {
-    try {
-      // Fetch trainees
-      await fetchTraineeList(trainerId);
-  
-      // Extract trainee IDs (use 'id' instead of 'userId')
-      const traineeIds = trainees.value.map((trainee) => trainee.id);
-  
-      // Fetch quest statuses
-      const questStatuses = await questStore.getQuestsByTraineesAndDate(
-        traineeIds,
-        startDate
-      );
-  
-      // Merge quest statuses into trainees
-      traineeWithQuests.value = trainees.value.map((trainee) => ({
-        ...trainee,
-        questStatus: questStatuses[trainee.id] || '미등록',
-      }));
-  
-      console.log('Trainees with quests:', traineeWithQuests.value);
-    } catch (err) {
-      console.error('Failed to load trainees with quests:', err);
-    }
-  };
-  
-
+  // 트레이니 검색
   const searchResult = ref(null);
 
   const searchTrainee = async (userId) =>{
@@ -94,6 +63,7 @@ export const useTraineeStore = defineStore('trainee', () => {
     }
   }
 
+  // 트레이너가 트레이니 추가
   const addTrainerToTrainee = async (traineeId, trainerId) => {
     try {
       const response = await axios.put(
@@ -105,6 +75,7 @@ export const useTraineeStore = defineStore('trainee', () => {
     }
   }
 
+  // 트레이너가 트레이니 삭제
   const deleteTrainee = async (traineeId) => {
     try {
       await axios.delete(`${REST_API_URL}/${traineeId}/delete`);
@@ -114,15 +85,42 @@ export const useTraineeStore = defineStore('trainee', () => {
     }
   };
 
+  // 퀘스트 상태 지닌 트레이니
+  const fetchTraineesWithQuestStatuses = async (trainerId, startAt) => {
+    try {
+      // 1. 훈련생 목록 가져오기
+      const traineeResponse = await axios.get(`${REST_API_URL}/${trainerId}/trainee-list`);
+      const traineeList = traineeResponse.data.map((trainee) => ({
+        ...trainee,
+        age: calculateAge(trainee.birthdate), // 나이 계산 추가
+      }));
+
+      // 2. 퀘스트 상태 가져오기
+      const questResponse = await axios.get(`${QUEST_API_URL}/${trainerId}/status`, {
+        params: { startAt },
+      });
+      const questStatuses = questResponse.data;
+      console.log("questStatuses: ", questStatuses)
+
+      // 3. 훈련생 목록과 퀘스트 상태 병합
+      trainees.value = traineeList.map((trainee) => ({
+        ...trainee,
+        questStatus: questStatuses.find((status) => status.trainee_id === trainee.id)?.quest_status || '미등록',
+      }));
+    } catch (err) {
+      console.error('Failed to fetch trainees with quest statuses:', err);
+    }
+  };
+
   return {
     trainees,
     fetchTraineeList,
     traineeWithQuests,
-    loadTraineeWithQuests,
     searchResult,
     searchTrainee,
     addTrainerToTrainee,
     selectedTrainee,
     deleteTrainee,
+    fetchTraineesWithQuestStatuses,
   };
 });

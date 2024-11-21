@@ -87,6 +87,22 @@
 	    WHERE q.trainer_id = #{trainerId} AND DATE(q.start_at) = DATE(#{startAt})
 	    GROUP BY q.trainee_id, q.quest_id;
 	</select>
+		
+	<!-- 퀘스트 상태 출력 -->
+	<select id="getTraineeQuestStatus" resultType="java.util.Map">
+		SELECT t.id AS trainee_id, 
+	           q.quest_id AS quest_id, 
+		    CASE 
+		        WHEN q.quest_id IS NULL THEN '퀘스트 미등록'
+		        WHEN COUNT(ts.task_id) > 0 THEN '퀘스트 수행중'
+		        ELSE '퀘스트 완료'
+		    END AS quest_status
+		FROM trainee t
+		LEFT JOIN quest q ON t.id = q.trainee_id AND DATE(q.start_at) = DATE(#{startAt})
+		LEFT JOIN task ts ON q.quest_id = ts.quest_id AND ts.is_completed = FALSE
+		WHERE t.trainer_id = #{trainerId}
+	    GROUP BY t.id, q.quest_id;
+	</select>
 	
 	<!-- 퀘스트 삭제 -->
 	<!-- 여기도 필요가 없어져버렸어

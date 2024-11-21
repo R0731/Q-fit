@@ -78,4 +78,10 @@ public class QuestServiceImpl implements QuestService {
         return questDao.getTraineeQuestCompletionRate(trainerId, startAt);
     }
 	
+    // 퀘스트 상태 출력
+    @Override
+    public List<Map<String, Object>> getQuestStatuses(int trainerId, String startAt){
+    	return questDao.getTraineeQuestStatus(trainerId, startAt);
+    };
+	
 }
