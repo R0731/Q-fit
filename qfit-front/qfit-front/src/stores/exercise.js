@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import axios from 'axios';
@@ -37,17 +36,6 @@ export const useExerciseStore = defineStore('exercise', () => {
     selectedExercises.value = exercisesArray;
   };
 
-  return { exercises, selectedExercises, getAllExercises, addSelectedExercise, removeSelectedExercise, setSelectedExercises };
-});
-=======
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
-import axios from 'axios'
-import router from '@/router'
-
-const REST_API_URL = `http://localhost:8080/exercise`
-export const useExerciseStore = defineStore('exercise', () => {
-  
   const getExerciseById = async (exerciseId) => {
     try {
       const url = `${REST_API_URL}/list/${exerciseId}`;
@@ -80,6 +68,5 @@ export const useExerciseStore = defineStore('exercise', () => {
     }
   };
 
-  return { getExerciseById, getExerciseByParts }
-})
->>>>>>> 8069349 (temp)
+  return { exercises, selectedExercises, getAllExercises, addSelectedExercise, removeSelectedExercise, setSelectedExercises, getExerciseById, getExerciseByParts };
+});

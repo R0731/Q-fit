@@ -60,6 +60,8 @@ const formattedDate = computed(() => viewStore.selectedDate);
 
 const tasks = computed(() => questStore.getTasks || []);
 
+console.log('테스크s', tasks.value);
+
 const exerciseData = ref({});
 
 const loadExerciseInfo = async (exerciseId) => {
