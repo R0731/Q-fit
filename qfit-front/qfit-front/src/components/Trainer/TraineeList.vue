@@ -126,6 +126,7 @@ const getStatusClass = (status) => {
       return ''; // 기본값 (클래스 없음)
   }
 };
+
 </script>
 
 <style scoped>
