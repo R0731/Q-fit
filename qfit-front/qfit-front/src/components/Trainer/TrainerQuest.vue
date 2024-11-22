@@ -27,7 +27,7 @@ import { useQuestStore } from '@/stores/quest';
 import Exercise from './Exercise.vue';
 import FeedbackUser from './FeedbackUser.vue';
 import Review from './TrainerReview.vue';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, onActivated } from 'vue';
 import { useRouter } from 'vue-router';
 import { useTraineeStore } from '@/stores/trainee';
 
@@ -68,6 +68,10 @@ onMounted(() => {
     console.warn('트레이니 데이터가 없습니다.');
   }
 });
+
+onActivated(() => {
+      questStore.fetchQuestList(); // 목록을 새로 불러오는 메서드 호출
+    });
 
 const createQuest = () => {
   router.push({ name: 'questAssign' });
