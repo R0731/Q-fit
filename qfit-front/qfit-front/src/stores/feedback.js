@@ -43,5 +43,21 @@ export const useFeedbackStore = defineStore('feedback', () => {
     }
   }
   
-  return { getFeedback, createFeedback, updateFeedback }
+  const feedbacks = ref([]);
+  const getFeedbackPendingQuests = async(trainerId) => {
+    try {
+      const response = await axios.get(`${REST_API_URL}/pending/${trainerId}`);
+      feedbacks.value = response.data
+    } catch (err) {
+      console.error('PendingFeedback Error: ', err)
+    }
+  }
+  
+  return { 
+    getFeedback, 
+    createFeedback, 
+    updateFeedback, 
+    getFeedbackPendingQuests,
+    feedbacks,
+  }
 })

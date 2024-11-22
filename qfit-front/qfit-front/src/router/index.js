@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user';
-import LoginView from '@/views/Trainer/TrainerLoginView.vue'
 import HomeView from '@/views/HomeView.vue'
 import TrainerRegist from '@/views/Trainer/TrainerRegist.vue';
 import TrainerLoginView from '@/views/Trainer/TrainerLoginView.vue';
@@ -23,6 +22,7 @@ import QuestAssign from '@/components/Trainer/QuestAssign.vue';
 import MyTrainees from '@/components/Trainer/MyTrainees.vue';
 import MyTraineesUpdate from '@/components/Trainer/MyTraineesUpdate.vue';
 import MyTraineesDelete from '@/components/Trainer/MyTraineesDelete.vue';
+import QuestSetting from '@/components/Trainer/QuestSetting.vue';
 import TheBigCalender from '@/components/common/TheBigCalender.vue';
 import ImageUploader from '@/components/common/ImageUploader.vue';
 
@@ -89,6 +89,11 @@ const router = createRouter({
           path: 'quest-assign',
           name: 'questAssign',
           component: QuestAssign,
+        },
+        {
+          path: 'quest-setting',
+          name: 'questSetting',
+          component: QuestSetting,
         },
         {
           path: 'my-trainees',

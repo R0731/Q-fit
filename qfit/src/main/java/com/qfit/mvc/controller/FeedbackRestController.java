@@ -1,5 +1,8 @@
 package com.qfit.mvc.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -107,4 +110,26 @@ public class FeedbackRestController {
 		}
 	}
 	
+	/**
+	 * 트레이너가 아직 피드백을 작성하지 않은 퀘스트 목록을 조회
+	 * @param trainerId 트레이너 ID
+	 * @return 성공 시 OK (200), 해야 할 피드백 없을 시 NO_CONTENT(204),
+	 *         실패 시 INTERNAL_SERVER_ERROR(500) 반환
+	 */
+	@GetMapping("/pending/{trainerId}")
+	@Operation(summary = "피드백 미작성 퀘스트 조회", description = "트레이너가 아직 피드백을 작성하지 않은 퀘스트 목록을 조회합니다.")
+	public ResponseEntity<?> getFeedbackPendingQuests(@PathVariable int trainerId) {
+	    try {
+	        List<Map<String, Object>> pendingQuests = feedbackService.getFeedbackPendingQuests(trainerId);
+	        // 피드백이 없는 퀘스트가 없을 경우 404 반환
+	        if (pendingQuests.isEmpty()) {
+	            return ResponseEntity.noContent().build(); // 피드백이 없는 퀘스트가 없을 때
+	        }
+	        return ResponseEntity.ok(pendingQuests); // 성공적으로 퀘스트 목록 반환
+	    } catch (Exception e) {
+	        // 예기치 못한 오류가 발생한 경우 500 반환
+	        return ResponseEntity.status(500).build();
+	    }
+	}
+    
 }

@@ -1,6 +1,7 @@
 package com.qfit.mvc.model.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -59,5 +60,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 		
 		feedbackDao.updateFeedback(info);
 	}
-
+	
+	// 피드백이 없는 퀘스트 목록을 반환
+    @Override
+    public List<Map<String, Object>> getFeedbackPendingQuests(int trainerId) {
+        return feedbackDao.getFeedbackPendingQuests(trainerId);
+    }
+    
 }

@@ -97,4 +97,21 @@ public class QuestRestController {
         }
     }
 	
+    /**
+     * 훈련생 퀘스트 상태 조회 메서드
+     * @return 정상 조회 OK (200), 서버 오류 시 INTERNAL_SERVER_ERROR (500)
+     */
+    @GetMapping("/{trainerId}/status")
+    @Operation(summary = "Trainee Quest 상태 조회", description = "훈련생의 퀘스트 상태를 조회합니다.")
+    public ResponseEntity<List<Map<String, Object>>> getTraineeQuestStatuses(@PathVariable int trainerId, @RequestParam String startAt) {
+        try {
+            // 서비스 레이어에서 퀘스트 상태 가져오기
+            List<Map<String, Object>> statuses = questService.getQuestStatuses(trainerId, startAt);
+            return new ResponseEntity<>(statuses, HttpStatus.OK);
+        } catch (Exception e) {
+            // 예외 발생 시 INTERNAL_SERVER_ERROR 반환
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
 }
