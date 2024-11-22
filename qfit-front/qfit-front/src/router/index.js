@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user';
-import LoginView from '@/views/Trainer/TrainerLoginView.vue'
 import HomeView from '@/views/HomeView.vue'
 import TrainerRegist from '@/views/Trainer/TrainerRegist.vue';
 import TrainerLoginView from '@/views/Trainer/TrainerLoginView.vue';
@@ -25,8 +24,7 @@ import MyTraineesUpdate from '@/components/Trainer/MyTraineesUpdate.vue';
 import MyTraineesDelete from '@/components/Trainer/MyTraineesDelete.vue';
 import QuestSetting from '@/components/Trainer/QuestSetting.vue';
 import TheBigCalender from '@/components/common/TheBigCalender.vue';
-
-const isAuth = false;
+import ImageUploader from '@/components/common/ImageUploader.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -166,6 +164,11 @@ const router = createRouter({
           path: 'calender',
           name: 'traineeCalender',
           component: TheBigCalender,
+        },
+        {
+          path: 'image',
+          name: 'image-uploader',
+          component: ImageUploader,
         },
       ]
     },

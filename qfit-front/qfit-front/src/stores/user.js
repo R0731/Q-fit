@@ -172,6 +172,31 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  // 유저 정보에서 imgUrl만 가져오기
+  const getUserImageUrl = async(numberId) => {
+    try{
+      const url = `${REST_API_URL}/image-load/${numberId}`
+      const res = await axios.get(url)
+      console.log('유저 이미지 정보 로드', res.data)
+      return res.data;
+    }catch(err){
+      console.error('유저 이미지 로드 에러', err);
+      throw new err;
+    }
+  }
+
+  // 유저 정보에서 imgUrl 업데이트하기
+  const updateUserImageUrl = async(user) => {
+    try{
+      const url = `${REST_API_URL}/image-update`;
+      const res = await axios.put(url, user);
+      console.log('사진 업데이트', res.data);
+      return res.data;
+    }catch(err){
+      console.error('사진 업데이트에러', err);
+    }
+  }
+
   return {
     userType,
     loginUser,
@@ -182,5 +207,7 @@ export const useUserStore = defineStore('user', () => {
     getUserDetails,
     loadUserFromToken,
     updateUser,
+    getUserImageUrl,
+    updateUserImageUrl,
   };
 });

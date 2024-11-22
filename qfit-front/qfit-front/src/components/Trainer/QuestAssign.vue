@@ -30,7 +30,6 @@
     <div v-else>
       <p>운동을 선택해주세요.</p>
     </div>
-
     <div class="footer2">
       <button 
         :disabled="selectedExercises.length === 0"
@@ -103,7 +102,6 @@ const goToQuestSetting = () => {
 };
 </script>
 
-
 <style scoped>
 .assign-header {
   margin-top: 20px;
@@ -148,6 +146,7 @@ button.active {
   text-align: center;
 }
 
+<<<<<<< HEAD
 .exercise-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

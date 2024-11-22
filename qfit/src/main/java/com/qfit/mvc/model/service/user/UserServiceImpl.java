@@ -45,5 +45,22 @@ public class UserServiceImpl implements UserService{
 		return user;
 	}
 
+	// 프로필 업데이트	
+	@Override
+	public boolean updateUserProfile(int id, String url) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", id);
+		map.put("userImg", url);
+		int result = userDao.updateUserProfile(map);
+		return result == 1;
+	}
+
+	// 프로필 조회	
+	@Override
+	public String loadUserProfile(int id) {
+		String res = userDao.selectImagebyId(id);
+		return res;
+	}
+
 
 }

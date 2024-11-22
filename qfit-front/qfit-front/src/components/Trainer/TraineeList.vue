@@ -16,7 +16,11 @@
             @click="selectTrainee(trainee)" 
             :class="['trainee-item', getStatusClass(trainee.questStatus)]">
           <!-- 프로필 이미지 -->
-          <img src="@/assets/default_profile.png" alt="Profile" class="profile-img" />
+          <img
+              v-if="!trainee.isLoading"
+              :src="trainee.profileImageUrl"
+              alt="Profile"
+              class="profile-img">
           <!-- 트레이니 정보 -->
           <div class="trainee-info">
             <span class="trainee-name">{{ trainee.userName }}</span>
@@ -35,22 +39,20 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { useTraineeStore } from "@/stores/trainee";
+import { useImageStore } from "@/stores/imageStore";
 import { useViewStore } from "@/stores/viewStore";
+import defaultProfileImage from "@/assets/default_profile.png";
 
 const router = useRouter();
 const userStore = useUserStore();
 const trainerId = userStore.loginUser.numberId;
 
 const traineeStore = useTraineeStore();
-const trainees = ref([]);
-
+const imageStore = useImageStore();
 const viewStore = useViewStore();
-const selectedDate = ref(viewStore.selectedDate);
 
-// 컴포넌트가 마운트될 때 데이터 로드
-onMounted(() => {
-  fetchTrainees();
-});
+const trainees = ref([]);
+const selectedDate = ref(viewStore.selectedDate);
 
 // 날짜 선택 시 호출되는 메서드
 const onDateSelected = (date) => {
@@ -83,6 +85,33 @@ const selectTrainee = (trainee) => {
   traineeStore.selectedTrainee = trainee; // Store에 선택된 훈련생 저장
   router.push({ name: 'quest' }); // 라우터 이동
 };
+
+const loadProfileImages = async () => {
+  // 각 트레이니의 프로필 이미지를 S3에서 로드
+  for (const trainee of trainees.value) {
+    if (trainee.userImg) {
+      console.log(`이미지 파일 이름: ${trainee.userImg}`); // 디버그 로그 추가
+      try {
+        const blob = await imageStore.loadFile(trainee.userImg);
+        trainee.profileImageUrl = URL.createObjectURL(blob); // Blob URL 생성
+        console.log(`이미지 로드 성공: ${trainee.userImg}`); // 디버그 로그 추가
+      } catch (error) {
+        console.error(`이미지 로드 실패 (${trainee.userImg}):`, error);
+        trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
+      }
+    } else {
+      console.log("이미지 파일 이름이 없습니다."); // 디버그 로그 추가
+      trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
+    }
+  }
+};
+
+//수정
+// 컴포넌트가 마운트될 때 데이터 로드
+onMounted(async () => {
+  fetchTrainees();
+  await loadProfileImages();
+});
 
 // 퀘스트 상태에 따른 클래스 변화
 const getStatusClass = (status) => {

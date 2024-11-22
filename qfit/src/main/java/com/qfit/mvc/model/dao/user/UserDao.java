@@ -27,6 +27,12 @@ public interface UserDao {
 	
 	// user_id 중복 확인
 	public int isUserIdAvailable(String userId);
+
+	// 프로필 업로드	
+	public int updateUserProfile(Map<String, Object> map);
+
+	// 프로필 조회
+	public String selectImagebyId(int id);
 	
 	
 }

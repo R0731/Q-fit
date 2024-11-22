@@ -29,3 +29,6 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# Ignore application.properties file
+src/main/resources/application.properties

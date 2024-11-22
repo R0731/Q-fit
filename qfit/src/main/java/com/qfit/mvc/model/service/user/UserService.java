@@ -9,5 +9,9 @@ public interface UserService {
 	public boolean isUserIdAvailable(String id);
 
 	public User getUserbyId(String userId);
+
+	public boolean updateUserProfile(int id, String url);
+
+	public String loadUserProfile(int id);
 	
 }
