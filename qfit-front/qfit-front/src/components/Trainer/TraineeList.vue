@@ -106,6 +106,7 @@ const loadProfileImages = async () => {
   }
 };
 
+//수정
 // 컴포넌트가 마운트될 때 데이터 로드
 onMounted(async () => {
   fetchTrainees();
