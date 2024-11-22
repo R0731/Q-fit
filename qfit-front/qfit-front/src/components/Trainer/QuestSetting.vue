@@ -136,25 +136,143 @@ const addSet = (index) => {
   console.log(`세트 추가 완료. 총 ${selectedExercises.value.length} 세트.`);
 };
 
-// 퀘스트 등록 메서드
+// 빈 객체로 반응형 상태를 초기화
+const quest = ref({
+  trainee_id: null,
+  trainer_id: null,
+  startAt: null,
+  endAt: null,
+  tasks: []
+});
+
+// 날짜를 DATETIME 형식으로 변환하는 유틸리티 함수
+const formatDateToDatetime = (date) => {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0'); // 1월 = 0이므로 +1
+  const day = String(d.getDate()).padStart(2, '0');
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const seconds = String(d.getSeconds()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
+// 퀘스트 등록 함수
 const registerQuest = async () => {
   try {
-    // 선택된 운동 데이터 처리
-    const questData = selectedExercises.value.map(exercise => ({
-  traineeId: traineeStore.selectedTrainee.id,
-  trainerId: traineeStore.selectedTrainee.trainerId,
-  startAt: viewStore.selectedDate,
-  endAt: viewStore.selectedDate + 1,
-  tasks:[{
-      "count": exercise.count,
-      "weightKg": exercise.weightKg,
-      "cardioMinutes": exercise.cardioMinutes,
-      "exerciseId": exercise.exerciseId
-        }]
-}));
+    // 기본 정보 설정 (traineeId, trainerId, startAt, endAt)
+    const traineeId = traineeStore.selectedTrainee.id;
+    const trainerId = traineeStore.selectedTrainee.trainerId;
+    const startAt = formatDateToDatetime(viewStore.selectedDate);
+    const endAt = formatDateToDatetime(new Date(viewStore.selectedDate).getTime() + 24 * 60 * 60 * 1000); // 24시간 후
+    
+    // 예시로 사용할 운동 데이터
+    const getSelectedExercise = () => {
+      return {
+        exerciseType: 'Cardio', // Cardio 또는 Weight
+        exerciseId: 1,
+        cardioMinutes: 30, // Cardio 운동의 경우 시간
+        count: null,  // Weight 운동의 경우 count 사용
+        weightKg: null,  // Weight 운동의 경우 weightKg 사용
+      };
+    };
+    // Quest 데이터 설정
+    
+    // 운동 정보를 조건에 맞춰 tasks 배열에 추가
+    const exercise = getSelectedExercise(); // 사용자가 선택한 운동 객체
+    if (exercise) {
+      addExerciseToTasks(exercise);
+    }
+
+    console.log(quest.value);  // quest 객체의 상태 확인
+
+// 퀘스트 데이터 설정 함수
+const setQuestData = (traineeId, trainerId, startDate, endDate) => {
+  quest.value.trainee_id = traineeId;
+  quest.value.trainer_id = trainerId;
+  quest.value.startAt = startDate;
+  quest.value.endAt = endDate;
+};
+
+setQuestData(traineeId, trainerId, startAt, endAt);
+// 운동 데이터를 tasks 배열에 추가하는 함수
+const addExerciseToTasks = (exercise) => {
+  if (exercise.exerciseType === 'Cardio') {
+    quest.value.tasks.push({
+      cardioMinutes: exercise.cardioMinutes || null,  // cardioMinutes가 없으면 null
+      exerciseId: exercise.exerciseId,  // exerciseId 추가
+      count: null,  // Cardio 운동은 count 없음
+      weightKg: null,  // Cardio 운동은 weightKg 없음
+    });
+  } else if (exercise.exerciseType === 'Weight') {
+    quest.value.tasks.push({
+      count: exercise.count || null,
+      weightKg: exercise.weightKg || null,
+      cardioMinutes: null,  // Weight 운동은 cardioMinutes 없음
+      exerciseId: exercise.exerciseId,  // exerciseId
+    });
+  }
+};
+
+
+
+// 퀘스트 등록 메서드
+// const registerQuest = async () => {
+//   try {
+//     // 날짜를 DATETIME 형식으로 변환하는 유틸리티 함수
+//     const formatDateToDatetime = (date) => {
+//       const d = new Date(date);
+//       const year = d.getFullYear();
+//       const month = String(d.getMonth() + 1).padStart(2, '0'); // 1월 = 0이므로 +1
+//       const day = String(d.getDate()).padStart(2, '0');
+//       const hours = String(d.getHours()).padStart(2, '0');
+//       const minutes = String(d.getMinutes()).padStart(2, '0');
+//       const seconds = String(d.getSeconds()).padStart(2, '0');
+//       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+//     };
+
+//     const questData = selectedExercises.value.map((exercise) => {
+//   // task 배열을 구성
+//   const tasks = [];
+
+//   // Cardio 운동일 경우
+//   if (exercise.exerciseType === 'Cardio') {
+//     tasks.push({
+//       cardioMinutes: exercise.cardioMinutes || null,
+//       exerciseId: exercise.exerciseId,  // exerciseId
+//       count: null,  // Cardio 운동은 count 없음
+//       weightKg: null,  // Cardio 운동은 weightKg 없음
+//     });
+//   }
+
+//   // Weight 운동일 경우
+//   if (exercise.exerciseType === 'Weight') {
+//     tasks.push({
+//       count: exercise.count || null,
+//       weightKg: exercise.weightKg || null,
+//       cardioMinutes: null,  // Weight 운동은 cardioMinutes 없음
+//       exerciseId: exercise.exerciseId,  // exerciseId
+//     });
+//   }
+
+//   // 최종적으로 반환하는 데이터 구조
+//   return {
+//     traineeId: traineeStore.selectedTrainee.id,
+//     trainerId: traineeStore.selectedTrainee.trainerId,
+//     startAt: formatDateToDatetime(viewStore.selectedDate),
+//     endAt: formatDateToDatetime(new Date(viewStore.selectedDate).getTime() + 24 * 60 * 60 * 1000),
+//     tasks: tasks,  // tasks 배열만 다수로 포함
+//   };
+// });
+
+
+
+
+    // 콘솔에 questData 찍기 (디버깅용)
+    console.log("퀘스트 데이터:", quest.value);
 
     // 퀘스트 등록 API 호출 (예시)
-    const response = await axios.post('/api/quests', { questData });
+    const response = await axios.post('http://localhost:8080/quest/', { quest });
 
     if (response.status === 200) {
       // 퀘스트 등록 성공
@@ -169,10 +287,6 @@ const registerQuest = async () => {
   }
 };
 </script>
-
-<style scoped>
-/* 스타일 코드 유지 */
-</style>
 
 
 <style scoped>
