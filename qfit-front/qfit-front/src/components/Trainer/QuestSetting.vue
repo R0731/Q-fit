@@ -89,11 +89,17 @@ import { useExerciseStore } from '@/stores/exercise';
 import { useTraineeStore } from '@/stores/trainee';
 import { computed, ref } from 'vue';
 import { useViewStore } from '@/stores/viewStore';
+import { useQuestStore } from '@/stores/quest';
+import { useRouter } from 'vue-router';
+import { useNotificationStore } from '@/stores/notification';
 import axios from 'axios'
 
 const viewStore = useViewStore();
 const traineeStore = useTraineeStore();
 const exerciseStore = useExerciseStore();
+const questStore = useQuestStore();
+const notificationStore = useNotificationStore();
+const router = useRouter();
 
 const traineeName = computed(() => traineeStore.selectedTrainee.userName);
 
@@ -136,8 +142,8 @@ const addSet = (index) => {
   console.log(`세트 추가 완료. 총 ${selectedExercises.value.length} 세트.`);
 };
 
+//퀘스트 등록 메서드
 const registerQuest = async () => {
-  try {
     // 날짜를 DATETIME 형식으로 변환하는 유틸리티 함수
     const formatDateToDatetime = (date) => {
       const d = new Date(date);
@@ -172,28 +178,42 @@ const registerQuest = async () => {
       })
       .filter((task) => task !== null); // 유효한 데이터만 포함
 
-    // 퀘스트 데이터 생성
-    const questData = {
-      traineeId: traineeStore.selectedTrainee.id,
-      trainerId: traineeStore.selectedTrainee.trainerId,
-      startAt: formatDateToDatetime(viewStore.selectedDate),
-      tasks, // 매핑된 tasks 배열
-    };
 
-    // 콘솔에 questData 확인
-    console.log('퀘스트 데이터:', questData);
-    // 백엔드 API 호출
-    const url = 'http://localhost:8080/quest/'
-    const response = await axios.post(url, questData);
+      
+      // 퀘스트 데이터 생성
+      const questData = {
+        traineeId: traineeStore.selectedTrainee.id,
+        trainerId: traineeStore.selectedTrainee.trainerId,
+        startAt: formatDateToDatetime(viewStore.selectedDate),
+        tasks, // 매핑된 tasks 배열
+      };
+      
+      // 퀘스트 등록 알림 생성 메서드
+      console.log('알림 받을 트레이니', traineeStore.selectedTrainee.id);
+      const notiTraineeId = traineeStore.selectedTrainee.id
+      const notiTraineeName = traineeStore.selectedTrainee.userName
 
-    if (response.status === 201) {
-      console.log('퀘스트 등록 성공:', response.data);
-    } else {
-      console.error('퀘스트 등록 실패');
-    }
-  } catch (error) {
-    console.error('퀘스트 등록 중 오류 발생:', error);
-  }
+      const makeNotification = async(msg) => {
+        try{
+          const notification = {userId: notiTraineeId, message: `${notiTraineeName}님, 오늘의 퀘스트가 ${msg}되었습니다.`}
+          console.log('넘어가는 메시지 확인', notification)
+          await notificationStore.createNotification(notification)
+        }catch(err){
+          console.log('프론트 등록 중 오류 발생', err)
+          // 알림 생성
+        }
+      }
+
+    questStore.createQuest(questData);
+
+     // 운동 데이터 비우기
+    exerciseStore.setSelectedExercises([]); // 선택된 운동을 비움
+
+    makeNotification('생성');
+
+    // 라우터 이동
+    router.push({ name: 'traineeList' });
+
 };
 </script>
 
