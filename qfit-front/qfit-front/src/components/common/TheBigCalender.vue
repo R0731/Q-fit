@@ -47,192 +47,226 @@
           {{ day.date.getDate() }} <!-- 날짜 숫자 -->
         </span>
 
-        <!-- 이벤트 1 동그라미 (event1 데이터 여부에 따라 표시) -->
+        <!-- 퀘스트 달성률, 리뷰, 피드백 표시 -->
+        <div v-if="day.questStatus">
+          <div>달성률: {{ day.questStatus.completionRate }}%</div>
+          <div>리뷰: {{ day.questStatus.review || '없음' }}</div>
+          <div>피드백: {{ day.questStatus.feedback || '없음' }}</div>
+        </div>
+
+        <!-- 이벤트 1 동그라미 (event1 데이터 여부에 따라 표시)
         <span
           v-if="day.event1"
           class="event-dot position-absolute"
         ></span>
 
-        <!-- 이벤트 2, 3, 4 목록 -->
+        이벤트 2, 3, 4 목록
         <div class="events-list">
-          <!-- 임시 이벤트 데이터 표시 -->
+          임시 이벤트 데이터 표시
           <div v-for="(event, index) in day.events" :key="index" class="event-item">
             {{ event }}
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: "Calendar", // 컴포넌트 이름
-  data() {
-    return {
-      currentMonth: new Date(), // 현재 날짜 기준으로 초기화
-      calendar: [], // 달력 데이터 저장 (2차원 배열)
-    };
-  },
-  mounted() {
-    // 컴포넌트가 로드되었을 때 달력 데이터를 생성
-    this.generateCalendar();
-  },
-  computed: {
-    /**
-     * 현재 월을 "YYYY년 MM월" 형식으로 반환
-     * - 예: 2024년 11월
-     */
-    getCurrentMonthText() {
-      const year = this.currentMonth.getFullYear();
-      const month = this.currentMonth.getMonth() + 1; // 월은 0부터 시작하므로 +1
-      return `${year}년 ${month}월`;
-    },
-  },
-  methods: {
-    /**
-     * 현재 월 데이터를 기반으로 달력 배열 생성
-     * - 이벤트 1 (동그라미): 랜덤한 Boolean 값
-     * - 이벤트 2, 3, 4: 임시 문자열 데이터로 초기화
-     */
-    generateCalendar() {
-      const start = new Date(
-        this.currentMonth.getFullYear(),
-        this.currentMonth.getMonth(),
-        1 // 현재 월의 첫째 날
-      );
-      const end = new Date(
-        this.currentMonth.getFullYear(),
-        this.currentMonth.getMonth() + 1,
-        0 // 현재 월의 마지막 날
-      );
+<script setup>
+import { useQuestStore } from "@/stores/quest";
+import { useUserStore } from "@/stores/user";
+import { ref, computed } from "vue";
 
-      const firstDayIndex = start.getDay(); // 첫 번째 날의 요일 (0: 일요일, 6: 토요일)
-      const lastDay = end.getDate(); // 현재 월의 마지막 날짜
-      const lastDayIndex = end.getDay(); // 마지막 날의 요일
-      const daysInPrevMonth = new Date(
-        this.currentMonth.getFullYear(),
-        this.currentMonth.getMonth(),
-        0 // 이전 월의 마지막 날짜
-      ).getDate();
+const currentMonth = ref(new Date()); // 현재 날짜 기준 초기화
+const calendar = ref([]); // 달력 데이터 저장
+const userStore = useUserStore();
+const traineeId = userStore.loginUser.numberId;
 
-      let calendarDays = [];
+// 현재 월 텍스트 (YYYY년 MM월)
+const getCurrentMonthText = computed(() => {
+  const year = currentMonth.value.getFullYear();
+  const month = currentMonth.value.getMonth() + 1; // 월은 0부터 시작하므로 +1
+  return `${year}년 ${month}월`;
+});
 
-      // 이전 달 날짜 추가
-      for (let i = firstDayIndex; i > 0; i--) {
-        calendarDays.push({
-          date: new Date(
-            this.currentMonth.getFullYear(),
-            this.currentMonth.getMonth() - 1,
-            daysInPrevMonth - i + 1 // 이전 달의 마지막 며칠
-          ),
-          inCurrentMonth: false, // 이전 달 날짜
-          event1: Math.random() > 0.5, // 이벤트 1 (랜덤)
-          events: ["Event 2", "Event 3", "Event 4"], // 임시 이벤트 데이터
-        });
-      }
+/**
+ * 현재 월 데이터를 기반으로 달력 배열 생성
+ * - 이벤트 1 (동그라미): 랜덤한 Boolean 값
+ * - 이벤트 2, 3, 4: 임시 문자열 데이터로 초기화
+ */
+const generateCalendar = async () => {
+  const start = new Date(
+    currentMonth.value.getFullYear(),
+    currentMonth.value.getMonth(),
+    1
+  );
+  const end = new Date(
+    currentMonth.value.getFullYear(),
+    currentMonth.value.getMonth() + 1,
+    0
+  );
 
-      // 현재 달 날짜 추가
-      for (let i = 1; i <= lastDay; i++) {
-        calendarDays.push({
-          date: new Date(
-            this.currentMonth.getFullYear(),
-            this.currentMonth.getMonth(),
-            i // 현재 월의 날짜
-          ),
-          inCurrentMonth: true, // 현재 달 날짜
-          event1: Math.random() > 0.5, // 이벤트 1 (랜덤)
-          events: ["Event 2", "Event 3", "피드백"], // 임시 이벤트 데이터
-        });
-      }
+  const firstDayIndex = start.getDay(); // 첫 번째 날의 요일 (0: 일요일, 6: 토요일)
+  const lastDay = end.getDate(); // 현재 월의 마지막 날짜
+  const lastDayIndex = end.getDay(); // 마지막 날의 요일
+  const daysInPrevMonth = new Date(
+    currentMonth.value.getFullYear(),
+    currentMonth.value.getMonth(),
+    0
+  ).getDate();
 
-      // 다음 달 날짜 추가
-      for (let i = 1; i < 7 - lastDayIndex; i++) {
-        calendarDays.push({
-          date: new Date(
-            this.currentMonth.getFullYear(),
-            this.currentMonth.getMonth() + 1,
-            i // 다음 달의 날짜
-          ),
-          inCurrentMonth: false, // 다음 달 날짜
-          event1: Math.random() > 0.5, // 이벤트 1 (랜덤)
-          events: ["Event 2", "Event 3", "Event 4"], // 임시 이벤트 데이터
-        });
-      }
+  let calendarDays = [];
 
-      // 달력을 주(Week) 단위로 분할
-      this.calendar = [];
-      while (calendarDays.length) {
-        this.calendar.push(calendarDays.splice(0, 7));
-      }
-    },
+  // 이전 달 날짜 추가
+  for (let i = firstDayIndex; i > 0; i--) {
+    calendarDays.push({
+      date: new Date(
+        currentMonth.value.getFullYear(),
+        currentMonth.value.getMonth() - 1,
+        daysInPrevMonth - i + 1
+      ),
+      inCurrentMonth: false,
+      event1: Math.random() > 0.5,
+      events: ["Event 2", "Event 3", "Event 4"],
+    });
+  }
 
-    /**
-     * 오늘 날짜인지 확인
-     * @param {Date} date - 확인할 날짜
-     * @returns {boolean} 오늘 날짜 여부
-     */
-    isToday(date) {
-      const today = new Date();
-      return (
-        today.getFullYear() === date.getFullYear() &&
-        today.getMonth() === date.getMonth() &&
-        today.getDate() === date.getDate()
-      );
-    },
+  // 현재 달 날짜 추가
+  for (let i = 1; i <= lastDay; i++) {
+    calendarDays.push({
+      date: new Date(
+        currentMonth.value.getFullYear(),
+        currentMonth.value.getMonth(),
+        i
+      ),
+      inCurrentMonth: true,
+      event1: Math.random() > 0.5,
+      events: ["Event 2", "Event 3", "피드백"],
+    });
+  }
 
-    /**
-     * 해당 날짜가 일요일인지 확인
-     * @param {Date} date - 확인할 날짜
-     * @returns {boolean} 일요일 여부
-     */
-    isSunday(date) {
-      return date.getDay() === 0;
-    },
+  // 다음 달 날짜 추가
+  for (let i = 1; i < 7 - lastDayIndex; i++) {
+    calendarDays.push({
+      date: new Date(
+        currentMonth.value.getFullYear(),
+        currentMonth.value.getMonth() + 1,
+        i
+      ),
+      inCurrentMonth: false,
+      event1: Math.random() > 0.5,
+      events: ["Event 2", "Event 3", "Event 4"],
+    });
+  }
 
-    /**
-     * 해당 날짜가 토요일인지 확인
-     * @param {Date} date - 확인할 날짜
-     * @returns {boolean} 토요일 여부
-     */
-    isSaturday(date) {
-      return date.getDay() === 6;
-    },
+  // 달력을 주 단위로 나누기
+  const weeks = [];
+  while (calendarDays.length) {
+    weeks.push(calendarDays.splice(0, 7));
+  }
+  calendar.value = weeks;
 
-    /**
-     * 날짜를 클릭했을 때 선택된 날짜를 반환
-     * @param {Date} date - 클릭된 날짜
-     */
-    selectDate(date) {
-      const formattedDate = date.toISOString().split("T")[0]; // yyyy-mm-dd 형식으로 변환
-      alert(`선택된 날짜: ${formattedDate}`);
-    },
 
-    /**
-     * 이전 달로 이동
-     */
-    goToPreviousMonth() {
-      this.currentMonth = new Date(
-        this.currentMonth.getFullYear(),
-        this.currentMonth.getMonth() - 1,
-        1 // 이전 달의 첫째 날
-      );
-      this.generateCalendar();
-    },
+  // 퀘스트 상태 데이터 로드
+  const startDate = `${currentMonth.value.getFullYear()}-${currentMonth.value.getMonth() + 1}-01`;
+  // const endDate = `${currentMonth.value.getFullYear()}-${currentMonth.value.getMonth() + 1}-${currentMonth.value.getDate()}`;
+  // 현재 달의 마지막 날짜 계산
+  const lastDayOfCurrentMonth = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth() + 1, 0);
+  const endDate = `${lastDayOfCurrentMonth.getFullYear()}-${lastDayOfCurrentMonth.getMonth() + 1}-${lastDayOfCurrentMonth.getDate()}`;
 
-    /**
-     * 다음 달로 이동
-     */
-    goToNextMonth() {
-      this.currentMonth = new Date(
-        this.currentMonth.getFullYear(),
-        this.currentMonth.getMonth() + 1,
-        1 // 다음 달의 첫째 날
-      );
-      this.generateCalendar();
-    },
-  },
+  await useQuestStore().getTraineeQuestCompletionRate(traineeId, startDate, endDate);
+  console.log('endDate: ',endDate)
+  console.log(useQuestStore().questCompletionRates)
+  updateCalendarWithQuestData();
 };
+
+// 퀘스트 상태 데이터로 달력 업데이트
+const updateCalendarWithQuestData = () => {
+  calendar.value.forEach((week) => {
+    week.forEach((day) => {
+      const status = useQuestStore().questCompletionRates.find((q) => {
+        // q.start_at을 Date 객체로 변환한 후, 연도, 월, 일만 비교
+        const qDate = new Date(q.start_at);
+        const dayDate = day.date;
+
+        return (
+          qDate.getFullYear() === dayDate.getFullYear() &&
+          qDate.getMonth() === dayDate.getMonth() &&
+          qDate.getDate() === dayDate.getDate()
+        );
+      });
+      console.log(status)
+      if (status) {
+        day.questStatus = status;
+        console.log(day.questStatus)
+      }
+    });
+  });
+};
+
+/**
+ * 오늘 날짜인지 확인
+ * @param {Date} date - 확인할 날짜
+ * @returns {boolean} 오늘 날짜 여부
+ */
+const isToday = (date) => {
+  const today = new Date();
+  return (
+    today.getFullYear() === date.getFullYear() &&
+    today.getMonth() === date.getMonth() &&
+    today.getDate() === date.getDate()
+  );
+};
+
+/**
+ * 해당 날짜가 일요일인지 확인
+ * @param {Date} date - 확인할 날짜
+ * @returns {boolean} 일요일 여부
+ */
+const isSunday = (date) => date.getDay() === 0;
+
+/**
+ * 해당 날짜가 토요일인지 확인
+ * @param {Date} date - 확인할 날짜
+ * @returns {boolean} 토요일 여부
+ */
+const isSaturday = (date) => date.getDay() === 6;
+
+/**
+ * 날짜를 클릭했을 때 선택된 날짜를 반환
+ * @param {Date} date - 클릭된 날짜
+ */
+const selectDate = (date) => {
+  const formattedDate = date.toISOString().split("T")[0];
+  alert(`선택된 날짜: ${formattedDate}`);
+};
+
+/**
+ * 이전 달로 이동
+ */
+const goToPreviousMonth = () => {
+  currentMonth.value = new Date(
+    currentMonth.value.getFullYear(),
+    currentMonth.value.getMonth() - 1,
+    1
+  );
+  generateCalendar();
+};
+
+/**
+ * 다음 달로 이동
+ */
+const goToNextMonth = () => {
+  currentMonth.value = new Date(
+    currentMonth.value.getFullYear(),
+    currentMonth.value.getMonth() + 1,
+    1
+  );
+  generateCalendar();
+};
+
+// 초기 달력 생성
+generateCalendar();
 </script>
 
 

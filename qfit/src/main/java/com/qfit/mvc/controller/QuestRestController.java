@@ -81,13 +81,14 @@ public class QuestRestController {
 	/**
      * 훈련생들의 퀘스트 달성률 조회 메서드
      * @param trainerId 트레이너 ID
-     * @return 훈련생들의 퀘스트 달성률 목록
+     * @return 훈련생들의 퀘스트 달성률 목록 정상 조회 OK (200), 목록 없을 시 NO_CONTENT (204),
+     *         실패 시 INTERNAL_SERVER_ERROR (500)
      */
-    @GetMapping("/{trainerId}")
+    @GetMapping("/{traineeId}")
     @Operation(summary = "훈련생 퀘스트 달성률 조회", description = "주어진 트레이너 ID에 해당하는 훈련생들의 퀘스트 달성률을 조회합니다.")
-    public ResponseEntity<?> getTraineeQuestCompletionRate(@PathVariable int trainerId, @RequestParam String startAt) {
+    public ResponseEntity<?> getTraineeQuestCompletionRate(@PathVariable int traineeId, @RequestParam String startAt, @RequestParam String endAt) {
         try {
-            List<Map<String, Object>> completionRates = questService.getTraineeQuestCompletionRate(trainerId, startAt);
+            List<Map<String, Object>> completionRates = questService.getTraineeQuestCompletionRate(traineeId, startAt, endAt);
             if (completionRates.isEmpty()) {
                 return new ResponseEntity<>("No data available for this trainer.", HttpStatus.NO_CONTENT);
             }
@@ -108,6 +109,7 @@ public class QuestRestController {
     public ResponseEntity<List<Map<String, Object>>> getTraineeQuestStatuses(@PathVariable int trainerId, @RequestParam String startAt) {
         try {
             // 서비스 레이어에서 퀘스트 상태 가져오기
+        	System.out.println("1");
             List<Map<String, Object>> statuses = questService.getQuestStatuses(trainerId, startAt);
             return new ResponseEntity<>(statuses, HttpStatus.OK);
         } catch (Exception e) {

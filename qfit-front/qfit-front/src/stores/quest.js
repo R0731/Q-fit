@@ -97,6 +97,19 @@ export const useQuestStore = defineStore('quest', () => {
     
     return quests; // 퀘스트 상태 객체 반환
   };
+
+  const questCompletionRates = ref([]); // 퀘스트 상태 (달성률, 리뷰, 피드백)
+
+  const getTraineeQuestCompletionRate = async (traineeId, startDate, endDate) => {
+    try {
+      const res = await axios.get(`${REST_API_URL}/${traineeId}`, {
+        params: {startAt: startDate, endAt: endDate },
+      });
+      questCompletionRates.value = res.data;
+    } catch (err) {
+      console.error(err);
+    }
+  };
   
   /**
    * 퀘스트 등록 함수
@@ -120,13 +133,16 @@ export const useQuestStore = defineStore('quest', () => {
       console.error('퀘스트 등록 중 오류 발생:', error);
     }
   };
+
   // 스토어에 제공할 함수 및 상태
   return { 
     quest, 
     tasks, 
     getQuestByIdAndStartDate, 
     getQuestsByTraineesAndDate,
-    getTasks,
+    getTasks, 
+    questCompletionRates, 
+    getTraineeQuestCompletionRate, 
     createQuest, 
     // formatDateToYMD 
   };
