@@ -17,8 +17,7 @@
             :class="['trainee-item', getStatusClass(trainee.questStatus)]">
           <!-- 프로필 이미지 -->
           <img
-              v-if="!trainee.isLoading"
-              :src="trainee.profileImageUrl"
+              :src="trainee.profileImageUrl || defaultProfileImage"
               alt="Profile"
               class="profile-img">
           <!-- 트레이니 정보 -->
@@ -110,6 +109,7 @@ const loadProfileImages = async () => {
 // 컴포넌트가 마운트될 때 데이터 로드
 onMounted(async () => {
   fetchTrainees();
+  trainees.value = traineeStore.trainees;
   await loadProfileImages();
 });
 
