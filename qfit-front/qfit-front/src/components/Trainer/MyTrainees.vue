@@ -16,7 +16,6 @@
           <li v-for="(trainee, index) in trainees" :key="index" class="trainee-item">
             <!-- 프로필 이미지 -->
             <img
-              v-if="!trainee.isLoading"
               :src="trainee.profileImageUrl"
               alt="Profile"
               class="profile-img">
@@ -60,22 +59,48 @@ const imageStore = useImageStore();
 
 const trainees = ref([]);
 
+// const loadProfileImages = async () => {
+//   // 각 트레이니의 프로필 이미지를 S3에서 로드
+//   for (const trainee of trainees.value) {
+//     if (trainee.userImg) {
+//       console.log(`이미지 파일 이름: ${trainee.userImg}`); // 디버그 로그 추가
+//       try {
+//         const blob = await imageStore.loadFile(trainee.userImg);
+//         trainee.profileImageUrl = URL.createObjectURL(blob); // Blob URL 생성
+//         console.log('트레이니이미지', trainee.profileImageUrl)
+//         console.log(`이미지 로드 성공: ${trainee.userImg}`); // 디버그 로그 추가
+//       } catch (error) {
+//         console.error(`이미지 로드 실패 (${trainee.userImg}):`, error);
+//         trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
+//       }
+//     } else {
+//       console.log("이미지 파일 이름이 없습니다."); // 디버그 로그 추가
+//       trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
+//     }
+//   }
+// };
+
 const loadProfileImages = async () => {
-  // 각 트레이니의 프로필 이미지를 S3에서 로드
   for (const trainee of trainees.value) {
     if (trainee.userImg) {
-      console.log(`이미지 파일 이름: ${trainee.userImg}`); // 디버그 로그 추가
+      console.log(`이미지 파일 이름: ${trainee.userImg}`);
       try {
         const blob = await imageStore.loadFile(trainee.userImg);
-        trainee.profileImageUrl = URL.createObjectURL(blob); // Blob URL 생성
-        console.log(`이미지 로드 성공: ${trainee.userImg}`); // 디버그 로그 추가
+        if (blob) {
+          console.log('Blob 생성 성공:', blob);
+          trainee.profileImageUrl = URL.createObjectURL(blob);
+        } else {
+          console.error('Blob 데이터가 비어 있습니다.');
+          trainee.profileImageUrl = defaultProfileImage;
+        }
+        console.log('트레이니이미지', trainee.profileImageUrl);
       } catch (error) {
         console.error(`이미지 로드 실패 (${trainee.userImg}):`, error);
-        trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
+        trainee.profileImageUrl = defaultProfileImage;
       }
     } else {
-      console.log("이미지 파일 이름이 없습니다."); // 디버그 로그 추가
-      trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
+      console.log("이미지 파일 이름이 없습니다.");
+      trainee.profileImageUrl = defaultProfileImage;
     }
   }
 };

@@ -4,16 +4,29 @@
     <div class="section-container">
       <h4>내 프로필</h4>
       <!-- 프로필 이미지 -->
-      <img
-        :src="profileImageUrl"
-        alt="Profile"
-        class="profile-img">
-        <button class="small-btn">이미지수정</button>
+      <div class="profile-section">
+        <img
+          :src="profileImageUrl"
+          alt="Profile"
+          class="profile-img">
+        <!-- 이미지 수정 -->
+        <div class="image-buttons">
+        <button class="small-btn-mini" @click="openFileInput">이미지 수정</button>
+        <!-- 파일 입력 숨기기 -->
+        <input
+          type="file"
+          class="hidden-input"
+          ref="fileInput"
+          @change="fileUpload"
+        />
+        <!-- 이미지 삭제 -->
+        <button class="small-btn-mini" @click="deleteImage">이미지 삭제</button>
+      </div>
       <p class="section-content">{{ userName }} 회원님, 안녕하세요.</p>
       <!-- 회원정보 수정 버튼 -->
       <button class="small-btn" @click="openPasswordModal">회원정보수정</button>
     </div>
-
+  </div>
     <!-- 비밀번호 확인 모달 -->
     <div v-if="isModalOpen" class="modal-overlay">
       <div class="modal-content">
@@ -122,16 +135,19 @@ const logout = async () => {
 
 const profileImageUrl = ref('');
 
-// 프로필 이미지 로드 함수
+// 프로필 이미지 로드
 const loadProfileImages = async () => {
   try {
     const numberId = userStore.loginUser.numberId;
-    console.log('넘버id', numberId);
-    const imgUrl = await userStore.getUserImageUrl(numberId);
+    console.log('넘버 id:', numberId);
+
+    const imgUrl = await userStore.getUserImageUrl(numberId); // await 추가
+    console.log('이미지 URL:', imgUrl);
+
     if (imgUrl) {
-      const blob = await imageStore.loadFile(imgUrl);
+      const blob = await imageStore.loadFile(imgUrl); // 이미지 로드
       profileImageUrl.value = URL.createObjectURL(blob); // Blob URL 생성
-      console.log(`이미지 로드 성공: ${profileImageUrl.value}`);
+      // console.log(`이미지 로드 성공: ${profileImageUrl.value}`);
     } else {
       throw new Error("사용자 이미지 URL이 없습니다.");
     }
@@ -140,6 +156,49 @@ const loadProfileImages = async () => {
     profileImageUrl.value = defaultProfileImage; // 실패 시 기본 이미지 설정
   }
 };
+
+
+// 프로필 이미지 수정
+const fileUpload = async(event) => {
+  const file = event.target.files[0];
+  if(!file){
+    console.error('파일선택안함');
+    return;
+  }
+  try{
+    const url = await imageStore.uploadFile(file);
+    console.log('이미지주소', url)
+    const user = {id: userStore.loginUser.numberId, userImg: url}
+    console.log('이미지업데이트유저', user)
+    userStore.updateUserImageUrl(user)
+    const blob = await imageStore.loadFile(url);
+    profileImageUrl.value = URL.createObjectURL(blob);
+  }catch(err){
+    console.error('이미지업데이트실패', err);
+  }
+}
+
+const fileInput = ref(null);
+const openFileInput = () => {
+  if(fileInput.value){
+    fileInput.value.click();
+  }
+}
+
+const deleteImage = async() => {
+  console.log('삭제할이미지주소', profileImageUrl.value);
+  if(profileImageUrl.value != defaultProfileImage){
+    try{
+      await imageStore.deleteFile(profileImageUrl.value);
+      const user = {id: userStore.loginUser.numberId, userImg: null};
+      console.log('삭제할 유저 객체', user)
+      await userStore.updateUserImageUrl(user);
+      profileImageUrl.value = defaultProfileImage;
+    }catch(err){
+      console.error('이미지 삭제 실패', err);
+    }
+  }
+}
 
 // 초기 데이터 로드
 onMounted(async () => {
@@ -155,6 +214,55 @@ onMounted(async () => {
   border: 1px solid #ddd; /* 섹션 경계선 */
   border-radius: 10px; /* 섹션 모서리 둥글게 */
   background-color: #f9f9f9; /* 섹션 배경 */
+}
+
+/* 프로필 섹션 (이미지 및 버튼 포함) */
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* 프로필 이미지 */
+.profile-img {
+  width: 200px; /* 이미지 크기를 더 키움 */
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border: 2px solid #e0e0e0; /* 경계선 */
+}
+
+
+/* 이미지 버튼 컨테이너 */
+.image-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+/* small-btn-mini (작은 버튼 스타일) */
+.small-btn-mini {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  border-radius: 15px;
+  background: #ffffff; /* 기본 색상: 흰색 */
+  color: var(--theme-color); /* 텍스트 색상 */
+  border: none; /* 테두리 */
+  cursor: pointer;
+  transition: all 0.3s ease; /* 애니메이션 */
+}
+
+.small-btn-mini:hover {
+  background: #e0e0e0; /* Hover 시 회색으로 변경 */
+  color: var(--theme-color); /* 텍스트는 동일한 테마 색상 유지 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+}
+
+.small-btn-mini:active {
+  background: #e0e0e0;
 }
 
 /* 모달 오버레이 (배경을 반투명하게 덮음) */
@@ -271,7 +379,7 @@ onMounted(async () => {
   width: 100%; /* 가로를 꽉 채움 */
   cursor: pointer; /* 클릭 가능한 커서 */
   transition: all 0.3s ease; /* 부드러운 애니메이션 */
-  margin-top: 35vh; /* 맨 위 항목과 뷰포트 높이 35% 간격 */
+  margin-top: 13vh; /* 맨 위 항목과 뷰포트 높이 35% 간격 */
 }
 
 .logout-btn:hover {
@@ -282,10 +390,13 @@ onMounted(async () => {
 
 /* 트레이니 프로필 이미지 */
 .profile-img {
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%; /* 원형 이미지 */
-  margin-right: 15px;
   object-fit: cover;
+}
+
+.hidden-input{
+  display: none;
 }
 </style>

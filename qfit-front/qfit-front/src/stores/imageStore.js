@@ -12,7 +12,6 @@ export const useImageStore = defineStore('image', () => {
   const uploadFile = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
-
     const response = await axios.post(`${REST_API_URL}/upload`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -28,7 +27,8 @@ export const useImageStore = defineStore('image', () => {
    */
   const deleteFile = async (fileName) => {
     const response = await axios.delete(`${REST_API_URL}/delete`, {
-      params: { fileName },
+      params: { fileName: fileName },
+      responseType: 'blob',
     });
     return response.data; // 삭제 성공 메시지 반환
   };

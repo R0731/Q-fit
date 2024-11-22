@@ -93,7 +93,7 @@ const loadProfileImages = async () => {
       try {
         const blob = await imageStore.loadFile(trainee.userImg);
         trainee.profileImageUrl = URL.createObjectURL(blob); // Blob URL 생성
-        console.log(`이미지 로드 성공: ${trainee.userImg}`); // 디버그 로그 추가
+        console.log('이미지 로드 성공', trainee.profileImageUrl); // 디버그 로그 추가
       } catch (error) {
         console.error(`이미지 로드 실패 (${trainee.userImg}):`, error);
         trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
