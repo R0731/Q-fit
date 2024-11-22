@@ -51,10 +51,12 @@ public class QuestServiceImpl implements QuestService {
 		// 일단 퀘스트 생성
 		questDao.insertQuest(quest);
 		
+		System.out.println("퀘스트아이디확인 " + quest.getQuestId());
 		
 		// 각 task 생성
 		for (Task task : quest.getTasks()) {
 			task.setQuestId(quest.getQuestId());
+			System.out.println("테스크아이디확인" + " " + task.getQuestId());
 			taskService.createTask(task);
 		}
 		

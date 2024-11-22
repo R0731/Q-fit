@@ -65,6 +65,8 @@ public class QuestRestController {
 	@Operation(summary = "Quest 등록", description = "trainer가 trainee에게 부여하는 퀘스트를 등록합니다. task를 등록하지 않으면 Quest가 등록되지 않습니다.")
 	public ResponseEntity<String> insertQuest(@RequestBody Quest quest) {
 		try {
+			System.out.println(quest.toString());
+			System.out.println(quest.getTasks());
             questService.insertQuest(quest);
             return new ResponseEntity<>("Quest created successfully.", HttpStatus.CREATED);
         } catch (IllegalStateException e) {
