@@ -76,7 +76,7 @@
 	<select id="getTraineeQuestCompletionRate" resultType="java.util.Map">
 	    SELECT q.trainee_id AS trainee_id, 
 	           q.quest_id AS quest_id,
-	           DATE(q.start_at) AS star_at,
+	           DATE(q.start_at) AS start_at,
 	           CONCAT(
 	               ROUND(
 	                   (SUM(CASE WHEN t.is_completed = TRUE THEN 1 ELSE 0 END) / COUNT(t.task_id)) * 100,

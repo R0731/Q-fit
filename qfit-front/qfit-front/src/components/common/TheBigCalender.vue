@@ -46,27 +46,28 @@
         >
           {{ day.date.getDate() }} <!-- 날짜 숫자 -->
         </span>
-
-        <!-- 퀘스트 달성률, 리뷰, 피드백 표시 -->
-        <div v-if="day.questStatus">
-          <div>달성률: {{ day.questStatus.completionRate }}%</div>
-          <div>리뷰: {{ day.questStatus.review || '없음' }}</div>
-          <div>피드백: {{ day.questStatus.feedback || '없음' }}</div>
-        </div>
-
-        <!-- 이벤트 1 동그라미 (event1 데이터 여부에 따라 표시)
+        
+        <!-- 퀘스트 있으면 동그라미 -->
         <span
-          v-if="day.event1"
+          v-if="day.questStatus"
           class="event-dot position-absolute"
         ></span>
 
-        이벤트 2, 3, 4 목록
+        <!-- 퀘스트 달성률, 리뷰, 피드백 표시 -->
+        <div v-if="day.questStatus" class="quest-details">
+          <div>달성률  {{ day.questStatus.questCompletionRate }}</div>
+          <div v-if="day.questStatus.review">리뷰  <span v-html="getReviewEmoji(day.questStatus.review)"></span></div>
+          <div v-if="day.questStatus.feedback">피드백  <i class="bi bi-chat-left"></i></div>
+          <!-- <div>피드백: {{ day.questStatus.feedback || '없음' }}</div> -->
+        </div>
+
+        <!-- 이벤트 2, 3, 4 목록
         <div class="events-list">
           임시 이벤트 데이터 표시
           <div v-for="(event, index) in day.events" :key="index" class="event-item">
             {{ event }}
           </div>
-        </div>-->
+        </div> -->
       </div>
     </div>
   </div>
@@ -75,12 +76,16 @@
 <script setup>
 import { useQuestStore } from "@/stores/quest";
 import { useUserStore } from "@/stores/user";
+import { useViewStore } from "@/stores/viewStore";
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 
 const currentMonth = ref(new Date()); // 현재 날짜 기준 초기화
 const calendar = ref([]); // 달력 데이터 저장
 const userStore = useUserStore();
 const traineeId = userStore.loginUser.numberId;
+const viewStore = useViewStore();
+const router = useRouter();
 
 // 현재 월 텍스트 (YYYY년 MM월)
 const getCurrentMonthText = computed(() => {
@@ -126,8 +131,8 @@ const generateCalendar = async () => {
         daysInPrevMonth - i + 1
       ),
       inCurrentMonth: false,
-      event1: Math.random() > 0.5,
-      events: ["Event 2", "Event 3", "Event 4"],
+      // event1: Math.random() > 0.5,
+      // events: ["Event 2", "Event 3", "Event 4"],
     });
   }
 
@@ -140,8 +145,8 @@ const generateCalendar = async () => {
         i
       ),
       inCurrentMonth: true,
-      event1: Math.random() > 0.5,
-      events: ["Event 2", "Event 3", "피드백"],
+      // event1: Math.random() > 0.5,
+      // events: ["Event 2", "Event 3", "피드백"],
     });
   }
 
@@ -154,8 +159,8 @@ const generateCalendar = async () => {
         i
       ),
       inCurrentMonth: false,
-      event1: Math.random() > 0.5,
-      events: ["Event 2", "Event 3", "Event 4"],
+      // event1: Math.random() > 0.5,
+      // events: ["Event 2", "Event 3", "Event 4"],
     });
   }
 
@@ -195,13 +200,32 @@ const updateCalendarWithQuestData = () => {
           qDate.getDate() === dayDate.getDate()
         );
       });
-      console.log(status)
+      console.log('status: ',status)
       if (status) {
         day.questStatus = status;
         console.log(day.questStatus)
       }
     });
   });
+};
+
+/**
+ * 리뷰를 Bootstrap Icons로 변환하는 메서드
+ * @param {string} review - 리뷰 수준 (EASY, MEDIUM, HARD)
+ * @returns {string} HTML 태그 문자열
+ */
+ const getReviewEmoji = (review) => {
+  if (!review) return '';
+  switch (review) {
+    case 'EASY':
+      return '<i class="bi bi-emoji-smile" style="color: green;"></i>'; // 쉬운 리뷰
+    case 'MEDIUM':
+      return '<i class="bi bi-emoji-neutral" style="color: orange;"></i>'; // 보통 리뷰
+    case 'HARD':
+      return '<i class="bi bi-emoji-frown" style="color: red;"></i>'; // 어려운 리뷰
+    default:
+      return '❓'; // 알 수 없는 값
+  }
 };
 
 /**
@@ -237,8 +261,8 @@ const isSaturday = (date) => date.getDay() === 6;
  * @param {Date} date - 클릭된 날짜
  */
 const selectDate = (date) => {
-  const formattedDate = date.toISOString().split("T")[0];
-  alert(`선택된 날짜: ${formattedDate}`);
+  viewStore.setSelectedDate(date);
+  router.push({ name: "traineeMain" });
 };
 
 /**
@@ -331,5 +355,11 @@ generateCalendar();
 
 .nav-btn:active {
   transform: scale(0.95); /* 클릭 시 작아지는 효과 */
+}
+
+/* quest-details 클래스에 스타일 추가 */
+.quest-details {
+  font-size: 0.7rem; /* 글씨 크기를 줄임 */
+  line-height: 1.2;  /* 줄 간격 조정 */
 }
 </style>

@@ -130,103 +130,171 @@ VALUES ('Cardio', 'cardio','런닝 머신'),
 ('Weight', 'leg','덤벨 런지')
 ;
 
+-- user 테이블에 초기 사용자 추가
 INSERT INTO user (user_id, user_pw, user_name, phone_number, email, gender, birth_date, user_img, user_type)
 VALUES 
-('ssafy', 'ssafy', '트레이너싸피', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 1),
-('ssafy2', 'ssafy2', '트레이니싸피', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 2),
-('user001', 'password123', 'Alice Smith', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'alice.jpg', 2),
-('user002', 'password456', 'Bob Brown', '010-8765-4321', 'bob@example.com', 'Male', '1985-11-23', 'bob.jpg', 1),
-('user003', 'password789', 'Charlie Johnson', '010-5555-6666', 'charlie@example.com', 'Male', '1992-07-08', 'charlie.jpg', 1),
-('user004', 'password789', 'Charlie Johnson', '010-5555-6666', 'charlie@example.com', 'Male', '1992-07-08', 'charlie.jpg', 2);
+('ssafy', 'ssafy', '트레이너싸피', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', NULL, 1),
+('ssafy2', 'ssafy2', '트레이니싸피', '010-1234-5678', 'bob@example.com', 'Female', '1990-05-15', NULL, 2);
 
+-- 추가 user 데이터 삽입
+INSERT INTO user (user_id, user_pw, user_name, phone_number, email, gender, birth_date, user_img, user_type)
+VALUES
+-- Trainer 데이터
+('trainer1', 'securepw123!', '김철수', '010-1234-5678', 'cheolsu.kim@fitnesspro.com', 'Male', '1985-03-22', NULL, 1),
+('trainer2', 'besttrainer987!', '박영호', '010-8765-4321', 'youngho.park@fitnesspro.com', 'Male', '1987-08-10', NULL, 1),
+
+-- Trainee 데이터
+('trainee1', 'trainee2024$', '이민정', '010-5678-1234', 'minjung.lee@fitlife.com', 'Female', '1995-12-05', NULL, 2),
+('trainee2', 'fitlife789!', '최성민', '010-4321-8765', 'sungmin.choi@fitlife.com', 'Male', '1999-06-18', NULL, 2);
+
+-- trainer 테이블 데이터 삽입
 INSERT INTO trainer (id, gym)
-VALUES 
-(2, 'Fitness Center A'),
-(3, 'Fitness Center B'),
-(1, 'Fitness Center C');
+SELECT id, CONCAT('Gym_', id)
+FROM user
+WHERE user_type = 1;
 
+-- Trainee 테이블에 trainer_id가 2인 데이터만 추가
 INSERT INTO trainee (id, trainer_id)
-VALUES 
-(1, 2),
-(2, 1),
-(3, 2),
-(6, 1);
+SELECT 
+    u.id, 
+    1 AS trainer_id -- 항상 trainer_id를 2로 설정
+FROM 
+    user u
+WHERE 
+    u.user_type = 2; -- Trainee인 사용자만 추가
 
--- INSERT INTO quest (trainee_id, trainer_id, start_at, end_at)
--- VALUES 
--- (1, 2, '2023-10-31 10:00:00', '2023-10-31 11:00:00'),
--- (2, 1, '2023-10-31 14:00:00', '2023-10-31 15:30:00'),
--- (3, 2, '2023-10-31 09:00:00', '2023-10-31 10:30:00');
-
--- INSERT INTO task (quest_id, order_index, is_completed, count, weight_kg, cardio_minutes, exercise_id)
--- VALUES 
--- (1, 1, FALSE, 10, 50, NULL, 1),
--- (2, 1, FALSE, NULL, NULL, 20, 2),
--- (3, 1, TRUE, 15, 60, NULL, 3);
-
+-- Quest 테이블 하드코딩 방식으로 더미 데이터 삽입
 INSERT INTO quest (trainee_id, trainer_id, start_at, end_at)
-VALUES 
--- 11월 18일 (어제)
-(1, 2, '2024-11-18 10:00:00', '2024-11-18 11:00:00'),
-(2, 3, '2024-11-18 15:00:00', '2024-11-18 16:00:00'),
+VALUES
+-- Trainee 2 데이터 (trainer_id: 1)
+(2, 1, '2024-11-22', '2024-11-23'),
+(2, 1, '2024-11-23', '2024-11-24'),
+(2, 1, '2024-11-24', '2024-11-25'),
+(2, 1, '2024-11-25', '2024-11-26'),
+(2, 1, '2024-11-26', '2024-11-27'),
+(2, 1, '2024-11-27', '2024-11-28'),
+(2, 1, '2024-11-28', '2024-11-29'),
+(2, 1, '2024-11-29', '2024-11-30'),
+(2, 1, '2024-11-30', '2024-12-01'),
 
--- 11월 19일 (오늘)
-(2, 1, '2024-11-19 09:30:00', '2024-11-19 10:30:00'),
-(1, 2, '2024-11-19 14:00:00', '2024-11-19 15:00:00'),
+-- Trainee 6 데이터 (trainer_id: 1)
+(6, 1, '2024-11-22', '2024-11-23'),
+(6, 1, '2024-11-23', '2024-11-24'),
+(6, 1, '2024-11-24', '2024-11-25'),
+(6, 1, '2024-11-25', '2024-11-26'),
+(6, 1, '2024-11-26', '2024-11-27'),
+(6, 1, '2024-11-27', '2024-11-28'),
+(6, 1, '2024-11-28', '2024-11-29'),
+(6, 1, '2024-11-29', '2024-11-30'),
+(6, 1, '2024-11-30', '2024-12-01');
 
--- 11월 20일 (내일)
-(2, 3, '2024-11-20 08:00:00', '2024-11-20 09:00:00'),
-(3, 2, '2024-11-20 16:30:00', '2024-11-20 17:30:00');
-
+-- Task 테이블에 하드코딩 방식으로 더미 데이터 삽입
 INSERT INTO task (quest_id, order_index, is_completed, count, weight_kg, cardio_minutes, exercise_id)
-VALUES 
--- 11월 18일 (어제)
-(1, 1, FALSE, 12, 40, NULL, 3), -- 벤치 프레스
-(1, 2, FALSE, 10, 50, NULL, 4), -- 딥스
-(2, 1, TRUE, NULL, NULL, 20, 1), -- 런닝 머신
+VALUES
+-- Quest 1 데이터
+(1, 1, FALSE, NULL, NULL, 30, 1), -- Cardio: 런닝 머신
+(1, 2, TRUE, 20, 60, NULL, 3),   -- Weight: 벤치 프레스
 
--- 11월 19일 (오늘)
-(3, 1, FALSE, 15, 60, NULL, 5), -- 덤벨 플라이
-(3, 2, FALSE, NULL, NULL, 25, 2), -- 싸이클
-(4, 1, TRUE, 20, 70, NULL, 6), -- 케이블 크로스 오버
-(4, 2, FALSE, 10, 45, NULL, 8), -- 랫풀다운
+-- Quest 2 데이터
+(2, 1, TRUE, 15, 50, NULL, 4),  -- Weight: 딥스
+(2, 2, FALSE, NULL, NULL, 25, 2), -- Cardio: 싸이클
 
--- 11월 20일 (내일)
-(5, 1, TRUE, 20, 70, NULL, 9), -- 친업
-(5, 2, FALSE, 8, 40, NULL, 11), -- 풀업
-(6, 1, TRUE, NULL, NULL, 30, 13), -- 오버헤드프레스
-(6, 2, TRUE, 12, 60, NULL, 18); -- 바벨컬
+-- Quest 3 데이터
+(3, 1, TRUE, 12, 70, NULL, 8),  -- Weight: 랫풀다운
+(3, 2, FALSE, NULL, NULL, 20, 1), -- Cardio: 런닝 머신
+(3, 3, TRUE, 10, 80, NULL, 10), -- Weight: 루마니안 데드리프트
 
+-- Quest 4 데이터
+(4, 1, FALSE, 18, 90, NULL, 15), -- Weight: 숄더프레스
+(4, 2, TRUE, 8, 40, NULL, 13), -- Weight: 사이드 레터럴 레이즈
 
-SELECT * FROM task;
+-- Quest 5 데이터
+(5, 1, FALSE, NULL, NULL, 45, 2), -- Cardio: 싸이클
+(5, 2, TRUE, NULL, NULL, 50, 1), -- Cardio: 런닝 머신
 
-INSERT INTO review (quest_id, trainee_id, difficulty)
-VALUES 
-(1, 1, 'MEDIUM'),
-(2, 2, 'HARD'),
-(3, 3, 'EASY');
+-- Quest 6 데이터
+(6, 1, FALSE, 5, 20, NULL, 20), -- Weight: 덤벨 리스트 컬
+(6, 2, TRUE, 10, 25, NULL, 18), -- Weight: 바벨컬
+(6, 3, FALSE, NULL, NULL, 15, 2), -- Cardio: 싸이클
 
+-- Quest 7 데이터
+(7, 1, TRUE, 12, 80, NULL, 24), -- Weight: 레그 익스텐션
+(7, 2, FALSE, 20, 90, NULL, 23), -- Weight: 레그 프레스
+(7, 3, FALSE, NULL, NULL, 40, 1), -- Cardio: 런닝 머신
+
+-- Quest 8 데이터
+(8, 1, FALSE, NULL, NULL, 35, 2), -- Cardio: 싸이클
+(8, 2, TRUE, 25, 110, NULL, 25), -- Weight: 덤벨 런지
+(8, 3, FALSE, NULL, NULL, 20, 1), -- Cardio: 런닝 머신
+
+-- Quest 9 데이터
+(9, 1, FALSE, 8, 55, NULL, 17), -- Weight: 프론트레이즈
+(9, 2, TRUE, 10, 45, NULL, 16), -- Weight: 숄더프레스
+
+-- Quest 10 데이터
+(10, 1, TRUE, 15, 60, NULL, 6), -- Weight: 케이블 크로스 오버
+(10, 2, FALSE, 25, 95, NULL, 24), -- Weight: 레그 익스텐션
+(10, 3, FALSE, NULL, NULL, 50, 2), -- Cardio: 싸이클
+
+-- Quest 11 데이터
+(11, 1, TRUE, 20, 70, NULL, 11), -- Weight: 풀업
+(11, 2, FALSE, NULL, NULL, 30, 1), -- Cardio: 런닝 머신
+
+-- Quest 12 데이터
+(12, 1, FALSE, 18, 85, NULL, 9), -- Weight: 친업
+(12, 2, TRUE, 15, 95, NULL, 10), -- Weight: 루마니안 데드리프트
+
+-- Quest 13 데이터
+(13, 1, FALSE, 20, 65, NULL, 5), -- Weight: 덤벨 플라이
+(13, 2, TRUE, 25, 75, NULL, 7), -- Weight: 푸시업
+
+-- Quest 14 데이터
+(14, 1, TRUE, NULL, NULL, 40, 2), -- Cardio: 싸이클
+(14, 2, FALSE, 10, 80, NULL, 12), -- Weight: 티바로우머신
+
+-- Quest 15 데이터
+(15, 1, FALSE, 18, 85, NULL, 17), -- Weight: 프론트레이즈
+(15, 2, TRUE, NULL, NULL, 45, 1), -- Cardio: 런닝 머신
+
+-- Quest 16 데이터
+(16, 1, FALSE, 12, 50, NULL, 22), -- Weight: 트라이셉 익스텐션머신
+(16, 2, TRUE, 8, 35, NULL, 18), -- Weight: 바벨컬
+
+-- Quest 17 데이터
+(17, 1, TRUE, NULL, NULL, 25, 2), -- Cardio: 싸이클
+(17, 2, FALSE, 5, 15, NULL, 21), -- Weight: 암컬 머신
+
+-- Quest 18 데이터
+(18, 1, TRUE, 15, 55, NULL, 14), -- Weight: 페이스 풀
+(18, 2, FALSE, 20, 60, NULL, 12); -- Weight: 티바로우머신
+
+-- Feedback 테이블에 더미 데이터 삽입
 INSERT INTO feedback (quest_id, trainer_id, content)
-VALUES 
-(1, 2, 'Good effort, Alice! Keep it up!'),
-(2, 1, 'You did well, Bob. Let’s push harder next time!'),
-(3, 2, 'Great job, Charlie. Remember to stretch after the workout.');
-
-INSERT INTO notification (user_id, message, is_read)
-VALUES 
-(1, 'Your training session starts in 1 hour.', FALSE),
-(2, '테스트1', false),
-(1, 'A new review is available for your last session.', FALSE),
-(2, '테스테스테스트세트스테슽스.', false),
-(2, 'A new review is available for your last session.', false);
+VALUES
+(1, 1, '운동 자세가 좋아지고 있습니다. 조금 더 무게를 늘려보세요.'),
+(2, 1, '자세를 조금 더 안정적으로 유지해주세요.'),
+(3, 1, '런닝 머신 속도를 조금 더 빠르게 설정해보세요.'),
+-- (4, 2, '랫풀다운 동작이 매우 좋습니다. 지속적으로 연습하세요.'),
+(5, 1, '오늘 운동 강도가 적절했습니다. 다음에도 비슷한 강도로 진행하세요.'),
+(6, 1, '덤벨 컬 시 손목의 각도를 조심하세요. 부상의 위험이 있습니다.'),
+(7, 1, '스쿼트 자세가 안정적입니다. 횟수를 조금 더 늘려보세요.'),
+-- (8, 2, '싸이클 시간을 조금 더 늘려서 유산소 효과를 높이세요.'),
+-- (9, 1, '오버헤드 프레스 동작이 훌륭합니다. 무게를 점진적으로 늘리세요.'),
+-- (10, 1, '벤치 프레스 시 어깨에 과한 부담을 주지 않도록 주의하세요.'),
+(11, 1, '풀업 동작이 좋아졌습니다. 개수를 조금 더 늘려보세요.'),
+(12, 1, '루마니안 데드리프트 시 허리 각도를 더 신경써주세요.'),
+-- (13, 1, '덤벨 런지 자세가 안정적입니다. 아주 잘 하고 있습니다.'),
+(14, 1, '페이스 풀 동작에서 속도를 조금 더 줄이세요.'),
+(15, 1, '프론트 스쿼트에서 안정감이 좋아졌습니다.'),
+(16, 1, '사이드 레터럴 레이즈 시 팔꿈치 각도를 유지하세요.'),
+-- (17, 1, '암컬 머신 사용이 좋아졌습니다. 횟수를 점진적으로 늘리세요.'), 
+(18, 1, '케이블 크로스 오버 동작에서 팔의 각도를 유지해보세요.');
 
 SELECT * FROM user;
 SELECT * FROM trainer;
 SELECT * FROM trainee;
-DESCRIBE user; 
+SELECT * FROM quest;
+SELECT * FROM exercise;
+SELECT * FROM task;
+SELECT * FROM feedback;
 SELECT * FROM notification;
-SELECT * FROM trainee;
-
-DELETE FROM review WHERE review_id >= 4;
-DELETE FROM notification WHERE notification_id >= 6; 
-INSERT INTO notification (user_id, message) VALUES (1, 'TEST');
