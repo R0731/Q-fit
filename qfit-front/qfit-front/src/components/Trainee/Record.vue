@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import TheBigCalender from '../common/TheBigCalender.vue';
+import TheBigCalender from './TraineeBigCalender.vue';
 </script>
 
 <style scoped>
