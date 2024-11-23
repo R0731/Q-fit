@@ -23,8 +23,9 @@ import MyTrainees from '@/components/Trainer/MyTrainees.vue';
 import MyTraineesUpdate from '@/components/Trainer/MyTraineesUpdate.vue';
 import MyTraineesDelete from '@/components/Trainer/MyTraineesDelete.vue';
 import QuestSetting from '@/components/Trainer/QuestSetting.vue';
-import TheBigCalender from '@/components/common/TheBigCalender.vue';
+import TraineeBigCalender from '@/components/Trainee/TraineeBigCalender.vue';
 import ImageUploader from '@/components/common/ImageUploader.vue';
+import MyTraineesBigCalender from '@/components/Trainer/MyTraineesBigCalender.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -110,6 +111,11 @@ const router = createRouter({
           name: 'MyTraineesDelete',
           component: MyTraineesDelete,
         },
+        {
+          path: 'bigcalender-trainee',
+          name: 'MyTraineesBigCalender',
+          component: MyTraineesBigCalender,
+        },
       ]
     },
 
@@ -163,7 +169,7 @@ const router = createRouter({
         {
           path: 'calender',
           name: 'traineeCalender',
-          component: TheBigCalender,
+          component: TraineeBigCalender,
         },
         {
           path: 'image',

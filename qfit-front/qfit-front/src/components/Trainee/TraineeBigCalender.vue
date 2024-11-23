@@ -180,8 +180,6 @@ const generateCalendar = async () => {
   const endDate = `${lastDayOfCurrentMonth.getFullYear()}-${lastDayOfCurrentMonth.getMonth() + 1}-${lastDayOfCurrentMonth.getDate()}`;
 
   await useQuestStore().getTraineeQuestCompletionRate(traineeId, startDate, endDate);
-  console.log('endDate: ',endDate)
-  console.log(useQuestStore().questCompletionRates)
   updateCalendarWithQuestData();
 };
 
@@ -200,10 +198,8 @@ const updateCalendarWithQuestData = () => {
           qDate.getDate() === dayDate.getDate()
         );
       });
-      console.log('status: ',status)
       if (status) {
         day.questStatus = status;
-        console.log(day.questStatus)
       }
     });
   });
