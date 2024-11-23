@@ -1,11 +1,11 @@
 <template>
   <div>
-    <TheBigCalender />
+    <TraineeBigCalender />
   </div>
 </template>
 
 <script setup>
-import TheBigCalender from './TraineeBigCalender.vue';
+import TraineeBigCalender from './TraineeBigCalender.vue';
 </script>
 
 <style scoped>
