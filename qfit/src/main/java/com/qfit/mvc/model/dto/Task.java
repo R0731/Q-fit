@@ -26,7 +26,6 @@ public class Task {
 	
 	// 무산소 생성자
 	public Task(int questId, Integer count, Integer weightKg, int exerciseId) {
-		super();
 		this.questId = questId;
 		this.count = count;
 		this.weightKg = weightKg;
@@ -35,7 +34,6 @@ public class Task {
 	
 	// 유산소 생성자
 	public Task(int questId, Integer cardioMinutes, int exerciseId) {
-		super();
 		this.questId = questId;
 		this.cardioMinutes = cardioMinutes;
 		this.exerciseId = exerciseId;
@@ -93,7 +91,7 @@ public class Task {
 	@Override
 	public String toString() {
 		return "Task [taskId=" + taskId + ", questId=" + questId + ", orderIndex=" + orderIndex + ", isCompleted="
-				+ isCompleted + ", count=" + count + ", weightKg=" + weightKg + ", cardioMinutes=" + cardioMinutes
+				+ isCompleted + ", count=" + (count != null ? count : 0) + ", weightKg=" + (weightKg != null ? weightKg : 0) + ", cardioMinutes=" + (cardioMinutes != null ? cardioMinutes : 0)
 				+ ", exerciseId=" + exerciseId + "]";
 	}
 	

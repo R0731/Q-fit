@@ -34,14 +34,20 @@
 
 <script setup>
 import { useFeedbackStore } from '@/stores/feedback';
+import { useNotificationStore } from '@/stores/notification';
 import { useQuestStore } from '@/stores/quest';
+import { useTraineeStore } from '@/stores/trainee';
 import { useUserStore } from '@/stores/user';
+import { useViewStore } from '@/stores/viewStore';
 import { ref, computed, watch } from 'vue';
 
 // 스토어 사용
 const feedbackStore = useFeedbackStore();
 const questStore = useQuestStore();
 const userStore = useUserStore();
+const traineeStore = useTraineeStore();
+const viewStore = useViewStore();
+const notificationStore = useNotificationStore();
 
 // 상태 관리
 const feedback = ref('NONE'); // 현재 피드백 상태
@@ -70,18 +76,28 @@ watch(
   { immediate: true } // 컴포넌트 로드시 실행
 );
 
-/**
- * 피드백 작성 시작
- */
+// 알림 생성
+const makeNotification = async(msg) => {
+  try{
+    const traineeId = traineeStore.selectedTrainee.id;
+    const questDate = viewStore.selectedDate;
+    const notification = {userId: traineeId, message: `${questDate} 수행 퀘스트에 대한 피드백이 ${msg}되었습니다.`}
+    console.log('넘어가는 메시지 확인', notification)
+    await notificationStore.createNotification(notification)
+  }catch(err){
+    console.log('프론트 등록 중 오류 발생', err)
+  }
+}
+
+
+// 피드백 작성 시작
 const startCreateFeedback = () => {
   isCreating.value = true; // 작성 모드 활성화
   newFeedbackContent.value = ''; // 텍스트 초기화
   newTrainerId.value = 1; // 기본 트레이너 ID 설정
 };
 
-/**
- * 피드백 등록 완료
- */
+// 피드백 등록 완료
 const submitCreateFeedback = async () => {
   if (!newFeedbackContent.value.trim()) {
     alert('내용을 입력해주세요.');
@@ -101,23 +117,21 @@ const submitCreateFeedback = async () => {
     feedback.value = newFeedback; // 로컬 상태 업데이트
     isCreating.value = false; // 작성 모드 종료
     alert('피드백이 등록되었습니다.');
+    makeNotification('등록');
   } catch (err) {
     console.error('피드백 등록 실패:', err);
     alert('피드백 등록에 실패했습니다.');
   }
 };
 
-/**
- * 피드백 수정 시작
- */
+
+// 피드백 수정 시작
 const startEditFeedback = () => {
   isEditing.value = true; // 수정 모드 활성화
   newFeedbackContent.value = feedback.value.content; // 기존 내용 불러오기
 };
 
-/**
- * 피드백 수정 완료
- */
+// 피드백 수정 완료
 const submitUpdateFeedback = async () => {
   if (!newFeedbackContent.value.trim()) {
     alert('내용을 입력해주세요.');
@@ -133,15 +147,17 @@ const submitUpdateFeedback = async () => {
     feedback.value = { ...feedback.value, ...updatedFeedback }; // 로컬 상태 업데이트
     isEditing.value = false; // 수정 모드 종료
     alert('피드백이 수정되었습니다.');
+    const traineeId = traineeStore.selectedTrainee.id;
+    const questDate = viewStore.selectedDate;
+    makeNotification('수정');
+    
   } catch (err) {
     console.error('피드백 수정 실패:', err);
     alert('피드백 수정에 실패했습니다.');
   }
 };
 
-/**
- * 작성/수정 취소
- */
+// 작성, 수정 취소
 const cancelAction = () => {
   isCreating.value = false; // 작성 모드 종료
   isEditing.value = false; // 수정 모드 종료

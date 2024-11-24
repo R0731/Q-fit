@@ -17,11 +17,15 @@
           <div class="d-flex align-items-center">
             <!-- bodyPart 텍스트 -->
             <div class="body-part">
-              <span class="text-theme">{{ task.cardioMinutes === null ? exerciseData[task.exerciseId]?.exerciseParts || 'Unknown' : 'cardio' }}</span>
+              <span class="text-theme">{{ task.cardioMinutes === null ? bodyPartMap[exerciseData[task.exerciseId]?.exerciseParts] || 'Unknown' : '유산소' }}</span>
             </div>
             <!-- exerciseName -->
             <div class="exercise-name">
               {{ exerciseData[task.exerciseId]?.exerciseName || 'Loading...' }}
+            </div>
+            <!-- kg -->
+            <div class="exercise-count">
+              {{ task.weightKg ? task.weightKg + 'kg' : null }}
             </div>
             <!-- count -->
             <div class="exercise-count">
@@ -38,28 +42,45 @@
           </button>
         </li>
       </ul>
+      <!-- 수정 버튼 -->
+      <div class="edit-section">
+        <button v-if="canEdit" class="small-btn" @click="$emit('switchToEditor')">수정</button>
+        <p v-else>수정할 수 없습니다.</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useExerciseStore } from '@/stores/exercise';
 import { useQuestStore } from '@/stores/quest';
+import { useViewStore } from '@/stores/viewStore';
+import { useRouter } from 'vue-router';
 
 // Pinia 스토어
 const questStore = useQuestStore();
 const exerciseStore = useExerciseStore();
+const viewStore = useViewStore();
+const router = useRouter();
 
 // 퀘스트 목록
-const tasks = computed(() => questStore.getTasks || []);
+const tasks = computed(() => questStore.tasks || []);
 
 // 운동 정보
 const exerciseData = ref({});
 
-/**
- * 특정 exerciseId의 운동 정보를 가져오기
- */
+// 영어 - 한글 매핑 객체
+const bodyPartMap = {
+  leg: '하체',
+  chest: '가슴',
+  back: '등',
+  shoulder: '어깨',
+  arm: '팔',
+  cardio: '유산소',
+};
+
+// 특정 exerciseId의 운동 정보를 가져오기
 const loadExerciseInfo = async (exerciseId) => {
   if (exerciseData.value[exerciseId]) return;
 
@@ -77,18 +98,69 @@ const loadExerciseInfo = async (exerciseId) => {
   }
 };
 
-/**
- * 모든 운동 정보를 로드
- */
+// 모든 운동 정보를 로드
 const loadAllExerciseInfo = async () => {
   const uniqueExerciseIds = [...new Set(tasks.value.map((task) => task.exerciseId))];
   for (const exerciseId of uniqueExerciseIds) {
     await loadExerciseInfo(exerciseId);
   }
+  console.log('모든 운동 정보 로드 완료')
 };
 
+// 전체 운동 정보 로드
+const getAllExercises = async() => {
+  const result = exerciseStore.getAllExercises()
+  console.log(result.value)
+}
+
+// 선택한 날짜가 현재 날짜 이전이면 수정 불가능
+const canEdit = ref(false);
+
+const updateCanEdit = () => {
+  const today = formatDateToYYYYMMDD(new Date()); // 오늘 날짜 계산
+  console.log('선택된 날짜:', selectedDate.value);
+  console.log('오늘 날짜:', today);
+
+  if (selectedDate.value) {
+    canEdit.value = selectedDate.value >= today; // 날짜 비교
+  } else {
+    canEdit.value = false; // 선택된 날짜가 없으면 수정 불가
+  }
+};
+
+// 날짜를 yyyy-mm-dd형식으로 변환
+const formatDateToYYYYMMDD = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 필요
+  const day = String(date.getDate()).padStart(2, '0'); // 1자리 수일 경우 앞에 0 추가
+  return `${year}-${month}-${day}`;
+};
+
+const selectedDate = computed(() => viewStore.selectedDate);
+
+// // tasks 감시
+// watch(
+//   () => questStore.tasks,
+//   (newTasks, oldTasks) => {
+//     console.log('watch에서 questStore.tasks 변경 감지:', { newTasks, oldTasks });
+//   },
+//   { deep: true }
+// );
+
+
 // 컴포넌트 초기화
-onMounted(loadAllExerciseInfo);
+onMounted(async() => {
+  await getAllExercises();
+  await loadAllExerciseInfo();
+  await updateCanEdit();
+  // console.log('로딩 완료');
+});
+watch(
+  () => tasks.value,
+  (newTasks) => {
+    console.log('computed tasks 변경 감지:', newTasks);
+  }
+);
 
 // 퀘스트 생성
 const createQuest = () => {
@@ -130,11 +202,6 @@ button {
   border: 1px solid var(--theme-color);
 }
 
-/* .btn-not-completed:hover {
-  background-color: var(--theme-color);
-  color: #fff;
-} */
-
 /* 텍스트 테마 색상 */
 .text-theme {
   color: var(--theme-color);
@@ -161,5 +228,9 @@ button {
 .exercise-count {
   font-size: 0.9rem;
   color: #666; /* 약간 어두운 텍스트 색상 */
+}
+
+.edit-section{
+  margin-top: 13px;
 }
 </style>

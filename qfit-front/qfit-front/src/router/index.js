@@ -25,6 +25,7 @@ import MyTraineesDelete from '@/components/Trainer/MyTraineesDelete.vue';
 import QuestSetting from '@/components/Trainer/QuestSetting.vue';
 import TraineeBigCalender from '@/components/Trainee/TraineeBigCalender.vue';
 import ImageUploader from '@/components/common/ImageUploader.vue';
+import { useNotificationStore } from '@/stores/notification';
 import MyTraineesBigCalender from '@/components/Trainer/MyTraineesBigCalender.vue';
 
 const router = createRouter({
@@ -214,4 +215,14 @@ router.beforeEach((to, from, next) => {
   next();
 })
 
+// 알림 상태 업데이트
+router.afterEach(() => {
+  const notificationStore = useNotificationStore();
+  const userStore = useUserStore();
+  const userId = userStore.loginUser?.numberId;
+
+  if(userId){
+    notificationStore.fetchUnreadNotifications(userId);
+  }
+})
 export default router

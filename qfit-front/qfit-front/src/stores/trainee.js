@@ -119,13 +119,15 @@ export const useTraineeStore = defineStore('trainee', () => {
       const url = `${REST_API_URL}/${traineeId}/read-trainer`
       // console.log('조회 url', url)
       const res = await axios.get(url)
-      return res.data;
+      console.log('res', res);
+      console.log('resdata', res.data);
       // console.log('res조회', res)
       if(res.status === 200){
         // console.log('res.data 조회', res.data);
         trainer.value = { trainerId: res.data };
         // console.log('trainer조회', trainer.value);
       }
+      return res.data;
     }catch(err){
       console.log(err)
     }

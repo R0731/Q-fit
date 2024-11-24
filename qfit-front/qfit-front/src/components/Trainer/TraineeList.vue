@@ -10,7 +10,7 @@
         <!-- 피드백 버튼 -->
         <button class="register-btn" @click="goFeedbackList">피드백</button>
       </div>
-      <ul>
+      <ul v-if="trainees.length > 0">
         <!-- 트레이니 리스트 -->
         <li v-for="trainee in trainees" :key="trainee.id" 
             @click="selectTrainee(trainee)" 
@@ -67,6 +67,15 @@ const fetchTrainees = () => {
     .fetchTraineesWithQuestStatuses(trainerId, viewStore.selectedDate)
     .then(() => {
       trainees.value = traineeStore.trainees;
+      console.log("트레이니 데이터 로드 완료:", trainees.value); // 디버그 로그
+
+      // 데이터 로드 후 프로필 이미지 로드 실행 (이미지 오류 시 해당 코드 문제)
+      if (trainees.value.length > 0) {
+        console.log("트레이니 데이터 로드 후 이미지 로드 시작");
+        loadProfileImages(); // 프로필 이미지 로드
+      } else {
+        console.warn("트레이니 데이터가 비어 있습니다.");
+      }
     })
     .catch((err) => {
       console.error(err);
@@ -93,7 +102,7 @@ const loadProfileImages = async () => {
       try {
         const blob = await imageStore.loadFile(trainee.userImg);
         trainee.profileImageUrl = URL.createObjectURL(blob); // Blob URL 생성
-        console.log(`이미지 로드 성공: ${trainee.userImg}`); // 디버그 로그 추가
+        console.log(`이미지 로드 성공: ${trainee.profileImageUrl.value}`);
       } catch (error) {
         console.error(`이미지 로드 실패 (${trainee.userImg}):`, error);
         trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
@@ -109,8 +118,6 @@ const loadProfileImages = async () => {
 // 컴포넌트가 마운트될 때 데이터 로드
 onMounted(async () => {
   fetchTrainees();
-  trainees.value = traineeStore.trainees;
-  await loadProfileImages();
 });
 
 // 퀘스트 상태에 따른 클래스 변화

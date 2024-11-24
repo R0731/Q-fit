@@ -1,5 +1,6 @@
 package com.qfit.mvc.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,9 @@ import java.io.InputStream;
 @RequestMapping("/s3")
 public class S3Controller {
 
+	@Value("${cloud.aws.s3.bucket}")
+    private String bucketName;
+	
     private final S3Service s3Service;
 
     public S3Controller(S3Service s3Service) {
@@ -42,9 +46,12 @@ public class S3Controller {
     @GetMapping("/load")
     @Operation(summary = "파일 로드", description = "AWS S3에서 특정 파일을 로드하여 반환합니다.")
     public ResponseEntity<byte[]> loadFile(@RequestParam("fileName") String fileName) throws IOException {
-        try (InputStream inputStream = s3Service.getFileAsStream(fileName)) {
+    	String s3UrlPrefix = "https://" + bucketName + ".s3.us-east-2.amazonaws.com/";
+        String key = fileName.replace(s3UrlPrefix, "");
+//        System.out.println("S3 키: " + key);
+        try (InputStream inputStream = s3Service.getFileAsStream(key)) {
             byte[] fileBytes = inputStream.readAllBytes(); // 스트림에서 바이트 배열로 읽기
-            
+//            System.out.println("실행완료" + fileName);
             // Content-Type 자동 추정 (이미지 파일로 가정)
             String contentType = fileName.endsWith(".png") ? "image/png" :
                                  fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") ? "image/jpeg" :
@@ -54,6 +61,7 @@ public class S3Controller {
                     .header("Content-Type", contentType)
                     .body(fileBytes);
         } catch (Exception e) {
+        	System.out.println("이미지 로드 실패" + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 파일이 없을 경우 404 반환
         }
     }

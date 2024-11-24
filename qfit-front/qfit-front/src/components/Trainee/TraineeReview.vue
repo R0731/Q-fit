@@ -177,12 +177,17 @@ const cancelSelection = () => {
 };
 
 
-const trainerId = traineeStore.trainer.trainerId;
 
-console.log('트레이너아이디', trainerId);
 // 알림 생성
 const makeNotification = async(msg) => {
   try{
+    const traineeId = userStore.loginUser.numberId;
+    const trainerId = await traineeStore.getTrainerId(traineeId);
+    if (!trainerId) {
+      console.error('트레이너 ID를 가져오지 못했습니다.');
+      return; // 유효하지 않은 경우 함수 종료
+    }
+    console.log('트레이너아이디', trainerId);
     const notification = {userId: trainerId, message: `${userStore.loginUser.name}님이 리뷰를 ${msg}하였습니다.`}
     console.log('넘어가는 메시지 확인', notification)
     await notificationStore.createNotification(notification)

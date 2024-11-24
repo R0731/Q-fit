@@ -17,11 +17,15 @@
           <div class="d-flex align-items-center">
             <!-- bodyPart 텍스트 -->
             <div class="body-part">
-              <span class="text-theme">{{ task.cardioMinutes === null ? exerciseData[task.exerciseId]?.exerciseParts || 'Unknown' : 'cardio' }}</span>
+              <span class="text-theme">{{ task.cardioMinutes === null ? bodyPartMap[exerciseData[task.exerciseId]?.exerciseParts] || 'Unknown' : '유산소' }}</span>
             </div>
             <!-- exerciseName -->
             <div class="exercise-name">
               {{ exerciseData[task.exerciseId]?.exerciseName || 'Loading...' }}
+            </div>
+            <!-- kg -->
+            <div class="exercise-count">
+              {{ task.weightKg ? task.weightKg + 'kg' : null }}
             </div>
             <!-- count -->
             <div class="exercise-count">
@@ -60,7 +64,15 @@ const formattedDate = computed(() => viewStore.selectedDate);
 
 const tasks = computed(() => questStore.getTasks || []);
 
-console.log('테스크s', tasks.value);
+// 영어 - 한글 매핑 객체
+const bodyPartMap = {
+  leg: '하체',
+  chest: '가슴',
+  back: '등',
+  shoulder: '어깨',
+  arm: '팔',
+  cardio: '유산소',
+};
 
 const exerciseData = ref({});
 

@@ -38,14 +38,14 @@
 	<!-- 유산소 태스크 수정 -->
 	<update id="updateCardioTask" parameterType="Task">
 		UPDATE task
-		SET cardio_minutes = #{cardioMinutes}, exercise_id = #{exerciseId}
+		SET cardio_minutes = #{cardioMinutes}, exercise_id = #{exerciseId}, weight_kg = #{weightKg}, count = #{count}
 		WHERE task_id = #{taskId};
 	</update>
 	
 	<!-- 무산소 태스크 수정 -->
 	<update id="updateWeightTask" parameterType="Task">
 		UPDATE task
-		SET weight_kg = #{weightKg}, count = #{count}, exercise_id = #{exerciseId}
+		SET weight_kg = #{weightKg}, count = #{count}, exercise_id = #{exerciseId}, cardio_minutes = #{cardioMinutes}
 		WHERE task_id = #{taskId};
 	</update>
 
