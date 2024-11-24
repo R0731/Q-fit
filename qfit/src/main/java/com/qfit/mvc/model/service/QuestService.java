@@ -14,7 +14,7 @@ public interface QuestService {
 	public void insertQuest(Quest quest);
 
 	// 퀘스트 수행률 계산
-	List<Map<String, Object>> getTraineeQuestCompletionRate(int trainerId, String startAt);
+	List<Map<String, Object>> getTraineeQuestCompletionRate(int traineeId, String startAt, String endAt);
 	
 	// 퀘스트 상태 출력
 	public List<Map<String, Object>> getQuestStatuses(int trainerId, String startAt);

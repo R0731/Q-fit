@@ -74,18 +74,24 @@
 	
 	<!-- 퀘스트 달성률 계산 -->
 	<select id="getTraineeQuestCompletionRate" resultType="java.util.Map">
-	    SELECT q.trainee_id AS traineeId, 
-	           q.quest_id AS questId,
+	    SELECT q.trainee_id AS trainee_id, 
+	           q.quest_id AS quest_id,
+	           DATE(q.start_at) AS start_at,
 	           CONCAT(
 	               ROUND(
 	                   (SUM(CASE WHEN t.is_completed = TRUE THEN 1 ELSE 0 END) / COUNT(t.task_id)) * 100,
 	                   2
 	               ), '%'
-	           ) AS questCompletionRate
+	           ) AS questCompletionRate,
+	           r.difficulty AS review,
+	           f.content AS feedback
 	    FROM quest q
 	    LEFT JOIN task t ON q.quest_id = t.quest_id
-	    WHERE q.trainer_id = #{trainerId} AND DATE(q.start_at) = DATE(#{startAt})
-	    GROUP BY q.trainee_id, q.quest_id;
+	    LEFT JOIN review r ON q.quest_id = r.quest_id
+	    LEFT JOIN feedback f ON q.quest_id = f.quest_id
+	    WHERE q.trainee_id = #{traineeId}
+	    	  AND DATE(q.start_at) BETWEEN DATE(#{startAt}) AND DATE(#{endAt})
+	    GROUP BY q.trainee_id, q.quest_id, r.difficulty, f.content;
 	</select>
 		
 	<!-- 퀘스트 상태 출력 -->

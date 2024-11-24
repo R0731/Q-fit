@@ -25,7 +25,7 @@
               <small class="trainee-age">{{ trainee.age }}세</small>
             </div>
             <!-- 퀘스트 조회하기 버튼 -->
-            <button class="small-btn" @click="viewQuest(trainee.id)">퀘스트 조회하기</button>
+            <button class="small-btn" @click="selectTrainee(trainee)">퀘스트 조회하기</button>
           </li>
         </ul>
       </div>
@@ -47,9 +47,11 @@ const router = useRouter();
 const goToUpdate = () => router.push({ name: "MyTraineesUpdate" });
 const goToDelete = () => router.push({ name: "MyTraineesDelete" });
 
-// 퀘스트 조회 함수
-const viewQuest = (id) => {
-  router.push({ name: "QuestView", params: { id } });
+// 트레이니 클릭 시 퀘스트 수행달력 조회
+const selectTrainee = (trainee) => {
+  // 선택한 훈련생 데이터를 상태로 유지 후 화면 전환
+  traineeStore.selectedTrainee = trainee; // Store에 선택된 훈련생 저장
+  router.push({ name: 'MyTraineesBigCalender' }); // 라우터 이동
 };
 
 // 사용자 및 트레이니 데이터 로드

@@ -30,7 +30,8 @@
     <div v-else>
       <p>운동을 선택해주세요.</p>
     </div>
-    <div class="footer2">
+    <div class="submit
+  ">
       <button 
         :disabled="selectedExercises.length === 0"
         @click.prevent="goToQuestSetting"
@@ -137,8 +138,8 @@ button:hover {
   background-color: #4b0581;
 }
 
-button.active {
-  background-color: #6f2be8; /* 선택된 버튼 색 */
+button.selected {
+  background-color: #4b0581; /* 선택된 버튼 색 */
 }
 
 .exercise-list {
@@ -169,13 +170,13 @@ button.active {
   font-size: 16px;
 }
 
-.footer2 {
+.submit {
   position: absolute;
   bottom: 80px;
   display: inline-flex;
 }
 
-.footer2 button {
+.submit button {
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 5px;
@@ -185,7 +186,7 @@ button.active {
   width: 400px;
 }
 
-.footer2 button:disabled {
+.submit button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
 }

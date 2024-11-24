@@ -42,26 +42,26 @@ export const useQuestStore = defineStore('quest', () => {
       throw error;
     }
   };
-
+  
   /**
    * Task 목록 반환
-   */
-  const getTasks = computed(() => tasks.value);
-
-  const getQuestsByTraineesAndDate = async (traineeIds, startDate) => {
-    const quests = {};
-  
-    try {
-      // 요청 로그
-      console.log('Batch Quest Fetch:', { traineeIds, startDate });
-  
-      // 여러 퀘스트를 동시에 조회
-      const promises = traineeIds.map(async (traineeId) => {
-        try {
-          const res = await axios.get(REST_API_URL, {
-            params: { traineeId, startAt: startDate },
+  */
+ const getTasks = computed(() => tasks.value);
+ 
+ const getQuestsByTraineesAndDate = async (traineeIds, startDate) => {
+   const quests = {};
+   
+   try {
+     // 요청 로그
+     console.log('Batch Quest Fetch:', { traineeIds, startDate });
+     
+     // 여러 퀘스트를 동시에 조회
+     const promises = traineeIds.map(async (traineeId) => {
+       try {
+         const res = await axios.get(REST_API_URL, {
+           params: { traineeId, startAt: startDate },
           });
-  
+          
           if (res.status === 200 && res.data) {
             quests[traineeId] = res.data.status || "미등록"; // 퀘스트 상태 저장
           } else {
@@ -72,32 +72,32 @@ export const useQuestStore = defineStore('quest', () => {
           quests[traineeId] = "미등록";
         }
       });
-  
+      
       await Promise.all(promises); // 모든 요청 완료 대기
     } catch (error) {
       console.error('Batch Quest Fetch Error:', error);
     }
-  
+    
     return quests; // 퀘스트 상태 객체 반환
   };
 
-  const originalTasks = ref([]);
+  // const originalTasks = ref([]);
   const exerciseData = reactive({});
 
-  // 액션 정의
-  const setTasks = (newTasks) => {
-    tasks.value = newTasks;
-    originalTasks.value = JSON.parse(JSON.stringify(newTasks)); // 깊은 복사
-  };
+  // // 액션 정의
+  // const setTasks = (newTasks) => {
+  //   tasks.value = newTasks;
+  //   originalTasks.value = JSON.parse(JSON.stringify(newTasks)); // 깊은 복사
+  // };
 
-  // task배열 업데이트
-  const updateTasks = (updatedTasks) => {
-    tasks.value = [...updatedTasks]; // 새로운 배열로 대체
-  };
+  // // task배열 업데이트
+  // const updateTasks = (updatedTasks) => {
+  //   tasks.value = [...updatedTasks]; // 새로운 배열로 대체
+  // };
 
-  const resetTasks = () => {
-    tasks.value = JSON.parse(JSON.stringify(originalTasks.value));
-  };
+  // const resetTasks = () => {
+  //   tasks.value = JSON.parse(JSON.stringify(originalTasks.value));
+  // };
 
   const fetchExerciseData = async () => {
     try {
@@ -123,19 +123,57 @@ export const useQuestStore = defineStore('quest', () => {
     }
   };
 
+  const questCompletionRates = ref([]); // 퀘스트 상태 (달성률, 리뷰, 피드백)
+
+  const getTraineeQuestCompletionRate = async (traineeId, startDate, endDate) => {
+    try {
+      const res = await axios.get(`${REST_API_URL}/${traineeId}`, {
+        params: {startAt: startDate, endAt: endDate },
+      });
+      questCompletionRates.value = res.data;
+    } catch (err) {
+      console.error(err);
+    }
+  };
   
+  /**
+   * 퀘스트 등록 함수
+   */
+  const createQuest = async (questData) => {
+  
+    try {
+  
+      // 요청 로그
+      console.log('API 요청 URL:', `${REST_API_URL}/`,  questData );
+  
+      // API 호출
+      const res = await axios.post(`${REST_API_URL}/`, questData );
+  
+      if (res.status === 201) {
+        console.log('퀘스트 등록 성공:', res.data);
+      } else {
+        console.error('퀘스트 등록 실패');
+      }
+    } catch (error) {
+      console.error('퀘스트 등록 중 오류 발생:', error);
+    }
+  };
   // 스토어에 제공할 함수 및 상태
   return { 
     quest, 
     tasks, 
     getQuestByIdAndStartDate, 
     getQuestsByTraineesAndDate,
-    getTasks, 
-    originalTasks,
+    getTasks,
+    // originalTasks,
     exerciseData,
-    setTasks,
-    resetTasks,
+    // setTasks,
+    // resetTasks,
     fetchExerciseData,
-    updateTasks,
+    // updateTasks,
+    questCompletionRates, 
+    getTraineeQuestCompletionRate, 
+    createQuest, 
+    // formatDateToYMD 
   };
 });

@@ -76,8 +76,9 @@ public class QuestServiceImpl implements QuestService {
 
     // 퀘스트 수행률 계산
     @Override
-    public List<Map<String, Object>> getTraineeQuestCompletionRate(int trainerId, String startAt) {
-        return questDao.getTraineeQuestCompletionRate(trainerId, startAt);
+    public List<Map<String, Object>> getTraineeQuestCompletionRate(int traineeId, String startAt, String endAt) {
+    	System.out.println("2");
+        return questDao.getTraineeQuestCompletionRate(traineeId, startAt, endAt);
     }
 	
     // 퀘스트 상태 출력
