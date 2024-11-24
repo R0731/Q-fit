@@ -51,7 +51,10 @@ const notificationStore = useNotificationStore();
 const isNotificationOpen = ref(false); // 알림 팝업 상태
 const userId = userStore.loginUser?.numberId || 0; // 사용자 ID
 const notifications = computed(() => notificationStore.notifications); // 알림 목록
-const unreadCount = computed(() => notifications.value.length); // 읽지 않은 알림 개수
+// const unreadCount = computed(() => notifications.value.length); // 읽지 않은 알림 개수
+const unreadCount = computed(() => 
+  notifications.value.filter(notification => !notification.isRead).length
+);
 
 // 뒤로 가기 함수
 const goBack = () => {

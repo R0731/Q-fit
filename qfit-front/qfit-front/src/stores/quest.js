@@ -1,5 +1,5 @@
 // quest.js
-import { ref, computed } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
@@ -8,23 +8,6 @@ const REST_API_URL = 'http://localhost:8080/quest';
 export const useQuestStore = defineStore('quest', () => {
   const quest = ref(null); // Quest 데이터
   const tasks = ref([]); // Task 목록
-
-  /**
-   * Date 또는 문자열을 'YYYY-MM-DD' 형식으로 변환
-   */
-  // const formatDateToYMD = (date) => {
-  //   if (date instanceof Date) {
-  //     return date.toISOString().split('T')[0];
-  //   }
-  //   if (typeof date === 'string') {
-  //     const parsedDate = new Date(date);
-  //     if (isNaN(parsedDate.getTime())) {
-  //       throw new Error('Invalid date format: Unable to parse startDate');
-  //     }
-  //     return parsedDate.toISOString().split('T')[0];
-  //   }
-  //   throw new Error('Invalid startDate format: Expected Date or string');
-  // };
 
   /**
    * 퀘스트 데이터를 로드하는 함수
@@ -98,6 +81,49 @@ export const useQuestStore = defineStore('quest', () => {
     return quests; // 퀘스트 상태 객체 반환
   };
 
+  const originalTasks = ref([]);
+  const exerciseData = reactive({});
+
+  // 액션 정의
+  const setTasks = (newTasks) => {
+    tasks.value = newTasks;
+    originalTasks.value = JSON.parse(JSON.stringify(newTasks)); // 깊은 복사
+  };
+
+  // task배열 업데이트
+  const updateTasks = (updatedTasks) => {
+    tasks.value = [...updatedTasks]; // 새로운 배열로 대체
+  };
+
+  const resetTasks = () => {
+    tasks.value = JSON.parse(JSON.stringify(originalTasks.value));
+  };
+
+  const fetchExerciseData = async () => {
+    try {
+      // 유니크한 exerciseId 추출
+      const exerciseIds = [...new Set(tasks.value.map((task) => task.exerciseId))];
+
+      // exerciseId별 데이터 요청
+      for (const id of exerciseIds) {
+        if (!exerciseData[id]) {
+          const response = await axios.get(`/api/exercise/${id}`);
+          const data = response.data;
+
+          // 운동 데이터 저장
+          exerciseData[id] = {
+            exerciseId: data.exerciseId,
+            exerciseName: data.exerciseName,
+            exerciseParts: data.exerciseParts,
+          };
+        }
+      }
+    } catch (error) {
+      console.error('운동 데이터 로드 실패:', error);
+    }
+  };
+
+  
   // 스토어에 제공할 함수 및 상태
   return { 
     quest, 
@@ -105,6 +131,11 @@ export const useQuestStore = defineStore('quest', () => {
     getQuestByIdAndStartDate, 
     getQuestsByTraineesAndDate,
     getTasks, 
-    // formatDateToYMD 
+    originalTasks,
+    exerciseData,
+    setTasks,
+    resetTasks,
+    fetchExerciseData,
+    updateTasks,
   };
 });

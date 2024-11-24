@@ -25,6 +25,7 @@ import MyTraineesDelete from '@/components/Trainer/MyTraineesDelete.vue';
 import QuestSetting from '@/components/Trainer/QuestSetting.vue';
 import TheBigCalender from '@/components/common/TheBigCalender.vue';
 import ImageUploader from '@/components/common/ImageUploader.vue';
+import { useNotificationStore } from '@/stores/notification';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -208,4 +209,14 @@ router.beforeEach((to, from, next) => {
   next();
 })
 
+// 알림 상태 업데이트
+router.afterEach(() => {
+  const notificationStore = useNotificationStore();
+  const userStore = useUserStore();
+  const userId = userStore.loginUser?.numberId;
+
+  if(userId){
+    notificationStore.fetchUnreadNotifications(userId);
+  }
+})
 export default router

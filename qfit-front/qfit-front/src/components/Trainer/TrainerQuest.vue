@@ -8,7 +8,9 @@
 
     <!-- 퀘스트 내용 -->
     <div v-if="hasQuest" class="quest-section">
-      <Exercise />
+      <component :is="currentComponent" @switchToEditor="switchToEditor" @switchToView="switchToView"/>
+      <!-- <component :is="currentComponent" :onSwitchToView="switchToView" /> -->
+      <!-- <Exercise /> -->
       <Review />
       <FeedbackUser />
     </div>
@@ -27,9 +29,10 @@ import { useQuestStore } from '@/stores/quest';
 import Exercise from './Exercise.vue';
 import FeedbackUser from './FeedbackUser.vue';
 import Review from './TrainerReview.vue';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useTraineeStore } from '@/stores/trainee';
+import ExerciseEditor from './ExerciseEditor.vue';
 
 const router = useRouter();
 
@@ -72,11 +75,30 @@ onMounted(() => {
 const createQuest = () => {
   router.push({ name: 'questAssign' });
 };
+
+const currentComponent = ref(Exercise);
+
+// 컴포넌트 맵 정의
+const components = {
+  Exercise,
+  ExerciseEditor,
+};
+
+// 수정 버튼 클릭 시 호출되는 함수
+const switchToEditor = () => {
+  currentComponent.value = ExerciseEditor;
+};
+
+// 편집 종료 후 원래 컴포넌트로 돌아가기
+const switchToView = () => {
+  currentComponent.value = Exercise;
+};
 </script>
 
 <style scoped>
 /* 전체 컨테이너 스타일 */
 .container {
+  position:relative;
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;

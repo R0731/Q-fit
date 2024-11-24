@@ -133,9 +133,10 @@ const logout = async () => {
   }
 };
 
-const profileImageUrl = ref('');
 
 // 프로필 이미지 로드
+const profileImageUrl = ref('');
+
 const loadProfileImages = async () => {
   try {
     const numberId = userStore.loginUser.numberId;
@@ -147,7 +148,7 @@ const loadProfileImages = async () => {
     if (imgUrl) {
       const blob = await imageStore.loadFile(imgUrl); // 이미지 로드
       profileImageUrl.value = URL.createObjectURL(blob); // Blob URL 생성
-      // console.log(`이미지 로드 성공: ${profileImageUrl.value}`);
+      console.log(`이미지 로드 성공: ${profileImageUrl.value}`);
     } else {
       throw new Error("사용자 이미지 URL이 없습니다.");
     }
@@ -209,6 +210,7 @@ onMounted(async () => {
 <style scoped>
 /* 섹션 컨테이너 */
 .section-container {
+  width: 350px;
   margin-bottom: 20px; /* 섹션 간 간격 */
   padding: 20px; /* 내부 여백 */
   border: 1px solid #ddd; /* 섹션 경계선 */

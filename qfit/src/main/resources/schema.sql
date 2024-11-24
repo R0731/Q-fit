@@ -133,8 +133,8 @@ VALUES ('Cardio', 'cardio','런닝 머신'),
 -- user 테이블에 초기 사용자 추가
 INSERT INTO user (user_id, user_pw, user_name, phone_number, email, gender, birth_date, user_img, user_type)
 VALUES 
-('ssafy', 'ssafy', '트레이너싸피', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', 'https://qfit-dev-profile-images.s3.us-east-2.amazonaws.com/male_1.jpg', 1),
-('ssafy2', 'ssafy2', '트레이니싸피', '010-1234-5678', 'bob@example.com', 'Female', '1990-05-15', 'https://qfit-dev-profile-images.s3.us-east-2.amazonaws.com/male_2.jpg', 2);
+('ssafy', 'ssafy', '트레이너싸피', '010-1234-5678', 'alice@example.com', 'Female', '1990-05-15', '1732280917068_male_1.jpg', 1),
+('ssafy2', 'ssafy2', '트레이니싸피', '010-1234-5678', 'bob@example.com', 'Female', '1990-05-15', '1732281796738_female_1.jpg', 2);
 
 -- 추가 user 데이터 삽입
 INSERT INTO user (user_id, user_pw, user_name, phone_number, email, gender, birth_date, user_img, user_type)
@@ -145,7 +145,7 @@ VALUES
 
 -- Trainee 데이터
 ('trainee1', 'trainee2024$', '이민정', '010-5678-1234', 'minjung.lee@fitlife.com', 'Female', '1995-12-05', NULL, 2),
-('trainee2', 'fitlife789!', '최성민', '010-4321-8765', 'sungmin.choi@fitlife.com', 'Male', '1999-06-18', 'https://qfit-dev-profile-images.s3.us-east-2.amazonaws.com/female_1.jpg', 2);
+('trainee2', 'fitlife789!', '최성민', '010-4321-8765', 'sungmin.choi@fitlife.com', 'Male', '1999-06-18', '1732280917068_male_1.jpg', 2);
 
 -- trainer 테이블 데이터 삽입
 INSERT INTO trainer (id, gym)
@@ -167,6 +167,7 @@ WHERE
 INSERT INTO quest (trainee_id, trainer_id, start_at, end_at)
 VALUES
 -- Trainee 2 데이터 (trainer_id: 1)
+(2, 1, '2024-11-21', '2024-11-22'),
 (2, 1, '2024-11-22', '2024-11-23'),
 (2, 1, '2024-11-23', '2024-11-24'),
 (2, 1, '2024-11-24', '2024-11-25'),
@@ -266,7 +267,11 @@ VALUES
 
 -- Quest 18 데이터
 (18, 1, TRUE, 15, 55, NULL, 14), -- Weight: 페이스 풀
-(18, 2, FALSE, 20, 60, NULL, 12); -- Weight: 티바로우머신
+(18, 2, FALSE, 20, 60, NULL, 12), -- Weight: 티바로우머신
+
+-- Quest 19 데이터
+(19, 1, TRUE, NULL, NULL, 25, 2), -- Cardio: 싸이클
+(19, 2, FALSE, 5, 15, NULL, 21); -- Weight: 암컬 머신
 
 -- Feedback 테이블에 더미 데이터 삽입
 INSERT INTO feedback (quest_id, trainer_id, content)

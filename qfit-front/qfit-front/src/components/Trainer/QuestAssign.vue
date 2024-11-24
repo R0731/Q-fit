@@ -146,7 +146,6 @@ button.active {
   text-align: center;
 }
 
-<<<<<<< HEAD
 .exercise-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
