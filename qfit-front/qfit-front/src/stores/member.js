@@ -48,6 +48,7 @@ export const useMemberStore = defineStore('member', () => {
         }else{
           console.log('사용가능 아이디')
         }
+        return res.data;
       }catch(err){
         console.log('에러발생 :', err);
       }

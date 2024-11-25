@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <!-- 로고 -->
-  <img src="@/assets/logo.png" alt="logo" class="logo" />
+  <img src="@/assets/logo_trainer.png" alt="logo" class="logo" />
   <div class="login-container">
     <!-- 로그인 폼 -->
     <form class="login-form">
@@ -56,7 +56,7 @@ export default {
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
-import { useViewStore } from '@/stores/viewStore';
+// import { useViewStore } from '@/stores/viewStore';
 
 const userStore = useUserStore();
 
@@ -64,10 +64,10 @@ const id = ref("")
 const password = ref("")
 
 const router = useRouter();
-const viewStore = useViewStore();
+// const viewStore = useViewStore();
 
 const goToRegist = () => {
-  viewStore.resetView();
+  // viewStore.resetView();
   // console.log("Router 인스턴스:", router);
   router.push('/trainer/regist').catch(err => console.error(err));
 };

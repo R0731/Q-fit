@@ -61,11 +61,8 @@
       <button type="submit" class="register-btn">회원정보 수정</button>
     </form>
 
-    <!-- 회원 탈퇴 버튼 -->
-    <!-- <button @click="resignCheck" class="resign-btn">회원 탈퇴</button> -->
-
-        <!-- 회원 탈퇴 버튼 -->
-        <button @click="openResignModal" class="red-btn">회원 탈퇴</button>
+  <!-- 회원 탈퇴 버튼 -->
+  <button @click="openResignModal" class="red-btn">회원 탈퇴</button>
 
 <!-- 탈퇴 확인 모달 -->
 <div v-if="isResignModalOpen" class="modal-overlay">
@@ -176,35 +173,6 @@ const updateUser = async () => {
   }
 };
 
-// // 회원 탈퇴 함수
-// const resignCheck = async () => {
-//   const confirmed = confirm('정말로 탈퇴하시겠습니까?');
-//   if (confirmed) {
-//     await resignUser();
-//   }
-// };
-
-// const resignUser = async () => {
-//   try {
-
-//     if (!userStore.loginUser) {
-//       console.error('로그인된 유저 정보가 없습니다.');
-//       return;
-//     }
-
-//     const { userType, numberId } = userStore.loginUser;
-
-//     console.log('정보조회:', userType, numberId)
-
-//     await memberStore.userResign(userType, numberId);
-//     userStore.logout();
-//     alert('회원 탈퇴가 완료되었습니다.');
-//     router.push({name: 'trainerLogin'});
-//   } catch (error) {
-//     console.error('회원 탈퇴 실패:', error);
-//     alert('회원 탈퇴에 실패했습니다.');
-//   }
-// };
 // 모달 상태 관리
 const isResignModalOpen = ref(false);
 

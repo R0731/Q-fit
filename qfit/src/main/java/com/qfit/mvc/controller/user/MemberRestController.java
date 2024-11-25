@@ -43,6 +43,7 @@ public class MemberRestController {
 	public ResponseEntity<?> idCheck(@RequestBody User user){
 		try {
 			boolean isAvailable = membershipService.idCheck(user.getUserId());
+			System.out.println(isAvailable);
 			return ResponseEntity.ok(isAvailable);
 		}catch(IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
