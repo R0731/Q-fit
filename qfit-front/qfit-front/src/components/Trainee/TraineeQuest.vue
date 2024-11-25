@@ -37,6 +37,7 @@
           <button 
             class="btn btn-sm "
             :class="task.completed ? 'btn-completed' : 'btn-not-completed'" @click="changeComplete(task)"
+            :disabled="!canEdit"
           >
             {{ task.completed ? '완료' : '미완료' }}
           </button>
@@ -53,12 +54,16 @@ import { useQuestStore } from "@/stores/quest";
 import { useUserStore } from "@/stores/user";
 import { useViewStore } from "@/stores/viewStore";
 import { useTaskStore } from "@/stores/task";
+import { useNotificationStore } from "@/stores/notification";
+import { useTraineeStore } from "@/stores/trainee";
 
 const questStore = useQuestStore();
 const userStore = useUserStore();
 const viewStore = useViewStore();
 const exerciseStore = useExerciseStore();
 const taskStore = useTaskStore();
+const notificationStore = useNotificationStore();
+const traineeStore = useTraineeStore();
 
 const formattedDate = computed(() => viewStore.selectedDate);
 
@@ -100,12 +105,38 @@ const loadAllExerciseInfo = async () => {
   }
 };
 
+// 선택한 날짜가 현재 날짜 이전이면 수정 불가능
+const canEdit = ref(false);
+
+const updateCanEdit = () => {
+  const today = formatDateToYYYYMMDD(new Date()); // 오늘 날짜 계산
+  console.log('선택된 날짜:', formattedDate.value);
+  console.log('오늘 날짜:', today);
+  
+  if (formattedDate) {
+    canEdit.value = formattedDate.value == today; // 날짜 비교
+  } else {
+    canEdit.value = false; // 선택된 날짜가 없으면 수정 불가
+  }
+  
+  // console.log(canEdit.value);
+};
+
+// 날짜를 yyyy-mm-dd형식으로 변환
+const formatDateToYYYYMMDD = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 필요
+  const day = String(date.getDate()).padStart(2, '0'); // 1자리 수일 경우 앞에 0 추가
+  return `${year}-${month}-${day}`;
+};
+
 const loadQuest = async () => {
   const traineeId = userStore.loginUser.numberId;
 
   try {
     await questStore.getQuestByIdAndStartDate(traineeId, formattedDate.value);
     await loadAllExerciseInfo();
+    await updateCanEdit();
   } catch (error) {
     console.error("퀘스트 로드 실패:", error);
   }
@@ -116,8 +147,33 @@ const changeComplete = async (task) => {
   try {
     await taskStore.updateCompleted(task.taskId, newStatus);
     task.completed = newStatus;
+
+    const traineeId = userStore.loginUser.numberId;
+    const startDate = viewStore.selectedDate;
+    const endDate = viewStore.selectedDate;
+
+    await questStore.getTraineeQuestCompletionRate(traineeId, startDate, endDate);
+    if (questStore.questCompletionRates[0].questCompletionRate === '100.00%') {
+      makeNotification();
+    }
   } catch (error) {
     console.error("업데이트 실패", error);
+  }
+};
+
+// 알림 생성
+const makeNotification = async() => {
+  try{
+    const traineeId = userStore.loginUser.numberId;
+    const trainerId = await traineeStore.getTrainerId(traineeId);
+    if (!trainerId) {
+      console.error('트레이너 ID를 가져오지 못했습니다.');
+      return;
+    }
+    const notification = {userId: trainerId, message: `${userStore.loginUser.name}님이 ${viewStore.selectedDate} 퀘스트를 완료하였습니다.`}
+    await notificationStore.createNotification(notification)
+  }catch(err){
+    console.log('프론트 등록 중 오류 발생', err)
   }
 };
 
@@ -221,5 +277,10 @@ button {
 
 .no-quest-message {
   font-size: 1.5rem; /* 글자 크기 수정 */
+}
+
+button:disabled {
+  cursor: not-allowed; /* 클릭 불가능 커서 */
+  opacity: 0.6; /* 흐리게 표시 */
 }
 </style>
