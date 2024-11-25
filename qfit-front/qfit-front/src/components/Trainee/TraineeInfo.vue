@@ -32,7 +32,8 @@
     <div class="section-container">
       <h4>나의 체육관</h4>
       <p v-if="trainerStore.trainer.gym">
-        {{ trainerStore.trainer.gym }}에서 활동 중입니다
+        <p>체육관 : {{ trainerStore.trainer.gym }}</p>
+        <p>트레이너 : {{ traineeStore.trainer.name }}</p>
       </p>
       <p v-else>
         아직 트레이너가 등록되지 않았습니다.
@@ -146,6 +147,7 @@ async function fetchTrainerDetail() {
   const trainerId = await traineeStore.getTrainerId(userStore.loginUser.numberId);
   console.log('트레이너아이디 조회:', trainerId);
   await trainerStore.getGym(trainerId);
+  await traineeStore.getTrainerName(userStore.loginUser.numberId);
   // gym = trainerStore.trainer.gym
   console.log('체육관', trainerStore.trainer.gym)
 }

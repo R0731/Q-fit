@@ -50,4 +50,13 @@
  		WHERE id = #{traineeId}
  	</select>
  	
+ 	<!-- traineeId로 trainer 정보 조회 -->
+ 	<select id="getTrainerNameByTraineeId">
+ 		SELECT u.user_name
+ 		FROM user u
+ 		LEFT JOIN trainee t ON t.trainer_id = u.id
+ 		WHERE t.id = #{traineeId}
+ 	</select>
+ 	
+ 	
   </mapper>

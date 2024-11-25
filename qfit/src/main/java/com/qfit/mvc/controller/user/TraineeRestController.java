@@ -119,4 +119,24 @@ public class TraineeRestController {
         }
     }
 	
+	/**
+     * 트레이너 이름을 가져오는 검색 메서드
+     * @param traineeId 트레이니의 ID
+     * @return 트레이너 이름 조회 성공 시 OK(200), 트레이너 이름이 없을 시 NOT_FOUND(404), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
+     */
+    @GetMapping("/search-trainer")
+    @Operation(summary = "트레이너 이름 검색", description = "트레이니 ID를 통해 트레이너의 이름을 검색합니다.")
+    public ResponseEntity<?> searchTrainer(@RequestParam int traineeId) {
+        try {
+            String trainerName = traineeService.getTrainerNameByTraineeId(traineeId);
+            if (trainerName != null && !trainerName.isEmpty()) {
+                return ResponseEntity.ok(trainerName);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Trainer not found for the given trainee.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to retrieve trainer name.");
+        }
+    }
+    
 }
