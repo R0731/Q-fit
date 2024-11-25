@@ -118,8 +118,8 @@ const canEdit = ref(false);
 
 const updateCanEdit = () => {
   const today = formatDateToYYYYMMDD(new Date()); // 오늘 날짜 계산
-  console.log('선택된 날짜:', selectedDate.value);
-  console.log('오늘 날짜:', today);
+  // console.log('선택된 날짜:', selectedDate.value);
+  // console.log('오늘 날짜:', today);
 
   if (selectedDate.value) {
     canEdit.value = selectedDate.value >= today; // 날짜 비교
@@ -209,7 +209,7 @@ button {
 
 /* bodyPart와 exerciseName 간의 간격 */
 .body-part {
-  width: 80px; /* bodyPart의 고정된 너비 */
+  width: 50px; /* bodyPart의 고정된 너비 */
   flex-shrink: 0; /* bodyPart가 축소되지 않도록 설정 */
   text-align: left; /* 텍스트 정렬 */
   margin-right: 8px; /* exerciseName과의 간격 */

@@ -22,7 +22,7 @@
         <!-- 이미지 삭제 -->
         <button class="small-btn-mini" @click="deleteImage">이미지 삭제</button>
       </div>
-      <p class="section-content">{{ userName }} 회원님, 안녕하세요.</p>
+      <p class="section-content">{{ userName }} 트레이너님, 안녕하세요.</p>
       <!-- 회원정보 수정 버튼 -->
       <button class="small-btn" @click="openPasswordModal">회원정보수정</button>
     </div>
