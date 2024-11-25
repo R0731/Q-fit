@@ -31,4 +31,5 @@ coverage
 *.tsbuildinfo
 
 # Ignore application.properties file
-src/main/resources/application.properties
+qfit/src/main/resources/application.properties
+

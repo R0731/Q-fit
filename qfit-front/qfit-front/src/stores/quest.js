@@ -84,20 +84,20 @@ export const useQuestStore = defineStore('quest', () => {
   // const originalTasks = ref([]);
   const exerciseData = reactive({});
 
-  // // 액션 정의
-  // const setTasks = (newTasks) => {
-  //   tasks.value = newTasks;
-  //   originalTasks.value = JSON.parse(JSON.stringify(newTasks)); // 깊은 복사
-  // };
+  // 액션 정의
+  const setTasks = (newTasks) => {
+    tasks.value = newTasks;
+    originalTasks.value = JSON.parse(JSON.stringify(newTasks)); // 깊은 복사
+  };
 
   // // task배열 업데이트
-  // const updateTasks = (updatedTasks) => {
-  //   tasks.value = [...updatedTasks]; // 새로운 배열로 대체
-  // };
+  const updateTasks = (updatedTasks) => {
+    tasks.value = [...updatedTasks]; // 새로운 배열로 대체
+  };
 
-  // const resetTasks = () => {
-  //   tasks.value = JSON.parse(JSON.stringify(originalTasks.value));
-  // };
+  const resetTasks = () => {
+    tasks.value = JSON.parse(JSON.stringify(originalTasks.value));
+  };
 
   const fetchExerciseData = async () => {
     try {
@@ -167,10 +167,10 @@ export const useQuestStore = defineStore('quest', () => {
     getTasks,
     // originalTasks,
     exerciseData,
-    // setTasks,
+    setTasks,
     // resetTasks,
     fetchExerciseData,
-    // updateTasks,
+    updateTasks,
     questCompletionRates, 
     getTraineeQuestCompletionRate, 
     createQuest, 
