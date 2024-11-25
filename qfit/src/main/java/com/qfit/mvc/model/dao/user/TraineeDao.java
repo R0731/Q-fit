@@ -31,5 +31,8 @@ public interface TraineeDao {
 
 	// 트레이니의 아이디로 트레이너 아이디 조회
 	public int getTrainerByTrainerId(int traineeId);
+	
+	// 트레이니의 아이디로 트레이너 이름 조회
+	public String getTrainerNameByTraineeId(int traineeId);
 
 }

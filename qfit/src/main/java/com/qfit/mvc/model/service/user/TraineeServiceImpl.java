@@ -72,5 +72,15 @@ public class TraineeServiceImpl implements TraineeService {
 			throw new IllegalArgumentException("Database Error");
 		}
 	}
+	
+	@Override
+	public String getTrainerNameByTraineeId(int traineeId) {
+		try {
+			String name = traineeDao.getTrainerNameByTraineeId(traineeId);
+			return name;
+		} catch (DataAccessException e) {
+			throw new IllegalArgumentException("Database Error");
+		}
+	}
 
 }

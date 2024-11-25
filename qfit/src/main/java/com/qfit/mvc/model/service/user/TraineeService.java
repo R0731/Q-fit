@@ -17,4 +17,6 @@ public interface TraineeService{
 	
 	public int getTrainerId(int traineeId);
 
+	public String getTrainerNameByTraineeId(int traineeId);
+
 }
