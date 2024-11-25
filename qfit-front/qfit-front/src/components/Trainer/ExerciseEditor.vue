@@ -53,6 +53,7 @@
               v-model="newTasks[index].weightKg"
               placeholder="kg"
               :disabled="task.completed"
+              min="0"
             />
           </div>
           <!-- 운동 시간/횟수 -->
@@ -62,6 +63,7 @@
               v-model="newTasks[index][newTasks[index].bodyPart === 'cardio' ? 'cardioMinutes' : 'count']"
               :placeholder="newTasks[index].bodyPart === 'cardio' ? '분' : '횟수'"
               :disabled="task.completed"
+              min="0"
             />
           </div>
 

@@ -1,20 +1,18 @@
 <template>
   <div class="container date-container">
-    <!-- 현재 월 표시 -->
     <div class="text-center mb-3">
       <h5>{{ currentMonth }}월</h5>
     </div>
 
-    <!-- 날짜 목록과 드래그 기능 -->
     <div
+      ref="dateListWrapperRef"
       class="date-list-wrapper"
       @mousedown="startDrag"
       @mousemove="onDrag"
       @mouseup="endDrag"
       @mouseleave="endDrag"
     >
-      <div class="date-list">
-        <!-- 요일과 날짜 표시 -->
+      <div ref="dateListRef" class="date-list">
         <div
           v-for="(date, index) in visibleDates"
           :key="index"
@@ -24,10 +22,7 @@
           <div class="day-name">{{ getDayName(date) }}</div>
           <div
             class="date"
-            :class="{
-              'text-primary': isToday(date),
-              'selected-date': isSelected(date),
-            }"
+            :class="{ 'text-primary': isToday(date), 'selected-date': isSelected(date) }"
           >
             {{ date.getDate() }}
           </div>
@@ -41,161 +36,174 @@
 import { ref, computed, onMounted } from 'vue';
 import { useViewStore } from '@/stores/viewStore';
 
+// Pinia 스토어
 const viewStore = useViewStore();
 
-// 오늘 날짜와 선택된 날짜 상태
+// 현재 날짜와 선택된 날짜
 const today = new Date();
 const selectedDate = ref(today);
 
-// 현재 보여질 날짜 목록 초기화 (7일 기준)
-const visibleDates = ref(generateDates(today, -7, 14)); // -7부터 +14일까지 표시
+// 표시할 날짜 목록
+const visibleDates = ref(generateDates(today, -7, 14));
 
-// 현재 월 계산
+// 날짜 리스트 DOM 참조
+const dateListRef = ref(null);
+const dateListWrapperRef = ref(null);
+
+// 드래그 상태 관리
+const scrollState = ref({ isDragging: false, startX: 0, scrollOffset: 0 });
+
+// 현재 월 계산 (선택된 날짜 기준)
 const currentMonth = computed(() => selectedDate.value.getMonth() + 1);
 
-// 날짜 생성 함수: 기준 날짜로부터 이전과 이후 날짜를 포함해 생성
+// 요일 배열 및 날짜 아이템 너비 상수화
+const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+const DATE_ITEM_WIDTH = 96;
+
+/**
+ * 날짜 배열 생성
+ * @param {Date} baseDate 기준 날짜
+ * @param {number} startOffset 시작 오프셋 (일 단위)
+ * @param {number} endOffset 끝 오프셋 (일 단위)
+ * @returns {Date[]} 생성된 날짜 배열
+ */
 function generateDates(baseDate, startOffset, endOffset) {
-  const dates = [];
-  for (let i = startOffset; i <= endOffset; i++) {
-    const newDate = new Date(baseDate);
-    newDate.setDate(baseDate.getDate() + i);
-    dates.push(newDate);
-  }
-  return dates;
+  return Array.from({ length: endOffset - startOffset + 1 }, (_, i) => {
+    const date = new Date(baseDate);
+    date.setDate(baseDate.getDate() + startOffset + i);
+    return date;
+  });
 }
 
-// 요일 이름 반환 함수
+/**
+ * 요일 이름 반환
+ * @param {Date} date 요일을 얻고자 하는 날짜
+ * @returns {string} 요일 이름
+ */
 function getDayName(date) {
-  const days = ['일', '월', '화', '수', '목', '금', '토'];
-  return days[date.getDay()];
+  return DAYS[date.getDay()];
 }
 
+// 선택한 날짜 변경을 상위 컴포넌트에 알림
 const emit = defineEmits(['update:selectedDate']);
-// 날짜 선택 함수
+
+/**
+ * 날짜 선택 핸들러
+ * @param {Date} date 선택된 날짜
+ */
 function onDateSelect(date) {
-  selectedDate.value = date; // 선택된 날짜 업데이트
-  viewStore.setSelectedDate(date); // Pinia 상태 업데이트
-  centerSelectedDate(); // 선택한 날짜를 중앙으로 이동
-  
-  // 부모 컴포넌트로 이벤트 전달
+  selectedDate.value = date;
+  viewStore.setSelectedDate(date);
+  centerSelectedDate();
   emit('update:selectedDate', date);
 }
 
-// 선택된 날짜를 중앙으로 이동하는 함수
+/**
+ * 선택된 날짜를 화면 중앙으로 이동
+ */
 function centerSelectedDate() {
-  const dateList = document.querySelector('.date-list');
+  const dateList = dateListRef.value;
+  const dateListWrapper = dateListWrapperRef.value;
 
-  // viewStore에서 selectedDate를 가져옴
-  const storeSelectedDate = viewStore.selectedDate
-    ? new Date(viewStore.selectedDate)
-    : today;
+  if (!dateList || !dateListWrapper) return;
 
-  const targetDate = visibleDates.value.find(
-    (d) =>
-      d.getDate() === storeSelectedDate.getDate() &&
-      d.getMonth() === storeSelectedDate.getMonth() &&
-      d.getFullYear() === storeSelectedDate.getFullYear()
+  const containerWidth = dateListWrapper.offsetWidth;
+  const targetIndex = visibleDates.value.findIndex(
+    (d) => d.toDateString() === selectedDate.value.toDateString()
   );
 
-  const selectedIndex = visibleDates.value.indexOf(targetDate);
+  if (targetIndex === -1) return;
 
-  if (dateList && selectedIndex !== -1) {
-    const dateItemWidth = 96; // 날짜 아이템 폭(80px + gap 16px)
-    const containerWidth = document.querySelector('.date-list-wrapper').offsetWidth;
-    const offset = -(selectedIndex * dateItemWidth) + containerWidth / 2 - dateItemWidth / 2;
+  const offset =
+    -(targetIndex * DATE_ITEM_WIDTH) + containerWidth / 2 - DATE_ITEM_WIDTH / 2;
 
-    // 부드러운 이동
-    dateList.style.transition = 'transform 0.5s ease'; // 부드러운 애니메이션 추가
-    dateList.style.transform = `translateX(${offset}px)`;
+  dateList.style.transition = 'transform 0.5s ease';
+  dateList.style.transform = `translateX(${offset}px)`;
 
-    // 스크롤 값을 업데이트해 드래그와 일관성 유지
-    scrollAmount.value = offset;
-  }
+  dateList.addEventListener(
+    'transitionend',
+    () => {
+      dateList.style.transition = ''; // 애니메이션 완료 후 transition 제거
+    },
+    { once: true }
+  );
+
+  scrollState.value.scrollOffset = offset; // 스크롤 상태 업데이트
 }
 
-// 오늘 날짜인지 확인
+/**
+ * 오늘 날짜인지 확인
+ * @param {Date} date 비교할 날짜
+ * @returns {boolean} 오늘인지 여부
+ */
 function isToday(date) {
-  return (
-    date.getDate() === today.getDate() &&
-    date.getMonth() === today.getMonth() &&
-    date.getFullYear() === today.getFullYear()
-  );
+  return date.toDateString() === today.toDateString();
 }
 
-// 선택된 날짜인지 확인
+/**
+ * 선택된 날짜인지 확인
+ * @param {Date} date 비교할 날짜
+ * @returns {boolean} 선택 여부
+ */
 function isSelected(date) {
-  return (
-    date.getDate() === selectedDate.value.getDate() &&
-    date.getMonth() === selectedDate.value.getMonth() &&
-    date.getFullYear() === selectedDate.value.getFullYear()
-  );
+  return date.toDateString() === selectedDate.value.toDateString();
 }
 
-// 드래그 상태 관리
-const isDragging = ref(false);
-const startX = ref(0);
-const scrollAmount = ref(0);
-const scrollThreshold = 100; // 드래그 임계값
-
-// 드래그 시작
+/**
+ * 드래그 시작 핸들러
+ * @param {MouseEvent} event 마우스 이벤트
+ */
 function startDrag(event) {
-  isDragging.value = true;
-  startX.value = event.clientX;
+  scrollState.value.isDragging = true;
+  scrollState.value.startX = event.clientX;
 }
 
-// 드래그 중: 스크롤 이동 계산
+/**
+ * 드래그 중 핸들러
+ * @param {MouseEvent} event 마우스 이벤트
+ */
 function onDrag(event) {
-  if (!isDragging.value) return;
+  if (!scrollState.value.isDragging) return;
 
-  const dragSpeed = 0.2; // 감속 비율 (0.1 ~ 1 사이 값, 작을수록 느림)
-  const deltaX = (event.clientX - startX.value) * dragSpeed; // 이동 거리 조정
-  scrollAmount.value += deltaX;
-  startX.value = event.clientX;
+  const dragSpeed = 0.2;
+  const deltaX = (event.clientX - scrollState.value.startX) * dragSpeed;
+  scrollState.value.scrollOffset += deltaX;
+  scrollState.value.startX = event.clientX;
 
-  // 스크롤을 부드럽게 이동
-  const dateList = document.querySelector('.date-list');
+  const dateList = dateListRef.value;
   if (dateList) {
-    dateList.style.transform = `translateX(${scrollAmount.value}px)`;
-  }
-
-  // 드래그 임계값을 넘었을 때 날짜 이동
-  if (Math.abs(scrollAmount.value) > scrollThreshold) {
-    if (scrollAmount.value > 0) {
-      loadPreviousDates();
-    } else {
-      loadNextDates();
-    }
-    scrollAmount.value = 0; // 스크롤 거리 초기화
+    dateList.style.transform = `translateX(${scrollState.value.scrollOffset}px)`;
   }
 }
 
-// 드래그 종료
+/**
+ * 드래그 종료 핸들러
+ */
 function endDrag() {
-  isDragging.value = false;
+  scrollState.value.isDragging = false;
 }
 
-// 이전 주 로드
-function loadPreviousDates() {
-  const firstVisibleDate = visibleDates.value[0];
-  const newDates = generateDates(firstVisibleDate, -7, -1);
-  visibleDates.value = [...newDates, ...visibleDates.value].slice(0, 14); // 14일 유지
+/**
+ * 가시적인 날짜 목록 업데이트
+ * @param {string} direction 날짜 추가 방향 ('previous' | 'next')
+ */
+function updateVisibleDates(direction) {
+  const newDates =
+    direction === 'previous'
+      ? generateDates(visibleDates.value[0], -7, -1)
+      : generateDates(visibleDates.value.at(-1), 1, 7);
+
+  visibleDates.value =
+    direction === 'previous'
+      ? [...newDates, ...visibleDates.value].slice(0, 14)
+      : [...visibleDates.value, ...newDates].slice(-14);
 }
 
-// 다음 주 로드
-function loadNextDates() {
-  const lastVisibleDate = visibleDates.value[visibleDates.value.length - 1];
-  const newDates = generateDates(lastVisibleDate, 1, 7);
-  visibleDates.value = [...visibleDates.value, ...newDates].slice(-14); // 14일 유지
-}
-
-// 컴포넌트 로딩 시 초기화
-onMounted(() => {
-  centerSelectedDate(); // 로딩 시 selectedDate 또는 오늘 날짜를 중앙에 위치
-});
+// 컴포넌트가 마운트되면 선택된 날짜를 화면 중앙으로 이동
+onMounted(centerSelectedDate);
 </script>
 
 <style scoped>
-/* 기존 스타일 유지 */
 .date-container {
   width: 100%;
   max-width: 480px;
@@ -224,8 +232,7 @@ onMounted(() => {
 
 .date-list {
   display: flex;
-  gap: 16px;
-  transition: transform 0.3s ease-out;
+  gap: 18px;
 }
 
 .date-item {
