@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user';
 import HomeView from '@/views/HomeView.vue'
-import TrainerRegist from '@/views/Trainer/TrainerRegist.vue';
+import Regist from '@/views/Regist.vue';
 import TrainerLoginView from '@/views/Trainer/TrainerLoginView.vue';
 import TraineeLoginView from '@/views/Trainee/TraineeLoginView.vue';
 import TrainerHomeView from '@/views/Trainer/TrainerHomeView.vue';
@@ -24,7 +24,6 @@ import MyTraineesUpdate from '@/components/Trainer/MyTraineesUpdate.vue';
 import MyTraineesDelete from '@/components/Trainer/MyTraineesDelete.vue';
 import QuestSetting from '@/components/Trainer/QuestSetting.vue';
 import TraineeBigCalender from '@/components/Trainee/TraineeBigCalender.vue';
-import ImageUploader from '@/components/common/ImageUploader.vue';
 import { useNotificationStore } from '@/stores/notification';
 import MyTraineesBigCalender from '@/components/Trainer/MyTraineesBigCalender.vue';
 
@@ -42,7 +41,7 @@ const router = createRouter({
     {
       path: '/trainer/regist',
       name: 'trainerRegist',
-      component: TrainerRegist,
+      component: Regist,
     },
 
     // trainer 관련 주소
@@ -124,7 +123,7 @@ const router = createRouter({
     {
       path: '/trainee/regist',
       name: 'traineeRegist',
-      component: TraineeRegist,
+      component: Regist,
     },
     // trainee 관련 주소
     {
@@ -172,11 +171,6 @@ const router = createRouter({
           name: 'traineeCalender',
           component: TraineeBigCalender,
         },
-        {
-          path: 'image',
-          name: 'image-uploader',
-          component: ImageUploader,
-        },
       ]
     },
   ]
@@ -186,6 +180,10 @@ router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
   
   if(!userStore.loginUser){
+    if (to.path === '/trainer/regist' || to.path === '/trainee/regist') {
+      return next(); // Allow navigation to these pages
+    }
+
     if(to.name === 'traineeLogin' || to.name === 'trainerLogin'){
       return next();
     }

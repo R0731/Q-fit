@@ -22,6 +22,7 @@
   overflow-y: visible;
   overflow-x: hidden; /* 👉 가로 스크롤 방지 */
   box-sizing: border-box;
+  background-color: white;
 }
 
 /* 상위 요소 스타일 (html, body) */

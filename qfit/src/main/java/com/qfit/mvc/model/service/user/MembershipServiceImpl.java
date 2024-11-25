@@ -82,12 +82,12 @@ public class MembershipServiceImpl implements MembershipService{
 	// 유저 아이디 중복 체크
 	@Override
 	public boolean idCheck(String userId) {
-//		System.out.println("유저id" + userId);
+		System.out.println("유저id" + userId);
 		if(userDao.isUserIdAvailable(userId) > 0){
-//			System.out.println(userDao.isUserIdAvailable(userId) + "거짓");
+			System.out.println(userDao.isUserIdAvailable(userId) + "거짓");
 			return false;
 		}
-//		System.out.println(userDao.isUserIdAvailable(userId) + "진실");
+		System.out.println(userDao.isUserIdAvailable(userId) + "진실");
 
 		return true;
 	}

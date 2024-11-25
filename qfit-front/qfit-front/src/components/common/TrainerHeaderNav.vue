@@ -4,7 +4,7 @@
     <i class="header-bi bi-chevron-left" @click="goBack"></i>
 
     <!-- 가운데 로고 -->
-    <img src="@/assets/logo.png" alt="logo" class="header-logo" />
+    <img src="@/assets/logo_trainer.png" alt="logo" class="header-logo" />
 
     <!-- 오른쪽 벨 아이콘 -->
     <div class="icon-wrapper" @click="toggleNotification">
