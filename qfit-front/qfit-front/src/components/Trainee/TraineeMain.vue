@@ -8,9 +8,16 @@
     
     <div class="welcome-container">
       <h5 class="welcome-text">{{ userName }} 회원님 안녕하세요.</h5>
-      <h5 class="welcome-text">오늘도 퀘스트 완료까지 화이팅!</h5>
+      <h5 class="welcome-text" v-if="rate !== '100%'">오늘도 퀘스트 완료까지 화이팅!</h5>
+      <h3 class="welcome-text" v-if="rate === '100%'">🎉오늘의 퀘스트 완료🎉</h3>
+      <br>
     </div>
 
+  <div class="completion">
+    <h6>달성률 : {{ rate }}</h6>
+
+  </div>
+    
     <!-- 퀘스트 섹션 -->
     <div class="quest-container">
       <TraineeQuest />
@@ -26,16 +33,55 @@ import TraineeFeedback from "./TraineeFeedback.vue";
 import TraineeQuest from "./TraineeQuest.vue";
 import TraineeReview from "./TraineeReview.vue";
 import { useUserStore } from '@/stores/user';
-import { computed } from 'vue';
+import { useViewStore } from "@/stores/viewStore";
+import { computed, onMounted, ref, watch } from 'vue';
 import { useQuestStore } from '@/stores/quest';
 
 const userStore = useUserStore();
 const questStore = useQuestStore();
+const viewStore = useViewStore();
 
 const userName = computed(() => userStore.loginUser.name);
 
+
+const complete = ref(false);
+const rate = ref();
+const checkQuest = async () =>{
+  try{
+    const traineeId = userStore.loginUser.numberId;
+    const startDate = viewStore.selectedDate;
+    const endDate = viewStore.selectedDate;
+    // console.log('변수조회', traineeId, startDate, endDate)
+    await questStore.getTraineeQuestCompletionRate(traineeId, startDate, endDate);
+    rate.value = questStore.questCompletionRates[0].questCompletionRate;
+    // console.log('조회2', questStore.questCompletionRates[0].questCompletionRate)
+    if(rate === '100%'){
+      complete = true;
+    }
+    // const completion = computed(() => {const rates = questStore.questCompletionRates[0].questCompletionRate
+    //   return rates && rates.length > 0 ? rates[0].questCompletionRate : '데이터 없음';
+    // } );
+    
+  }catch(err){
+    console.error(err)
+  }
+}
+
 // quest 상태 확인(quest가 null이 아니면 true)
 const hasQuest = computed(() => !!questStore.quest);
+
+onMounted(()=>{
+  setTimeout(() => {
+    checkQuest();
+  }, 200); // 200ms 딜레이
+});
+watch(()=>{
+  return questStore.questCompletionRates[0]?.questCompletionRate;},
+  (newValue, oldValue) => {
+  // console.log('이전', oldValue);
+  // console.log('이후', newValue);
+  rate.value = newValue;
+});
 </script>
 
 <style scoped>
@@ -72,7 +118,7 @@ const hasQuest = computed(() => !!questStore.quest);
 
 /* 퀘스트 컨테이너 */
 .quest-container {
-  margin-top: 20px;
+  /* margin-top: 20px; */
   padding: 20px;
   background: #ffffff;
   border-radius: 10px;
@@ -97,5 +143,15 @@ const hasQuest = computed(() => !!questStore.quest);
   .quest-container {
     padding: 15px; /* 퀘스트 컨테이너 패딩 축소 */
   }
+}
+
+.completion {
+  display: flex;
+  justify-content: center; /* 가로 중앙 */
+  align-items: center; /* 세로 중앙 */
+  flex-direction: column; /* 세로 방향 정렬 */
+  width: 100%; /* 부모 컨테이너 크기 기반으로 정렬 */
+  justify-content: center;
+
 }
 </style>

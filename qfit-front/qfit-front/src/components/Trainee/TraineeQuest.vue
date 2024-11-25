@@ -56,6 +56,7 @@ import { useViewStore } from "@/stores/viewStore";
 import { useTaskStore } from "@/stores/task";
 import { useNotificationStore } from "@/stores/notification";
 import { useTraineeStore } from "@/stores/trainee";
+import confetti from "canvas-confetti";
 
 const questStore = useQuestStore();
 const userStore = useUserStore();
@@ -142,6 +143,16 @@ const loadQuest = async () => {
   }
 };
 
+//꽃가루 날리기 함수
+const triggerConfetti = () => {
+      confetti({
+        particleCount: 100,  // 컨페티의 입자 수
+        spread: 70,          // 입자 퍼지는 범위
+        origin: { x: 0.5, y: 0.5 }, // 화면의 중앙에서 퍼지도록 설정
+        colors: ['#ff0000', '#00ff00', '#0000ff'], // 컨페티 색상
+      });
+    }
+
 const changeComplete = async (task) => {
   const newStatus = !task.completed;
   try {
@@ -152,9 +163,12 @@ const changeComplete = async (task) => {
     const startDate = viewStore.selectedDate;
     const endDate = viewStore.selectedDate;
 
+
+
     await questStore.getTraineeQuestCompletionRate(traineeId, startDate, endDate);
-    if (questStore.questCompletionRates[0].questCompletionRate === '100.00%') {
+    if (questStore.questCompletionRates[0].questCompletionRate === '100%') {
       makeNotification();
+      triggerConfetti();
     }
   } catch (error) {
     console.error("업데이트 실패", error);

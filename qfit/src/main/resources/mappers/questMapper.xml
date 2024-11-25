@@ -80,7 +80,7 @@
 	           CONCAT(
 	               ROUND(
 	                   (SUM(CASE WHEN t.is_completed = TRUE THEN 1 ELSE 0 END) / COUNT(t.task_id)) * 100,
-	                   2
+	                   0
 	               ), '%'
 	           ) AS questCompletionRate,
 	           r.difficulty AS review,
