@@ -254,7 +254,7 @@ button {
 
 /* bodyPart와 exerciseName 간의 간격 */
 .body-part {
-  width: 80px; /* bodyPart의 고정된 너비 */
+  width: 50px; /* bodyPart의 고정된 너비 */
   flex-shrink: 0; /* bodyPart가 축소되지 않도록 설정 */
   text-align: left; /* 텍스트 정렬 */
   margin-right: 8px; /* exerciseName과의 간격 */

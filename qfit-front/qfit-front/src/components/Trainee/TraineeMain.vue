@@ -1,9 +1,11 @@
 <template>
-  <div class="page-container">
+  <!-- <div class="page-container"> -->
+  <div>
     <!-- 캘린더 컴포넌트 -->
     <TheCalender />
 
     <!-- 환영 메시지 -->
+    
     <div class="welcome-container">
       <h5 class="welcome-text">{{ userName }} 회원님 안녕하세요.</h5>
       <h5 class="welcome-text">오늘도 퀘스트 완료까지 화이팅!</h5>
