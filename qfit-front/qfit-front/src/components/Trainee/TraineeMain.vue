@@ -43,10 +43,9 @@ import { useQuestStore } from '@/stores/quest';
 const userStore = useUserStore();
 const questStore = useQuestStore();
 const viewStore = useViewStore();
-
 const userName = computed(() => userStore.loginUser.name);
 
-const rate = ref();
+const rate = ref(null);
 
 // 퀘스트 달성률 상태 반영 메서드
 const checkQuest = async () =>{
@@ -56,6 +55,7 @@ const checkQuest = async () =>{
     const endDate = viewStore.selectedDate;
     await questStore.getTraineeQuestCompletionRate(traineeId, startDate, endDate);
     rate.value = questStore.questCompletionRates[0].questCompletionRate;
+    console.log('여기rate', rate.value);
   }catch(err){
     console.error(err)
   }
@@ -71,11 +71,27 @@ onMounted(()=>{
 });
 
 
-watch(()=>{
-  return questStore.questCompletionRates[0]?.questCompletionRate;},
-  (newValue, oldValue) => {
-  rate.value = newValue;
-});
+watch(
+  () => viewStore.selectedDate, 
+  async(newDate, oldDate) => {
+    console.log('셀렉데이체인지', oldDate, newDate);
+    await checkQuest();
+  }
+);
+
+watch(
+  () => questStore.questCompletionRates,
+  async(newValue, oldValue) => {
+    if(newValue.length > 0){
+      console.log('퀘스트체인지', oldValue, newValue);
+      rate.value = questStore.questCompletionRates[0]?.questCompletionRate || null;
+    }else{
+      rate.value = null;
+    }
+  },
+  { deep : true }
+)
+
 </script>
 
 <style scoped>
