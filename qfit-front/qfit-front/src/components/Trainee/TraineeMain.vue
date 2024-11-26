@@ -8,13 +8,16 @@
     
     <div class="welcome-container">
       <h5 class="welcome-text">{{ userName }} 회원님 안녕하세요.</h5>
+      
+      <!-- 달성률에 따른 메세지 변경 -->
       <h5 class="welcome-text" v-if="rate !== '100%'">오늘도 퀘스트 완료까지 화이팅!</h5>
       <h3 class="welcome-text" v-if="rate === '100%'">🎉오늘의 퀘스트 완료🎉</h3>
       <br>
     </div>
 
-  <div class="completion">
-    <h6>달성률 : {{ rate }}</h6>
+    <!-- 달성률 표시 -->
+     <div class="completion">
+      <h6>달성률 : {{ rate }}</h6>
 
   </div>
     
@@ -46,21 +49,21 @@ const userName = computed(() => userStore.loginUser.name);
 
 const complete = ref(false);
 const rate = ref();
+
+	/**
+	 * 퀘스트 달성률 상태 반영 메서드
+	 * @param -
+	 */
 const checkQuest = async () =>{
   try{
     const traineeId = userStore.loginUser.numberId;
     const startDate = viewStore.selectedDate;
     const endDate = viewStore.selectedDate;
-    // console.log('변수조회', traineeId, startDate, endDate)
     await questStore.getTraineeQuestCompletionRate(traineeId, startDate, endDate);
     rate.value = questStore.questCompletionRates[0].questCompletionRate;
-    // console.log('조회2', questStore.questCompletionRates[0].questCompletionRate)
     if(rate === '100%'){
       complete.value = true;
     }
-    // const completion = computed(() => {const rates = questStore.questCompletionRates[0].questCompletionRate
-    //   return rates && rates.length > 0 ? rates[0].questCompletionRate : '데이터 없음';
-    // } );
     
   }catch(err){
     console.error(err)
@@ -75,11 +78,11 @@ onMounted(()=>{
     checkQuest();
   }, 200); // 200ms 딜레이
 });
+
+
 watch(()=>{
   return questStore.questCompletionRates[0]?.questCompletionRate;},
   (newValue, oldValue) => {
-  // console.log('이전', oldValue);
-  // console.log('이후', newValue);
   rate.value = newValue;
 });
 </script>

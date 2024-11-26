@@ -3,6 +3,7 @@
     <h6 class="assign-header">{{ viewStore.selectedDate }}</h6>
     <h5 class="assign-header">{{ traineeName }} 회원님의 운동 선택하기</h5>
 
+    <!-- 부위 선택 버튼을 모아서 css처리 -->
     <div class="button-group">
       <button @click="selectPart('leg')" :class="{ selected: selectedPart === 'leg' }">하체</button>
       <button @click="selectPart('chest')" :class="{ selected: selectedPart === 'chest' }">가슴</button>
@@ -12,6 +13,7 @@
       <button @click="selectPart('cardio')" :class="{ selected: selectedPart === 'cardio' }">유산소</button>
     </div>
 
+    <!-- 부위별로 필터링된 운동 목록 -->
     <div v-if="filteredExercises.length > 0" class="exercise-list">
       <div class="exercise-cards">
         <div 
@@ -30,8 +32,9 @@
     <div v-else>
       <p>운동을 선택해주세요.</p>
     </div>
-    <div class="submit
-  ">
+
+    <!-- 선택된 운동 수를 보여주는 버튼, 운동 횟수 입력 페이지로 연결 -->
+    <div class="submit">
       <button 
         :disabled="selectedExercises.length === 0"
         @click.prevent="goToQuestSetting"
@@ -59,6 +62,10 @@ const traineeName = computed(() => traineeStore.selectedTrainee.userName);
 const selectedPart = ref('leg'); // 기본적으로 'leg' 선택
 const exercises = ref([]);
 
+	/**
+	 * 운동 전체 조회 메서드
+	 * @param 없음
+	 */
 const fetchExercises = async () => {
   try {
     const result = await exerciseStore.getAllExercises();
@@ -76,11 +83,22 @@ onMounted(() => {
   fetchExercises();
 });
 
+
+	/**
+	 * 선택된 운동 부위 반영 메서드
+   * 선택된 부위를 변경하고 fetch로 반영
+	 * @param part
+	 */
 const selectPart = (part) => {
   selectedPart.value = part;
   fetchExercises();
 };
 
+	/**
+	 * 체크박스에서 선택된 운동 반영 메서드
+   * 선택된 운동을 선택된 운동 리스트에 추가, 체크없으면 삭제
+	 * @param exercise
+	 */
 const updateSelectedExercises = (exercise) => {
   if (exercise.selected) {
     exerciseStore.addSelectedExercise(exercise);
@@ -89,15 +107,28 @@ const updateSelectedExercises = (exercise) => {
   }
 };
 
+
+	/**
+	 * 선택한 부위별 운동 필터링 메서드
+	 * @param -
+	 */
 const filteredExercises = computed(() => {
   if (!selectedPart.value) return exercises.value;
   return exercises.value.filter(exercise => exercise.exerciseParts === selectedPart.value);
 });
 
+	/**
+	 * 엑서사이즈 스토어 컴퓨팅 메서드
+	 * @param -
+	 */
 const selectedExercises = computed(() => {
   return exerciseStore.selectedExercises;
 });
 
+	/**
+	 * 횟수 입력화면 이동 메서드
+	 * @param -
+	 */
 const goToQuestSetting = () => {
   router.push({ name: 'questSetting' });
 };
