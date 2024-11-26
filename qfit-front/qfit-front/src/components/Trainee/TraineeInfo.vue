@@ -88,7 +88,7 @@ const isModalOpen = ref(false);  // 모달 표시 여부
 const password = ref('');        // 입력된 비밀번호
 const errorMessage = ref('');    // 오류 메시지
 
-const userName = computed(() => userStore.loginUser.name);
+const userName = computed(() => userStore.loginUser.name); // 사용자 이름
 
 // 모달 열기 함수
 const openPasswordModal = () => {
@@ -105,7 +105,6 @@ const closeModal = () => {
 // 비밀번호 확인 및 개인정보 수정 페이지 이동
 const changeInfo = async () => {
   if (!password.value) {
-    console.log(password.value)
     errorMessage.value = '비밀번호를 입력해주세요.';
     return;
   }
@@ -126,46 +125,35 @@ const changeInfo = async () => {
   }
 };
 
-// 페이지 이동 함수
-const navigateTo = (routeName) => {
-  if (routeName) {
-    router.push({ name: routeName });
-  }
-};
-
+// 로그아웃
 const logout = async () => {
   try {
     await userStore.logout();
     alert('로그아웃 완료');
   } catch {
-    console.log('로그아웃 실패');
+    console.error('로그아웃 실패');
   }
 };
 
 // 트레이너 정보 조회
 async function fetchTrainerDetail() {
   const trainerId = await traineeStore.getTrainerId(userStore.loginUser.numberId);
-  // 트레이너 체육관 정보 가져오기
-  await trainerStore.getGym(trainerId);
-  // 트레이너 이름 가져오기
-  await traineeStore.getTrainerName(userStore.loginUser.numberId);
+  await trainerStore.getGym(trainerId); // 트레이너 체육관 정보 가져오기
+  await traineeStore.getTrainerName(userStore.loginUser.numberId); // 트레이너 이름 가져오기
 }
 
-// 프로필 이미지 로드
+// 프로필 이미지 URL
 const profileImageUrl = ref('');
 
+// 프로필 이미지 로드
 const loadProfileImages = async () => {
   try {
     const numberId = userStore.loginUser.numberId;
-    console.log('넘버 id:', numberId);
-
-    const imgUrl = await userStore.getUserImageUrl(numberId); // await 추가
-    console.log('이미지 URL:', imgUrl);
+    const imgUrl = await userStore.getUserImageUrl(numberId);
 
     if (imgUrl) {
       const blob = await imageStore.loadFile(imgUrl); // 이미지 로드
       profileImageUrl.value = URL.createObjectURL(blob); // Blob URL 생성
-      console.log(`이미지 로드 성공: ${profileImageUrl.value}`);
     } else {
       throw new Error("사용자 이미지 URL이 없습니다.");
     }
@@ -174,7 +162,6 @@ const loadProfileImages = async () => {
     profileImageUrl.value = defaultProfileImage; // 실패 시 기본 이미지 설정
   }
 };
-
 
 // 프로필 이미지 수정
 const fileUpload = async(event) => {
@@ -185,9 +172,7 @@ const fileUpload = async(event) => {
   }
   try{
     const url = await imageStore.uploadFile(file);
-    console.log('이미지주소', url)
     const user = {id: userStore.loginUser.numberId, userImg: url}
-    console.log('이미지업데이트유저', user)
     userStore.updateUserImageUrl(user)
     const blob = await imageStore.loadFile(url);
     profileImageUrl.value = URL.createObjectURL(blob);
@@ -196,6 +181,7 @@ const fileUpload = async(event) => {
   }
 }
 
+// 파일 input 상태
 const fileInput = ref(null);
 const openFileInput = () => {
   if(fileInput.value){
@@ -203,13 +189,12 @@ const openFileInput = () => {
   }
 }
 
+// 프로필 이미지 삭제
 const deleteImage = async() => {
-  console.log('삭제할이미지주소', profileImageUrl.value);
   if(profileImageUrl.value != defaultProfileImage){
     try{
       await imageStore.deleteFile(profileImageUrl.value);
       const user = {id: userStore.loginUser.numberId, userImg: null};
-      console.log('삭제할 유저 객체', user)
       await userStore.updateUserImageUrl(user);
       profileImageUrl.value = defaultProfileImage;
     }catch(err){

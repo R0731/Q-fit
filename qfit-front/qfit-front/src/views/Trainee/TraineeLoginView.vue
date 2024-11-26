@@ -59,21 +59,21 @@ import { useRouter } from 'vue-router';
 import { useViewStore } from '@/stores/viewStore';
 import { useTraineeStore } from '@/stores/trainee';
 
+const router = useRouter();
 const userStore = useUserStore();
 const traineeStore = useTraineeStore();
-
-const id = ref("")
-const password = ref("")
-
-const router = useRouter();
 const viewStore = useViewStore();
 
+const id = ref("") // 입력 id
+const password = ref("") // 입력 패스워드
+
+// 등록하기
 const goToRegist = () => {
   viewStore.resetView();
-  // console.log("Router 인스턴스:", router);
   router.push('/trainee/regist').catch(err => console.error(err));
 };
 
+// 로그인
 const login = async() =>{
     const success = await userStore.traineeLogin(id.value, password.value)
     if(!success){
@@ -81,8 +81,7 @@ const login = async() =>{
     }
     
     await traineeStore.getTrainerId(userStore.loginUser.numberId);
-    // console.log('프론트 결과 조회', traineeStore.trainer.value);
-    router.push({name: 'traineeMain'});
+    router.push({name: 'traineeMain'}); // 메인으로 이동
 }
 </script>
 

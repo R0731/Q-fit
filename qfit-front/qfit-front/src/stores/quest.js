@@ -6,11 +6,16 @@ import axios from 'axios';
 const REST_API_URL = 'http://localhost:8080/quest';
 
 export const useQuestStore = defineStore('quest', () => {
-  const quest = ref(null); // Quest 데이터
-  const tasks = ref([]); // Task 목록
+  const quest = ref(null); // 퀘스트 데이터
+  const tasks = ref([]); // 테스크 목록
+  const getTasks = computed(() => tasks.value); // 테스크 목록 반환
+  const exerciseData = reactive({}); // 운동 데이터 
 
-  /**
-   * 퀘스트 데이터를 로드하는 함수
+   /**
+   * 퀘스트 데이터 로드
+   * @param {number} traineeId - 트레이니 ID
+   * @param {string} startDate - 시작 날짜
+   * @returns {void}
    */
   const getQuestByIdAndStartDate = async (traineeId, startDate) => {
     // 상태 초기화
@@ -18,22 +23,13 @@ export const useQuestStore = defineStore('quest', () => {
     tasks.value = [];
 
     try {
-      // startDate 포맷팅
-      // const formattedDate = formatDateToYMD(startDate);
-
-      // 요청 로그
-      console.log('API 요청 URL:', REST_API_URL, { traineeId, startAt: startDate });
-
-      // API 호출
       const res = await axios.get(REST_API_URL, {
         params: { traineeId, startAt: startDate },
       });
 
-      // 상태 업데이트
       if (res.status === 200 && res.data) {
         quest.value = res.data;
         tasks.value = res.data.tasks || [];
-        console.log('퀘스트 불러오기 성공:', tasks.value);
       } else {
         console.warn('퀘스트 데이터 없음');
       }
@@ -43,19 +39,16 @@ export const useQuestStore = defineStore('quest', () => {
     }
   };
   
-  /**
-   * Task 목록 반환
-  */
- const getTasks = computed(() => tasks.value);
- 
+ /**
+   * 트레이니 ID 목록으로 퀘스트 상태 조회
+   * @param {Array<number>} traineeIds - 트레이니 ID 목록
+   * @param {string} startDate - 시작 날짜
+   * @returns {Object} - 트레이니 ID별 퀘스트 상태 객체
+   */
  const getQuestsByTraineesAndDate = async (traineeIds, startDate) => {
    const quests = {};
    
    try {
-     // 요청 로그
-     console.log('Batch Quest Fetch:', { traineeIds, startDate });
-     
-     // 여러 퀘스트를 동시에 조회
      const promises = traineeIds.map(async (traineeId) => {
        try {
          const res = await axios.get(REST_API_URL, {
@@ -81,8 +74,6 @@ export const useQuestStore = defineStore('quest', () => {
     return quests; // 퀘스트 상태 객체 반환
   };
 
-  // const originalTasks = ref([]);
-  const exerciseData = reactive({});
 
   // 액션 정의
   const setTasks = (newTasks) => {
@@ -90,7 +81,10 @@ export const useQuestStore = defineStore('quest', () => {
     originalTasks.value = JSON.parse(JSON.stringify(newTasks)); // 깊은 복사
   };
 
-  // // task배열 업데이트
+   /**
+   * 테스크 업데이트
+   * @param { Array<Object> } - 업데이트될 테스크 데이터
+   */ 
   const updateTasks = (updatedTasks) => {
     tasks.value = [...updatedTasks]; // 새로운 배열로 대체
   };
@@ -99,6 +93,10 @@ export const useQuestStore = defineStore('quest', () => {
     tasks.value = JSON.parse(JSON.stringify(originalTasks.value));
   };
 
+  /**
+   * 운동 데이터 로드
+   * @returns {void}
+   */
   const fetchExerciseData = async () => {
     try {
       // 유니크한 exerciseId 추출
@@ -165,15 +163,12 @@ export const useQuestStore = defineStore('quest', () => {
     getQuestByIdAndStartDate, 
     getQuestsByTraineesAndDate,
     getTasks,
-    // originalTasks,
     exerciseData,
     setTasks,
-    // resetTasks,
     fetchExerciseData,
     updateTasks,
     questCompletionRates, 
     getTraineeQuestCompletionRate, 
     createQuest, 
-    // formatDateToYMD 
   };
 });

@@ -1,25 +1,22 @@
 <template>
-  <!-- <div class="page-container"> -->
   <div>
     <!-- 캘린더 컴포넌트 -->
     <TheCalender />
 
     <!-- 환영 메시지 -->
-    
     <div class="welcome-container">
       <h5 class="welcome-text">{{ userName }} 회원님 안녕하세요.</h5>
       
-      <!-- 달성률에 따른 메세지 변경 -->
+      <!-- 달성률에 따른 메세지 -->
       <h5 class="welcome-text" v-if="rate !== '100%'">오늘도 퀘스트 완료까지 화이팅!</h5>
       <h3 class="welcome-text" v-if="rate === '100%'">🎉오늘의 퀘스트 완료🎉</h3>
       <br>
     </div>
 
     <!-- 달성률 표시 -->
-     <div class="completion">
-     <h6 v-if="rate">달성률 : {{ rate }}</h6>
-
-  </div>
+    <div class="completion">
+      <h6 v-if="rate">달성률 : {{ rate }}</h6>
+    </div>
     
     <!-- 퀘스트 섹션 -->
     <div class="quest-container">
@@ -45,9 +42,10 @@ const questStore = useQuestStore();
 const viewStore = useViewStore();
 const userName = computed(() => userStore.loginUser.name);
 
-const rate = ref(null);
+const rate = ref(null); // 달성률 상태
+const hasQuest = computed(() => !!questStore.quest); // 퀘스트 여부 확인
 
-// 퀘스트 달성률 상태 반영 메서드
+// 퀘스트 달성률 상태 반영
 const checkQuest = async () =>{
   try{
     const traineeId = userStore.loginUser.numberId;
@@ -55,14 +53,10 @@ const checkQuest = async () =>{
     const endDate = viewStore.selectedDate;
     await questStore.getTraineeQuestCompletionRate(traineeId, startDate, endDate);
     rate.value = questStore.questCompletionRates[0].questCompletionRate;
-    console.log('여기rate', rate.value);
   }catch(err){
     console.error(err)
   }
 }
-
-// quest 상태 확인(quest가 null이 아니면 true)
-const hasQuest = computed(() => !!questStore.quest);
 
 onMounted(()=>{
   setTimeout(() => {
@@ -70,20 +64,17 @@ onMounted(()=>{
   }, 200); // 200ms 딜레이
 });
 
-
+// 선택 날짜 변경 시 달성률 업데이트
 watch(
   () => viewStore.selectedDate, 
-  async(newDate, oldDate) => {
-    console.log('셀렉데이체인지', oldDate, newDate);
-    await checkQuest();
-  }
+  checkQuest
 );
 
+// 달성률 데이터 변경 시 rate 업데이트
 watch(
   () => questStore.questCompletionRates,
   async(newValue, oldValue) => {
     if(newValue.length > 0){
-      console.log('퀘스트체인지', oldValue, newValue);
       rate.value = questStore.questCompletionRates[0]?.questCompletionRate || null;
     }else{
       rate.value = null;
@@ -91,7 +82,6 @@ watch(
   },
   { deep : true }
 )
-
 </script>
 
 <style scoped>

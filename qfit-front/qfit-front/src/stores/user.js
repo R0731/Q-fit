@@ -9,9 +9,9 @@ const REST_API_URL = `http://localhost:8080/user`;
 export const useUserStore = defineStore('user', () => {
   
   const route = useRoute();
-  const userType = computed(() => route.path.split('/')[1]);
-  
-  const loginUser = ref(null);
+
+  const userType = computed(() => route.path.split('/')[1]); // 주소를 통해 userType 확정
+  const loginUser = ref(null); // 로그인한 유저 정보를 담을 객체
   
   // 회원 로그아웃
   const logout = () => {
@@ -28,7 +28,12 @@ export const useUserStore = defineStore('user', () => {
     }
   };
   
-  // 트레이너 로그인
+  /**
+  * 트레이너 로그인
+  * @param {string} id
+  * @param {string} password
+  * 
+ */
   const trainerLogin = async (id, password) => {
     try {
       const res = await axios.post(`${REST_API_URL}/login`, {
@@ -43,7 +48,6 @@ export const useUserStore = defineStore('user', () => {
       setUserFromToken(accessToken); // 토큰에서 유저 정보 설정
 
       const userType = loginUser.value.userType;
-      console.log('강제로그아웃 전 유저 타입 확인', userType)
 
       if(userType !== 1){
         console.warn('잘못된 유저 접근')
@@ -61,7 +65,12 @@ export const useUserStore = defineStore('user', () => {
     }
   };
   
-  // 트레이니 로그인
+  /**
+  * 트레이니 로그인
+  * @param {string} id
+  * @param {string} password
+  * 
+ */
   const traineeLogin = async (id, password) => {
     try {
       const res = await axios.post(`${REST_API_URL}/login`, {
@@ -76,7 +85,6 @@ export const useUserStore = defineStore('user', () => {
       setUserFromToken(accessToken); // 토큰에서 유저 정보 설정
       
       const userType = loginUser.value.userType;
-      console.log('강제로그아웃 유저 타입 확인', userType)
 
       if(userType !== 2){
         console.warn('잘못된 유저 접근')
@@ -94,7 +102,6 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-
   // 패스워드 체크 기능
   const passwordCheck = async (check) => {
     try {
@@ -107,12 +114,13 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-  // 유저 정보 가져오기
+  /**
+   * 유저 상세 정보 가져오기
+   * @param {string} userId - 업데이트할 유저 id
+  */
   const getUserDetails = async (userId) => {
     try {
-      console.log('getUserDetails 호출:', userId);
       const res = await axios.get(`${REST_API_URL}/info/${userId}`);
-      console.log('user정보조회', res)
       return res.data;
     } catch (err) {
       console.error('유저 정보 가져오기 실패:', err);
@@ -120,6 +128,7 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
+  // 토큰 디코딩
   const decodeBase64Url = (str) => {
     // Base64Url 포맷에서 '+'를 '-', '/'를 '_', 그리고 '='를 제거한 형태로 변환
     str = str.replace(/-/g, '+').replace(/_/g, '/');
@@ -142,12 +151,6 @@ export const useUserStore = defineStore('user', () => {
     };
   };
 
-  // 세션에서 토큰을 이용해 유저 정보 로드
-  // const loadUserFromToken = async () => {
-  //   const token = sessionStorage.getItem('access-token');
-  //   if (token) setUserFromToken(token);
-  // };
-
   const loadUserFromToken = () => {
     const token = sessionStorage.getItem('access-token');
     if (token) {
@@ -160,24 +163,32 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
+  /**
+   * 유저 정보 업데이트
+   * @param {nubmer} numberId - 업데이트할 유저 고유 id
+   * @param {Object} user - 업데이트할 유저 정보
+   * 
+  */
   const updateUser = async(numberId, user) => {
     try{
       const url = `${REST_API_URL}/update/${numberId}`;
       const res = await axios.put(url, user);
-      console.log('유저정보 수정 성공');
       return res.data;
     }catch(err){
-      console.log('수정 중 에러 발생', err);
+      console.error('수정 중 에러 발생', err);
       throw new Error('회원 정보 수정에 실패했습니다.');
     }
   }
 
-  // 유저 정보에서 imgUrl만 가져오기
+    /**
+  * 트레이니 로그인
+  * @param {number} numberId - 유저 고유 ID
+  * 
+ */
   const getUserImageUrl = async(numberId) => {
     try{
       const url = `${REST_API_URL}/image-load/${numberId}`
       const res = await axios.get(url)
-      console.log('유저 이미지 정보 로드', res.data)
       return res.data;
     }catch(err){
       console.error('유저 이미지 로드 에러', err);
@@ -190,7 +201,6 @@ export const useUserStore = defineStore('user', () => {
     try{
       const url = `${REST_API_URL}/image-update`;
       const res = await axios.put(url, user);
-      console.log('사진 업데이트', res.data);
       return res.data;
     }catch(err){
       console.error('사진 업데이트에러', err);

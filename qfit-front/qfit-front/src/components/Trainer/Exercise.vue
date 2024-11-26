@@ -1,12 +1,5 @@
 <template>
   <div class="container mt-4">
-    <!-- 퀘스트가 없는 경우 -->
-    <div v-if="tasks.length === 0" class="text-center">
-      <button class="btn btn-primary create-quest-btn" @click="createQuest">퀘스트 등록하기</button>
-    </div>
-
-    <!-- 퀘스트가 있는 경우 -->
-    <div v-else>
       <ul class="list-group">
         <li 
           v-for="task in tasks" 
@@ -48,7 +41,6 @@
         <p v-else>수정할 수 없습니다.</p>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -56,19 +48,14 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useExerciseStore } from '@/stores/exercise';
 import { useQuestStore } from '@/stores/quest';
 import { useViewStore } from '@/stores/viewStore';
-import { useRouter } from 'vue-router';
 
-// Pinia 스토어
 const questStore = useQuestStore();
 const exerciseStore = useExerciseStore();
 const viewStore = useViewStore();
-const router = useRouter();
 
-// 퀘스트 목록
-const tasks = computed(() => questStore.tasks || []);
-
-// 운동 정보
-const exerciseData = ref({});
+const tasks = computed(() => questStore.tasks || []); // 퀘스트 목록
+const exerciseData = ref({}); // 운동 정보
+const selectedDate = computed(() => viewStore.selectedDate); // 선택 날짜
 
 // 영어 - 한글 매핑 객체
 const bodyPartMap = {
@@ -104,18 +91,17 @@ const loadAllExerciseInfo = async () => {
   for (const exerciseId of uniqueExerciseIds) {
     await loadExerciseInfo(exerciseId);
   }
-  console.log('모든 운동 정보 로드 완료')
 };
 
 // 전체 운동 정보 로드
 const getAllExercises = async() => {
-  const result = exerciseStore.getAllExercises()
-  console.log(result.value)
+  exerciseStore.getAllExercises()
 }
 
 // 선택한 날짜가 현재 날짜 이전이면 수정 불가능
 const canEdit = ref(false);
 
+// 수정 가능 상태 확인
 const updateCanEdit = () => {
   const today = formatDateToYYYYMMDD(new Date()); // 오늘 날짜 계산
 
@@ -134,26 +120,19 @@ const formatDateToYYYYMMDD = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-const selectedDate = computed(() => viewStore.selectedDate);
-
 // 컴포넌트 초기화
 onMounted(async() => {
   await getAllExercises();
   await loadAllExerciseInfo();
   await updateCanEdit();
-  // console.log('로딩 완료');
 });
+
 watch(
   () => tasks.value,
   (newTasks) => {
     console.log('computed tasks 변경 감지:', newTasks);
   }
 );
-
-// 퀘스트 생성
-const createQuest = () => {
-  console.log('퀘스트 등록 페이지로 이동');
-};
 </script>
 
 <style scoped>

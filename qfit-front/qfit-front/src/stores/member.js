@@ -1,56 +1,58 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
 const REST_API_URL = `http://localhost:8080/member`
 export const useMemberStore = defineStore('member', () => {
 
+   /**
+   * 회원가입
+   * @param {string} userType - 유저 타입
+   * @param {Object} user - 사용자 정보 객체
+   * @returns {Object} - 등록된 사용자 정보
+   */
   const userRegist = async(userType, user) => {
     try{
       if (!userType || !user) {
         throw new Error("유효한 유저 타입 또는 데이터가 없습니다.");
       }
-
-    // console.log("전달된 유저 데이터:", user);
-
       const url = `${REST_API_URL}/${userType}/regist`;
       const res = await axios.post(url, user);
-      console.log(`${userType}등록 성공`)
-
       return res.data;
-
-    }catch(error){
-      console.log('에러발생')
+    }catch(err){
+      console.error('에러발생', err)
       throw error;
     }
 
   }
 
+  /**
+   * 사용자 탈퇴
+   * @param {string} userType - 사용자 유형
+   * @param {number} numberId - 사용자 고유 ID
+   * @returns {void}
+   */
   const userResign = async(userType, numberId) => {
     try{
       const url = `${REST_API_URL}/${userType}/resign/${numberId}`
-      console.log(url)
       const res = await axios.delete(url);
-      console.log('삭제성공')
     }catch(err){
-      console.log('삭제실패')
+      console.error('삭제실패', err)
       throw err;
     }
   } 
 
-    // 아이디 중복 체크 기능
+  /**
+   * 사용자 ID 중복 확인
+   * @param {string} userId - 확인할 사용자 ID
+   * @returns {boolean} - 중복 여부
+   */
     const userIdCheck = async(userId) => {
       try{
         const url = `${REST_API_URL}/idCheck`;
         const res = await axios.post(url, {userId});
-        if(res){
-          console.log('중복 아이디')
-        }else{
-          console.log('사용가능 아이디')
-        }
         return res.data;
       }catch(err){
-        console.log('에러발생 :', err);
+        console.log('에러발생', err);
       }
     };
 

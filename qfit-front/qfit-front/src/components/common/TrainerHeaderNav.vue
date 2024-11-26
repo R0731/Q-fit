@@ -21,19 +21,19 @@
         <button class="close-btn" @click="toggleNotification">X</button>
       </div>
       <ul class="notification-list">
-  <li
-    v-for="notification in notifications"
-    :key="notification.notificationId"
-    :data-id="notification.notificationId"
-    @click="() => handleNotificationClick(notification.notificationId)"
-    class="notification-item"
-  >
-    {{ notification.message }}
-  </li>
-  <li v-if="notifications.length === 0" class="no-notifications">
-    알림이 없습니다.
-  </li>
-</ul>
+        <li
+          v-for="notification in notifications"
+          :key="notification.notificationId"
+          :data-id="notification.notificationId"
+          @click="() => handleNotificationClick(notification.notificationId)"
+          class="notification-item"
+        >
+          {{ notification.message }}
+        </li>
+        <li v-if="notifications.length === 0" class="no-notifications">
+          알림이 없습니다.
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -48,15 +48,17 @@ const router = useRouter();
 const userStore = useUserStore();
 const notificationStore = useNotificationStore();
 
+// 알림 상태 관리
 const isNotificationOpen = ref(false); // 알림 팝업 상태
 const userId = userStore.loginUser?.numberId || 0; // 사용자 ID
 const notifications = computed(() => notificationStore.notifications); // 알림 목록
-// const unreadCount = computed(() => notifications.value.length); // 읽지 않은 알림 개수
+
+// 읽지 않은 알림 개수 계산
 const unreadCount = computed(() => 
   notifications.value.filter(notification => !notification.isRead).length
 );
 
-// 뒤로 가기 함수
+// 뒤로 가기
 const goBack = () => {
   router.back();
 };
@@ -84,18 +86,18 @@ const handleNotificationClick = async (notificationId) => {
   try {
     const item = document.querySelector(`[data-id="${notificationId}"]`); // 알림 DOM 찾기
     if (item) {
-      item.classList.add('slide-out'); // 애니메이션 클래스 추가
+      item.classList.add('slide-out'); // 애니메이션 추가
 
       // 애니메이션 완료 후 실행
       setTimeout(() => {
         notificationStore.removeNotification(notificationId); // 로컬 상태 업데이트
-      }, 300); // 애니메이션 시간과 일치
+      }, 300); // 애니메이션 지속 시간과 일치
       
       // 서버에 읽음 요청
       await notificationStore.markAsRead(notificationId);
     }
-  } catch (error) {
-    console.error('알림 읽음 처리 중 오류 발생:', error);
+  } catch (err) {
+    console.error('알림 읽음 처리 중 오류 발생:', err);
   }
 };
 

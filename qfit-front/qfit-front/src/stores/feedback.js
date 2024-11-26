@@ -1,17 +1,18 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import router from '@/router'
-
 const REST_API_URL = `http://localhost:8080/feedback`
 export const useFeedbackStore = defineStore('feedback', () => {
   
+  /**
+   * 퀘스트 ID로 피드백 가져오기
+   * @param {number} questId - 퀘스트 ID
+   * @returns {Object} - 피드백 데이터
+   */
   const getFeedback = async(questId) => {
     try{
       const url = `${REST_API_URL}/${questId}`
-      // console.log('피드백피니아url', url);
       const res = await axios.get(url)
-      // console.log('피드백피니아', res.data);
       return res.data;
     }catch(err){
       console.log('피드백가져오기실패', err)
@@ -19,24 +20,31 @@ export const useFeedbackStore = defineStore('feedback', () => {
     }
   }
 
+   /**
+   * 새 피드백 생성
+   * @param {Object} newFeedback - 생성할 피드백 데이터
+   * @returns {Object} - 생성된 피드백 데이터
+   */
   const createFeedback = async(newFeedback) => {
     try{
       const url = `${REST_API_URL}`
-      console.log('새 피드백', newFeedback)
       const res = await axios.post(url, newFeedback)
-      console.log('피드백 등록 성공')
     }catch(err){
       console.log('피드백등록실패', err)
       throw err;
     }
   }
 
+   /**
+   * 피드백 수정
+   * @param {number} questId - 퀘스트 ID
+   * @param {Object} newFeedback - 수정할 피드백 데이터
+   * @returns {Object} - 수정된 피드백 데이터
+   */
   const updateFeedback = async(questId, newFeedback) => {
     try{
       const url = `${REST_API_URL}/${questId}`
-      console.log('새 피드백', newFeedback)
       const res = await axios.put(url, newFeedback)
-      console.log('피드백 수정 성공')
     }catch(err){
       console.log('피드백수정실패', err)
       throw err;

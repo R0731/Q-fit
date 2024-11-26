@@ -41,7 +41,6 @@ import { useUserStore } from '@/stores/user';
 import { useViewStore } from '@/stores/viewStore';
 import { ref, computed, watch } from 'vue';
 
-// 스토어 사용
 const feedbackStore = useFeedbackStore();
 const questStore = useQuestStore();
 const userStore = useUserStore();
@@ -49,7 +48,6 @@ const traineeStore = useTraineeStore();
 const viewStore = useViewStore();
 const notificationStore = useNotificationStore();
 
-// 상태 관리
 const feedback = ref('NONE'); // 현재 피드백 상태
 const quest = computed(() => questStore.quest); // 현재 퀘스트
 const questId = ref(null); // 현재 퀘스트 ID
@@ -57,24 +55,7 @@ const questId = ref(null); // 현재 퀘스트 ID
 const isCreating = ref(false); // 피드백 작성 모드
 const isEditing = ref(false); // 피드백 수정 모드
 const newFeedbackContent = ref(''); // 작성/수정 중인 피드백 내용
-const newTrainerId = ref(null); // 트레이너 ID (기본값 1)
-
-// 퀘스트 변경 감지
-watch(
-  quest,
-  async (newQuest) => {
-    if (newQuest?.questId) {
-      questId.value = newQuest.questId; // questId 업데이트
-      try {
-        const res = await feedbackStore.getFeedback(questId.value);
-        feedback.value = res || 'NONE';
-      } catch (err) {
-        console.error('피드백 로드 실패:', err);
-      }
-    }
-  },
-  { immediate: true } // 컴포넌트 로드시 실행
-);
+const newTrainerId = ref(null); // 트레이너 ID
 
 // 알림 생성
 const makeNotification = async(msg) => {
@@ -82,13 +63,11 @@ const makeNotification = async(msg) => {
     const traineeId = traineeStore.selectedTrainee.id;
     const questDate = viewStore.selectedDate;
     const notification = {userId: traineeId, message: `${questDate} 수행 퀘스트에 대한 피드백이 ${msg}되었습니다.`}
-    console.log('넘어가는 메시지 확인', notification)
     await notificationStore.createNotification(notification)
   }catch(err){
-    console.log('프론트 등록 중 오류 발생', err)
+    console.error(err);
   }
 }
-
 
 // 피드백 작성 시작
 const startCreateFeedback = () => {
@@ -106,12 +85,10 @@ const submitCreateFeedback = async () => {
 
   try {
     const newFeedback = {
-      questId: questId.value,
-      trainerId: userStore.loginUser.numberId, // 트레이너 ID 추가
-      content: newFeedbackContent.value,
+      questId: questId.value, // 퀘스트 id
+      trainerId: userStore.loginUser.numberId, // 트레이너 ID
+      content: newFeedbackContent.value, // 피드백 내용
     };
-
-    // console.log(newFeedback);
 
     await feedbackStore.createFeedback(newFeedback); // 피드백 등록
     feedback.value = newFeedback; // 로컬 상태 업데이트
@@ -123,7 +100,6 @@ const submitCreateFeedback = async () => {
     alert('피드백 등록에 실패했습니다.');
   }
 };
-
 
 // 피드백 수정 시작
 const startEditFeedback = () => {
@@ -162,6 +138,23 @@ const cancelAction = () => {
   isCreating.value = false; // 작성 모드 종료
   isEditing.value = false; // 수정 모드 종료
 };
+
+// 퀘스트 변경 감지
+watch(
+  quest,
+  async (newQuest) => {
+    if (newQuest?.questId) {
+      questId.value = newQuest.questId; // questId 업데이트
+      try {
+        const res = await feedbackStore.getFeedback(questId.value);
+        feedback.value = res || 'NONE';
+      } catch (err) {
+        console.error('피드백 로드 실패:', err);
+      }
+    }
+  },
+  { immediate: true } // 컴포넌트 로드시 실행
+);
 </script>
 
 <style scoped>

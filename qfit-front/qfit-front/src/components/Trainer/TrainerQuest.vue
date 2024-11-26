@@ -34,35 +34,37 @@ import { useRouter } from 'vue-router';
 import { useTraineeStore } from '@/stores/trainee';
 import ExerciseEditor from './ExerciseEditor.vue';
 
-// Vue Router 사용을 위한 초기화
 const router = useRouter();
 
-// Pinia 스토어
 const questStore = useQuestStore(); // 퀘스트 관련 상태 및 메서드를 관리하는 스토어
 const traineeStore = useTraineeStore(); // 트레이니 데이터 관리하는 스토어
 const viewStore = useViewStore(); // 뷰 상태(날짜 선택 등)를 관리하는 스토어
 
-// 현재 선택된 트레이니를 가져오기 (Pinia 상태로부터 계산된 값)
-const trainee = computed(() => traineeStore.selectedTrainee);
+const trainee = computed(() => traineeStore.selectedTrainee); // 현재 선택된 trainee
+const hasQuest = computed(() => !!questStore.quest); // 퀘스트 존재 여부 확인
 
-// 퀘스트의 존재 여부를 확인하는 계산된 속성
-// questStore의 quest 상태가 null 또는 undefined인지 여부를 boolean 값으로 반환
-const hasQuest = computed(() => !!questStore.quest);
-
-/**
- * 퀘스트 데이터를 로드하는 함수
- * - 트레이니 ID와 선택된 날짜를 기반으로 퀘스트를 로드
- */
+// 트레이니 id와 선택 날짜 기반으로 퀘스트 로드
 const loadQuest = async () => {
   try {
-    console.log('트레이니:', trainee.value); // 트레이니 정보를 로그로 출력
-
-    // 퀘스트 로드
     await questStore.getQuestByIdAndStartDate(trainee.value.id, viewStore.selectedDate);
-    console.log('퀘스트 로드 완료'); // 로드 성공 시 출력
   } catch (error) {
     console.error('퀘스트 로드 실패:', error.message); // 에러 발생 시 에러 메시지 출력
   }
+};
+
+// 퀘스트 등록하기 버튼 클릭
+const createQuest = () => {
+  router.push({ name: 'questAssign' });
+};
+
+// 현재 렌더링 중인 컴포넌트를 관리하는 상태 (기본값: Exercise)
+const currentComponent = ref(Exercise);
+
+// 동적으로 렌더링할 컴포넌트 맵
+// 현재는 Exercise와 ExerciseEditor를 지원
+const components = {
+  Exercise,
+  ExerciseEditor,
 };
 
 // 컴포넌트가 마운트될 때 실행되는 라이프사이클 훅
@@ -79,35 +81,17 @@ onActivated(() => {
   questStore.fetchQuestList(); // 퀘스트 목록 새로고침
 });
 
-// '퀘스트 등록하기' 버튼 클릭 시 호출되는 함수
-// 퀘스트 등록 페이지로 이동
-const createQuest = () => {
-  router.push({ name: 'questAssign' });
-};
 
-// 현재 렌더링 중인 컴포넌트를 관리하는 상태 (기본값: Exercise)
-const currentComponent = ref(Exercise);
-
-// 동적으로 렌더링할 컴포넌트 맵
-// 현재는 Exercise와 ExerciseEditor를 지원
-const components = {
-  Exercise,
-  ExerciseEditor,
-};
-
-// 수정 버튼 클릭 시 호출되는 함수
-// 현재 컴포넌트를 ExerciseEditor로 전환
+// 수정 버튼 클릭 시 현재 컴포넌트를 ExerciseEditor로 전환
 const switchToEditor = () => {
   currentComponent.value = ExerciseEditor;
 };
 
-// 편집 종료 후 호출되는 함수
-// 현재 컴포넌트를 Exercise로 복원
+// 편집 종료 후 현재 컴포넌트를 Exercise로 복원
 const switchToView = () => {
   currentComponent.value = Exercise;
 };
 </script>
-
 
 <style scoped>
 /* 전체 컨테이너 스타일 */

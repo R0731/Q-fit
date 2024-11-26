@@ -55,7 +55,7 @@
     <!-- 체육관 정보 섹션 -->
     <div class="section-container">
       <h4>체육관 정보 수정</h4>
-      <p class="section-content">체육관 정보를 확인하거나 수정할 수 있습니다.</p>
+      <p class="section-content">{{ gym }}</p>
       <!-- 체육관 정보 수정 버튼 -->
       <button class="small-btn" @click="navigateTo('trainerGym')">체육관 정보</button>
     </div>
@@ -71,16 +71,20 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import { useImageStore } from "@/stores/imageStore";
 import defaultProfileImage from "@/assets/default_profile.png";
+import { useTrainerStore } from '@/stores/trainer';
 
 const router = useRouter();
 const userStore = useUserStore();
 const imageStore = useImageStore();
+const trainerStore = useTrainerStore();
 
 const isModalOpen = ref(false);  // 모달 표시 여부
 const password = ref('');        // 입력된 비밀번호
 const errorMessage = ref('');    // 오류 메시지
 
 const userName = computed(() => userStore.loginUser.name);
+const gym = ref('');
+const numberId = userStore.loginUser.numberId;
 
 // 모달 열기 함수
 const openPasswordModal = () => {
@@ -124,31 +128,29 @@ const navigateTo = (routeName) => {
   }
 };
 
+// 로그아웃
 const logout = async () => {
   try {
     await userStore.logout();
     alert('로그아웃 완료');
   } catch {
-    console.log('로그아웃 실패');
+    console.error('로그아웃 실패');
   }
 };
 
 
-// 프로필 이미지 로드
+// 로드할 이미지 주소
 const profileImageUrl = ref('');
 
+// 프로필 이미지 로드
 const loadProfileImages = async () => {
   try {
-    const numberId = userStore.loginUser.numberId;
-    console.log('넘버 id:', numberId);
 
     const imgUrl = await userStore.getUserImageUrl(numberId); // await 추가
-    console.log('이미지 URL:', imgUrl);
 
     if (imgUrl) {
       const blob = await imageStore.loadFile(imgUrl); // 이미지 로드
       profileImageUrl.value = URL.createObjectURL(blob); // Blob URL 생성
-      console.log(`이미지 로드 성공: ${profileImageUrl.value}`);
     } else {
       throw new Error("사용자 이미지 URL이 없습니다.");
     }
@@ -168,9 +170,7 @@ const fileUpload = async(event) => {
   }
   try{
     const url = await imageStore.uploadFile(file);
-    console.log('이미지주소', url)
     const user = {id: userStore.loginUser.numberId, userImg: url}
-    console.log('이미지업데이트유저', user)
     userStore.updateUserImageUrl(user)
     const blob = await imageStore.loadFile(url);
     profileImageUrl.value = URL.createObjectURL(blob);
@@ -186,13 +186,12 @@ const openFileInput = () => {
   }
 }
 
+// 프로필 이미지 삭제
 const deleteImage = async() => {
-  console.log('삭제할이미지주소', profileImageUrl.value);
   if(profileImageUrl.value != defaultProfileImage){
     try{
       await imageStore.deleteFile(profileImageUrl.value);
       const user = {id: userStore.loginUser.numberId, userImg: null};
-      console.log('삭제할 유저 객체', user)
       await userStore.updateUserImageUrl(user);
       profileImageUrl.value = defaultProfileImage;
     }catch(err){
@@ -203,6 +202,9 @@ const deleteImage = async() => {
 
 // 초기 데이터 로드
 onMounted(async () => {
+  await trainerStore.getGym(numberId);
+
+  gym.value = trainerStore.trainer.gym;
   await loadProfileImages(); // 프로필 이미지 로드
 });
 </script>

@@ -9,7 +9,11 @@ export const useNotificationStore = defineStore('notification', () => {
   const loading = ref(false); // 로딩 상태
   const error = ref(null); // 오류 메시지
 
-  // 읽지 않은 알림 가져오기
+  /**
+   * 읽지 않은 알림 가져오기
+   * @param {number} userId - 사용자 ID
+   * @returns {void}
+   */
   const fetchUnreadNotifications = async (id) => {
     loading.value = true;
     error.value = null;
@@ -25,24 +29,27 @@ export const useNotificationStore = defineStore('notification', () => {
     }
   };
 
-  // 개별 알림 읽음 처리
+  /**
+   * 개별 알림 읽음 처리
+   * @param {number} notificationId - 알림 ID
+   * @returns {void}
+   */
   const markAsRead = async (notificationId) => {
     try {
-      console.log('알람아이디안넘어왓나:', notificationId);
-  
       if (!notificationId) throw new Error('notificationId가 비어있음');
-  
       await axios.put(`${REST_API_URL}/read`, null, {
         params: { notificationId },
       });
-  
-      console.log('알람 읽음 성공');
     } catch (err) {
       console.error('알림 중 오류 발생', err);
     }
   };
   
-  // 실시간으로 알림 삭제 확인 반영
+  /**
+   * 알림 삭제
+   * @param {number} notificationId - 알림 ID
+   * @returns {void}
+   */
   const removeNotification = (notificationId) => {
     const index = notifications.value.findIndex(
       (n) => n.notificationId === notificationId
@@ -52,20 +59,21 @@ export const useNotificationStore = defineStore('notification', () => {
     }
   };
 
-  // 알림 생성
+  /**
+   * 알림 생성
+   * @param {Object} notification - 생성할 알림 객체
+   * @returns {Object} - 생성된 알림 데이터
+   */
   const createNotification = async(notification) => {
     try{
-      console.log('알림이 잘 넘어왔나요', notification)
       const url = `${REST_API_URL}`
       const res = await axios.post(url, notification);
-      console.log('알림 생성 성공')
     }catch(err){
       console.log('알림 생성 중 오류 발생', err);
       throw err;
     }
   }
   
-
   return {
     notifications,
     loading,

@@ -94,6 +94,7 @@ const makeNotification = async() => {
   }
 }
 
+// 프로필 이미지 로드
 const loadProfileImages = async () => {
   for (const trainee of trainees.value) {
     if (trainee.userImg) {

@@ -83,30 +83,13 @@ const originalDifficulty = ref('NONE'); // 수정 취소 시 복구용
 const isSelecting = ref(false); // true면 선택 가능
 const isEditing = ref(false); // true면 수정 모드
 
-// 퀘스트 변경 감지
-watch(
-  quest,
-  async (newQuest) => {
-    if (newQuest?.questId) {
-      questId.value = newQuest.questId; // questId 업데이트
-      try {
-        await reviewStore.getReview(questId.value); // 리뷰 데이터 로드
-        difficulty.value = review.value?.difficulty || 'NONE'; // 기존 리뷰 난이도 설정
-      } catch (err) {
-        console.error('리뷰 로드 실패:', err);
-      }
-    }
-  },
-  { immediate: true } // 컴포넌트 로드시 실행
-);
-
-// "리뷰 등록하기" 버튼 클릭 시 선택 모드로 전환
+// 리뷰 등록하기 버튼 클릭 시 선택 모드로 전환
 const startSelection = () => {
   isSelecting.value = true; // 선택 모드 활성화
   isEditing.value = false; // 등록 모드
 };
 
-// "수정" 버튼 클릭 시 수정 모드로 전환
+// 수정 버튼 클릭 시 수정 모드로 전환
 const enterEditMode = () => {
   isSelecting.value = true; // 선택 모드 활성화
   isEditing.value = true; // 수정 모드 활성화
@@ -130,7 +113,6 @@ const saveReview = async () => {
         traineeId: userStore.loginUser.numberId,
         difficulty: difficulty.value,
       };
-      console.log('새 리뷰:', newReview);
 
       await reviewStore.createReview(newReview); // 새로운 리뷰 생성
       alert('리뷰가 성공적으로 저장되었습니다.');
@@ -153,7 +135,6 @@ const updateReview = async () => {
         questId: questId.value,
         difficulty: difficulty.value,
       };
-      console.log('수정된 리뷰:', updatedReview);
 
       await reviewStore.updateReview(questId.value, updatedReview); // 기존 리뷰 업데이트
       alert('리뷰가 성공적으로 수정되었습니다.');
@@ -176,8 +157,6 @@ const cancelSelection = () => {
   isEditing.value = false; // 수정 모드 종료
 };
 
-
-
 // 알림 생성
 const makeNotification = async(msg) => {
   try{
@@ -187,14 +166,29 @@ const makeNotification = async(msg) => {
       console.error('트레이너 ID를 가져오지 못했습니다.');
       return; // 유효하지 않은 경우 함수 종료
     }
-    console.log('트레이너아이디', trainerId);
     const notification = {userId: trainerId, message: `${userStore.loginUser.name}님이 리뷰를 ${msg}하였습니다.`}
-    console.log('넘어가는 메시지 확인', notification)
     await notificationStore.createNotification(notification)
   }catch(err){
-    console.log('프론트 등록 중 오류 발생', err)
+    console.error('프론트 등록 중 오류 발생', err)
   }
 }
+
+// 퀘스트 변경 감지
+watch(
+  quest,
+  async (newQuest) => {
+    if (newQuest?.questId) {
+      questId.value = newQuest.questId; // questId 업데이트
+      try {
+        await reviewStore.getReview(questId.value); // 리뷰 데이터 로드
+        difficulty.value = review.value?.difficulty || 'NONE'; // 기존 리뷰 난이도 설정
+      } catch (err) {
+        console.error('리뷰 로드 실패:', err);
+      }
+    }
+  },
+  { immediate: true } // 컴포넌트 로드시 실행
+);
 </script>
 
 <style scoped>

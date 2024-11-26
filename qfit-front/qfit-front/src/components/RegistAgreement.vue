@@ -30,7 +30,7 @@ import { ref } from 'vue';
 import { useViewStore } from '@/stores/viewStore';
 
 const viewStore = useViewStore();
-const isAgreed = ref(false);
+const isAgreed = ref(false); // 동의 여부
 
 // 개인정보 수집 및 이용 동의 확인
 const proceed = () => {

@@ -70,14 +70,14 @@
         </div>
 
         <!-- 삭제 버튼 -->
-      <div class="delete-icon">
+        <div class="delete-icon">
         <i
           :class="task.completed ? 'bi bi-check-square-fill' : 'bi bi-x-square-fill'"
           :style="{ color: task.completed ? 'var(--theme-color)' : 'red',
           cursor: task.completed ? 'not-allowed' : 'pointer'}"
           @click="!task.completed && deleteTaskConfirm(index)"
         ></i>
-      </div>
+        </div>
       </li>
     </ul>
 
@@ -98,13 +98,11 @@ import { ref, onMounted } from 'vue';
 import { useTaskStore } from '@/stores/task';
 import { useNotificationStore } from '@/stores/notification';
 
-// Pinia 스토어
 const questStore = useQuestStore();
 const exerciseStore = useExerciseStore();
 const taskStore = useTaskStore();
 const notificationStore = useNotificationStore();
 
-// 로컬 상태
 const exercises = exerciseStore.exercises; // 운동 데이터 배열
 const newTasks = ref([]); // 편집용 상태
 const deleteTaskId = ref([]); // 삭제할 테스크Id 저장
@@ -132,7 +130,6 @@ const initializeNewTasks = () => {
       count: task.count ?? null,
     };
   });
-  console.log(newTasks.value)
 };
 
 // 알림 생성
@@ -140,10 +137,9 @@ const makeNotification = async() => {
   try{
     const traineeId = questStore.quest.traineeId;
     const notification = {userId: traineeId, message: '퀘스트가 수정되었습니다'}
-    // console.log('넘어가는 메시지 확인', notification)
     await notificationStore.createNotification(notification)
   }catch(err){
-    console.log('프론트 등록 중 오류 발생', err)
+    console.error('프론트 등록 중 오류 발생', err)
   }
 }
 
@@ -177,7 +173,7 @@ const handleExerciseChange = (index) => {
   task.cardioMinutes = null;
 };
 
-// 운동 이름 필터링
+// 선택된 신체 부위에 해당하는 운동만 필터링
 const filteredExercises = (bodyPart) => {
   return exercises.filter((exercise) => exercise.exerciseParts === bodyPart);
 };
@@ -193,7 +189,7 @@ const deleteTaskConfirm = (index) => {
   }
 };
 
-// 새로운 운동 항목 추가
+// 새로운 운동 추가
 const addTask = () => {
   newTasks.value.push({
     taskId: 'new', // 고유 ID 생성
@@ -205,27 +201,21 @@ const addTask = () => {
     cardioMinutes: null, // 기본 운동 시간
     completed: false, // 기본 완료 상태
   });
-  console.log('새 테스크', newTasks.value);
 };
 
 const deleteMethod = (idArray) => {
   idArray.forEach((taskId) => {
-    // console.log('삭제하는 taskId', taskId)
     taskStore.deleteTask(taskId);
   });
   deleteTaskId.value = [];
-  // console.log('삭제배열 초기화 완료', deleteTaskId.value)
 }
 
 const editMehod = (taskArray) => {
   taskArray.forEach((task) => {
     const taskId = task.taskId;
     if(taskId === 'new'){
-      // task.taskId = null;
-      // console.log('생성되는 task', task);
       taskStore.createTask(task);
     }else{
-      // console.log('수정되는 task', task);
       taskStore.updateTask(task);
     }
   })
@@ -235,51 +225,41 @@ const emit = defineEmits(['switchToView']);
 
 // 저장 버튼 클릭 시
 const saveChanges = async(tasks) => {
-  // console.log('현재 newTasks:', newTasks.value);
   newTasks.value.forEach((task, index) => {
-    // console.log(`newTasks[${index}] =`, task); // 각 객체를 출력
   });
 
   const checkTask = (task) => {
-  // console.log('검사 중인 task:', task); // 현재 검사 중인 task를 출력
 
   if (!task.exerciseName) {
-    // console.log('운동 이름이 누락된 task:', task);
     alert('운동을 선택해주세요');
     return false;
   }
 
   if (task.bodyPart === 'cardio') {
     if (!task.cardioMinutes || task.cardioMinutes <= 0) {
-      // console.log('운동 시간이 누락되었거나 0인 task:', task);
       alert('운동 시간을 입력해주세요');
       return false;
     }
   } else {
     if (!task.count || task.count <= 0 || !task.weightKg || task.weightKg <= 0) {
-      // console.log('운동 횟수 또는 무게가 누락된 task:', task);
       alert('운동 횟수와 무게를 입력해주세요');
       return false;
     }
   }
 
-  // console.log('task가 유효합니다:', task);
   return true; // 모든 조건 통과
 };
 
 const notCompleteTask = newTasks.value.some((task) => {
-  // console.log('현재 검사 중인 task:', task); // 각 task를 확인
   return !checkTask(task);
 });
 
 if (notCompleteTask) {
-  console.log('유효하지 않은 작업 발견. 저장 중단');
   return;
 }
 
   // 기존의 생성된 task를 삭제하는 경우
   if(deleteTaskId.value.length > 0){
-    console.log('삭제배열', deleteTaskId.value);
     deleteMethod(deleteTaskId.value);
   }
 
@@ -290,7 +270,6 @@ if (notCompleteTask) {
     questStore.tasks = [...newTasks.value];
   }
 
-  console.log('저장성공');
   makeNotification();
   questStore.updateTasks(newTasks.value);
   setTimeout(() => {

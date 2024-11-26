@@ -1,9 +1,11 @@
 <template>
   <div class="container date-container">
+    <!-- 월 표시 -->
     <div class="text-center mb-3">
       <h5>{{ currentMonth }}월</h5>
     </div>
 
+    <!-- 날짜 리스트 컨테이너 -->
     <div
       ref="dateListWrapperRef"
       class="date-list-wrapper"
@@ -13,13 +15,16 @@
       @mouseleave="endDrag"
     >
       <div ref="dateListRef" class="date-list">
+         <!-- 날짜 항목 -->
         <div
           v-for="(date, index) in visibleDates"
           :key="index"
           class="date-item"
           @click="onDateSelect(date)"
         >
+         <!-- 요일 이름 -->
           <div class="day-name">{{ getDayName(date) }}</div>
+           <!-- 날짜 -->
           <div
             class="date"
             :class="{ 'text-primary': isToday(date), 'selected-date': isSelected(date) }"
@@ -36,14 +41,14 @@
 import { ref, computed, onMounted } from 'vue';
 import { useViewStore } from '@/stores/viewStore';
 
-// Pinia 스토어
+// 스토어 사용
 const viewStore = useViewStore();
 
 // 현재 날짜와 선택된 날짜
 const today = new Date();
 const selectedDate = ref(today);
 
-// 표시할 날짜 목록
+// 표시할 날짜 목록 ( -7일 ~ +14일)
 const visibleDates = ref(generateDates(today, -7, 14));
 
 // 날짜 리스트 DOM 참조
@@ -56,8 +61,10 @@ const scrollState = ref({ isDragging: false, startX: 0, scrollOffset: 0 });
 // 현재 월 계산 (선택된 날짜 기준)
 const currentMonth = computed(() => selectedDate.value.getMonth() + 1);
 
-// 요일 배열 및 날짜 아이템 너비 상수화
+// 요일 배열 및 날짜
 const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+
+// 날짜 아이템 너비
 const DATE_ITEM_WIDTH = 96;
 
 /**
@@ -98,28 +105,29 @@ function onDateSelect(date) {
   emit('update:selectedDate', date);
 }
 
-/**
- * 선택된 날짜를 화면 중앙으로 이동
- */
+// 선택된 날짜를 화면 중앙으로 이동
 function centerSelectedDate() {
   const dateList = dateListRef.value;
   const dateListWrapper = dateListWrapperRef.value;
 
-  if (!dateList || !dateListWrapper) return;
+  if (!dateList || !dateListWrapper) return; // DOM 요소가 없으면 종료
 
   const containerWidth = dateListWrapper.offsetWidth;
   const targetIndex = visibleDates.value.findIndex(
     (d) => d.toDateString() === selectedDate.value.toDateString()
   );
 
-  if (targetIndex === -1) return;
+  if (targetIndex === -1) return; // 날짜가 리스트에 없으면 종료
 
+  // 중앙 정렬을 위한 offset 계산
   const offset =
     -(targetIndex * DATE_ITEM_WIDTH) + containerWidth / 2 - DATE_ITEM_WIDTH / 2;
 
+  // 애니메이션 추가
   dateList.style.transition = 'transform 0.5s ease';
   dateList.style.transform = `translateX(${offset}px)`;
 
+   // 애니메이션 종료 후 transition 속성 제거
   dateList.addEventListener(
     'transitionend',
     () => {
@@ -154,8 +162,8 @@ function isSelected(date) {
  * @param {MouseEvent} event 마우스 이벤트
  */
 function startDrag(event) {
-  scrollState.value.isDragging = true;
-  scrollState.value.startX = event.clientX;
+  scrollState.value.isDragging = true; // 드래그 활성화
+  scrollState.value.startX = event.clientX; // 드래그 시작 X 좌표 저장
 }
 
 /**
@@ -163,16 +171,16 @@ function startDrag(event) {
  * @param {MouseEvent} event 마우스 이벤트
  */
 function onDrag(event) {
-  if (!scrollState.value.isDragging) return;
+  if (!scrollState.value.isDragging) return; // 드래그 중이 아니면 종료
 
   const dragSpeed = 0.2;
-  const deltaX = (event.clientX - scrollState.value.startX) * dragSpeed;
-  scrollState.value.scrollOffset += deltaX;
-  scrollState.value.startX = event.clientX;
+  const deltaX = (event.clientX - scrollState.value.startX) * dragSpeed; // X 변화량 계산
+  scrollState.value.scrollOffset += deltaX; // 스크롤 오프셋 업데이트
+  scrollState.value.startX = event.clientX; // 새로운 시작 X 좌표 설정
 
   const dateList = dateListRef.value;
   if (dateList) {
-    dateList.style.transform = `translateX(${scrollState.value.scrollOffset}px)`;
+    dateList.style.transform = `translateX(${scrollState.value.scrollOffset}px)`; // 드래그 이동 반영
   }
 }
 
@@ -190,9 +198,10 @@ function endDrag() {
 function updateVisibleDates(direction) {
   const newDates =
     direction === 'previous'
-      ? generateDates(visibleDates.value[0], -7, -1)
-      : generateDates(visibleDates.value.at(-1), 1, 7);
+      ? generateDates(visibleDates.value[0], -7, -1) // 이전 날짜 추가
+      : generateDates(visibleDates.value.at(-1), 1, 7); // 이후 날짜 추가
 
+  // 기존 날짜와 새 날짜 병합
   visibleDates.value =
     direction === 'previous'
       ? [...newDates, ...visibleDates.value].slice(0, 14)

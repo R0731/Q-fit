@@ -4,39 +4,50 @@ import axios from 'axios'
 
 const REST_API_URL = `http://localhost:8080/review`
 export const useReviewStore = defineStore('review', () => {
-  const review = ref(null);
 
+  const review = ref(null); // 리뷰 객체
+
+  /**
+   * 리뷰 가져오기
+   * @param {number} questId - 퀘스트 ID
+   * @returns {Object} - 리뷰 데이터
+   */
   const getReview = async(questId) => {
     try{
       const url = `${REST_API_URL}/${questId}`
-      // console.log('리뷰아이디', questId)
-      // console.log('리뷰주소', url)
       const res = await axios.get(url)
       review.value = res.data;
-      // console.log('현재 리뷰상태', review.value)
     }catch(err){
       console.log('리뷰가져오기실패', err)
       throw err;
     }
   }
+
+  /**
+   * 리뷰 생성
+   * @param {Object} newReview - 새 리뷰 데이터
+   * @returns {Object} - 생성된 리뷰 데이터
+   */
   const createReview = async(newReview) => {
     try{
       const url = `${REST_API_URL}`
-      // console.log('리뷰업데이트', newReview)
       const res = await axios.post(url, newReview)
-      // console.log('리뷰업데이트성공', res.data)
     }catch(err){
       console.log('리뷰업데이트실패')
       throw err;
     }
   }
 
+  /**
+   * 리뷰 업데이트
+   * @param {number} questId - 퀘스트 ID
+   * @param {Object} newReview - 업데이트할 리뷰 데이터
+   * @returns {Object} - 업데이트된 리뷰 데이터
+   */
   const updateReview = async(questId, newReview) => {
     try{
       const url = `${REST_API_URL}/${questId}`
-      console.log('리뷰업데이트', newReview)
       const res = await axios.put(url, newReview)
-      console.log('리뷰업데이트성공', res.data)
     }catch(err){
       console.log('리뷰업데이트실패')
       throw err;

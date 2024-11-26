@@ -45,33 +45,30 @@
 </div>
 </template>
 
+<!-- 
 <script>
 export default {
   name: 'LoginForm',
 };
-</script>
-
+</script> -->
 
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
-// import { useViewStore } from '@/stores/viewStore';
 
 const userStore = useUserStore();
+const router = useRouter();
 
 const id = ref("")
 const password = ref("")
 
-const router = useRouter();
-// const viewStore = useViewStore();
-
+// 등록하기
 const goToRegist = () => {
-  // viewStore.resetView();
-  // console.log("Router 인스턴스:", router);
   router.push('/trainer/regist').catch(err => console.error(err));
 };
 
+// 로그인
 const login = async() =>{
     const success = await userStore.trainerLogin(id.value, password.value)
     

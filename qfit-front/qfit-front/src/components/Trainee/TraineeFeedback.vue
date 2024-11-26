@@ -18,8 +18,8 @@ import { ref, computed, watch } from 'vue';
 const questStore = useQuestStore();
 const feedbackStore = useFeedbackStore();
 
-const feedback = ref('NONE');
-const quest = computed(() => questStore.quest);
+const feedback = ref('NONE'); // 피드백 기본값
+const quest = computed(() => questStore.quest); // 퀘스트 객체
 const questId = ref(null); // 현재 퀘스트 ID
 
 // 퀘스트 변경 감지
@@ -36,9 +36,8 @@ watch(
       }
     }
   },
-  { immediate: true } // 컴포넌트 로드시 실행
+  { immediate: true }
 );
-
 </script>
 
 <style scoped>

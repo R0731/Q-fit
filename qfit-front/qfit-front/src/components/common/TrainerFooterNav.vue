@@ -1,15 +1,5 @@
 <template>
   <div class="footer-container">
-      <!-- 임시 아이콘 및 텍스트 (로그인)
-      <div 
-        class="footer-item"
-        :class="{ 'selected': route.name === 'trainerLogin' }" 
-        @click="navigateTo('trainerLogin')"
-      >
-      <i class="bi bi-people"></i>
-      <span>임시로그인용</span>
-    </div> -->
-    
     <!-- 첫 번째 아이콘 및 텍스트 (회원 관리) -->
     <div 
       class="footer-item"
@@ -48,11 +38,9 @@ import { useRouter, useRoute } from 'vue-router';
 const router = useRouter();
 const route = useRoute();
 
-/* 라우터를 이용해 페이지 이동 (name 기반) */
-// route.name(현재경로)와 routeName(이동할경로) 비교 후 다를 경우만 이동
+// 라우터를 이용해 페이지 이동 (name 기반)
 const navigateTo = (routeName) => { 
-  if (route.name !== routeName) {
-    // console.log('이동경로', routeName)
+  if (route.name !== routeName) { // 경로가 다를 경우만 이동
     router.push({ name: routeName });
   }
 };
