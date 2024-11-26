@@ -17,15 +17,10 @@ public class QuestServiceImpl implements QuestService {
 
 	private final QuestDao questDao;
 	private final TaskService taskService;
-	// 만약에 삭제 넣을거면 필요해서 생성해둔 review, feedbackService
-	private final ReviewService reviewService;
-	private final FeedbackService feedbackService;
 	
-	public QuestServiceImpl(QuestDao questDao, TaskService taskService, ReviewService reviewService, FeedbackService feedbackService) {
+	public QuestServiceImpl(QuestDao questDao, TaskService taskService) {
 		this.questDao = questDao;
 		this.taskService = taskService;
-		this.reviewService = reviewService;
-		this.feedbackService = feedbackService;
 	}
 	
 	// 퀘스트 가져오기

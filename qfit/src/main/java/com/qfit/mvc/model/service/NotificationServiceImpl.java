@@ -22,26 +22,22 @@ public class NotificationServiceImpl implements NotificationService{
 		if (message == null || message.isEmpty()) {
             throw new IllegalArgumentException("Notification message cannot be null or empty.");
         }
-		Notification notification = new Notification();
+		Notification notification = new Notification(); // 알림 객체 생성
         notification.setUserId(id);
         notification.setMessage(message);
-      
         notificationDao.save(notification); // 알림 저장
-        System.out.println("알림저장완료 " + message);
 	}
 
 	// 아직 읽지 않은 알림 가져오기
 	@Override
 	public List<Notification> getUnreadNotifications(int id) {
-		System.out.println(id);
 		return notificationDao.getUnreadNotifications(id);
 	}
 
 	// 알림 읽음처리
 	@Override
 	public void asRead(int notificationId) {
-		System.out.println("@@@@" + notificationId + "읽음 완료");
-        notificationDao.updateRead(notificationId); // 업데이트
+        notificationDao.updateRead(notificationId);
 	}
 
 }

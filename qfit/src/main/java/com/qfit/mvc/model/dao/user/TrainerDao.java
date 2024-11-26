@@ -21,9 +21,7 @@ public interface TrainerDao extends UserDao{
 	// 트레이너 체육관 정보 업데이트
 	public int addGym(Map<String, Object> info);
 
-	// 트레이너 검색
-	public List<Trainer> trainerSearch(UserSearchCondition condition);
-
+	// 트레이너 id로 트레이너의 체육관 정보 조회
 	public Trainer readGym(int trainerId);
 	
 }

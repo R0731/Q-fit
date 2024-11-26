@@ -63,6 +63,7 @@ public class TraineeServiceImpl implements TraineeService {
 		return traineeDao.getTraineeByUserId(userId);
 	}
 
+	// traineeId로 trainerId 가져오기	
 	@Override
 	public int getTrainerId(int traineeId) {
 		try {

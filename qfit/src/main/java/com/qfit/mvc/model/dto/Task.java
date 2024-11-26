@@ -1,28 +1,18 @@
 package com.qfit.mvc.model.dto;
 
 public class Task {
-	private int taskId;
-	private int questId;
-	private int orderIndex;
-	private boolean isCompleted;
-	private Integer count;
-	private Integer weightKg;
-	private Integer cardioMinutes;
-	private int exerciseId;
+	private int taskId; // task 고유 ID
+	private int questId; // quest 고유 ID
+	private int orderIndex; // 순서 정렬에 사용할 요소
+	private boolean isCompleted; // 달성 여부
+	private Integer count; // 횟수
+	private Integer weightKg; // 무게kg
+	private Integer cardioMinutes; // 유산소 운동 시간
+	private int exerciseId; // 운동 이름
 	
-	/*
-	 * 기본 Task 생성자
-	 */
+	// 생성자
 	public Task() {
 	}
-	
-//	// 전체 생성자
-//	public Task(int questId, boolean isCompleted, Integer count, Integer weightKg, Integer cardioMinutes, int exerciseId) {
-//		this.questId = questId;
-//		this.count = count;
-//		this.weightKg = weightKg;
-//		this.exerciseId = exerciseId;
-//	}
 	
 	// 무산소 생성자
 	public Task(int questId, Integer count, Integer weightKg, int exerciseId) {

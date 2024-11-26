@@ -23,6 +23,7 @@
 	    LEFT JOIN task t ON q.quest_id = t.quest_id
 	    WHERE q.trainee_id = #{traineeId} AND DATE(q.start_at) = DATE(#{startAt})
     </select>
+    
     <!-- resultMap 정의 -->
     <resultMap id="questResultMap" type="com.qfit.mvc.model.dto.Quest">
 	    <!-- Quest 기본 필드 -->
@@ -58,8 +59,7 @@
 	        <result property="exerciseId" column="exercise_id"/>
 	    </collection>
 	</resultMap>
-
-	
+    
 	<!-- 퀘스트 생성 -->
 	<insert id="insertQuest" parameterType="Quest" useGeneratedKeys="true" keyProperty="questId">
 	    INSERT INTO quest (trainee_id, trainer_id, start_at, end_at)

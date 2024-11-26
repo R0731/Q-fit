@@ -56,7 +56,6 @@ public class ReviewRestController {
 	@PostMapping("")
 	@Operation(summary = "리뷰 작성", description = "작성된 리뷰가 없을 시 리뷰를 등록합니다. 등록된 리뷰가 있다면, 등록이 되지 않도록 하여 퀘스트 하나 당 리뷰 하나만 등록될 수 있도록 합니다.")
 	public ResponseEntity<String> writeReview(@RequestBody Review review){
-		System.out.println("@@@작성완료");
 		try {
 			reviewService.writeReview(review);
 			return new ResponseEntity<String>("", HttpStatus.CREATED);

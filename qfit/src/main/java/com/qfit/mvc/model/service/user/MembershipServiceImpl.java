@@ -28,12 +28,10 @@ public class MembershipServiceImpl implements MembershipService{
 	@Transactional
 	public String registMember(User user, String userType) {
 		// userId 중복 확인
-		if(userDao.isUserIdAvailable(user.getUserId()) > 0){
-			System.out.println("회원가입중" + userDao.isUserIdAvailable(user.getUserId()));
-			throw new IllegalArgumentException("User ID is already taken");
+		if(userDao.isUserIdAvailable(user.getUserId()) > 0){			throw new IllegalArgumentException("User ID is already taken");
 		}
-		// user 테이블에 공통 정보 등록
-		//유저 타입에 따라 알맞은 테이블에 정보 추가
+		
+		// user 테이블에 공통 정보 등록 : 유저 타입에 따라 알맞은 테이블에 정보 추가
 		int id;
 		switch(userType) {
 			case "trainer":
@@ -58,19 +56,16 @@ public class MembershipServiceImpl implements MembershipService{
 	@Override
 	@Transactional
 	public boolean removeMember(int id, int userType) {
-		System.out.println("@@@@" + id + " " + userType);
 		int foreignkeyDeleted = 0;
 		// 유저 타입에 따라 연관 테이블 정보 삭제
 		switch(userType) {
 			case 1: // trainer
 				foreignkeyDeleted = trainerDao.deleteTrainer(id);
-				System.out.println("삭제성공");
 				break;
 			case 2: // trainee
 				foreignkeyDeleted = traineeDao.deleteTrainee(id);
 				break;
 			default:
-				System.out.println("존재하지 않는 유저 타입입니다.");
 				return false;
 		}		
 		// 연관 테이블 정보 삭제 성공 시 user 테이블 정보 삭제
@@ -82,12 +77,9 @@ public class MembershipServiceImpl implements MembershipService{
 	// 유저 아이디 중복 체크
 	@Override
 	public boolean idCheck(String userId) {
-		System.out.println("유저id" + userId);
 		if(userDao.isUserIdAvailable(userId) > 0){
-			System.out.println(userDao.isUserIdAvailable(userId) + "거짓");
 			return false;
 		}
-		System.out.println(userDao.isUserIdAvailable(userId) + "진실");
 
 		return true;
 	}

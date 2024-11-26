@@ -16,18 +16,26 @@ public class JwtInterceptor implements HandlerInterceptor{
 	@Autowired
 	private JwtUtil jwtUtil;
 	
+	/**
+	 * HTTP 요청을 사전 처리하는 메서드
+	 * @param request 클라이언트의 HTTP 요청 객체
+	 * @param response 서버의 HTTP 응답 객체
+	 * @param handler 요청을 처리할 핸들러 객체
+	 * @return 요청 처리를 계속 진행할 경우 true 반환, 중단 시 예외 발생
+	 * @throws Exception 유효하지 않은 요청 또는 인증 실패 시 예외 발생
+	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		
-		// 클라이언트는 서버에게 요청을 보내려고 했을 때 사전 요청을 먼저 보낸다
-		// 서버가 현재 요청을 수락할 수 있는 상태인지 체크
+		// 클라이언트가 서버와의 상호작용이 가능한지 확인하기 위해 OPTIONS 메서드로 사전 요청을 보낸 경우 처리 허용
 		if(request.getMethod().equals("OPTIONS"))
 			return true;
 		
-		String token = request.getHeader(HEADER_AUTH);
+		String token = request.getHeader(HEADER_AUTH); // Authorization 헤더에서 토큰을 가져옴
+		
 		if(token != null) {
-			jwtUtil.validate(token);
+			jwtUtil.validate(token); // JWT 유효성 검사
 			return true;
 		}
 		

@@ -7,11 +7,9 @@ import com.qfit.mvc.model.dto.user.Trainer;
 
 public interface TrainerService {
 		
+	// 체육관 정보 조회
 	public Trainer getGym(int trainerId);
 
+	// 체육관 정보 업데이트
 	public boolean updateGym(int trainerId, String gym);
-
-	
-//	public List<Trainer> getTrainerSearch(UserSearchCondition conditon);
-	
 }
