@@ -39,7 +39,8 @@ const router = useRouter();
 
 // Pinia 스토어
 const questStore = useQuestStore(); // 퀘스트 관련 상태 및 메서드를 관리하는 스토어
-const traineeStore = useTraineeStore(); // 트레이니 데이터 관리하는 스토어const viewStore = useViewStore(); // 뷰 상태(날짜 선택 등)를 관리하는 스토어
+const traineeStore = useTraineeStore(); // 트레이니 데이터 관리하는 스토어
+const viewStore = useViewStore(); // 뷰 상태(날짜 선택 등)를 관리하는 스토어
 
 // 현재 선택된 트레이니를 가져오기 (Pinia 상태로부터 계산된 값)
 const trainee = computed(() => traineeStore.selectedTrainee);

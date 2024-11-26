@@ -56,7 +56,7 @@ const checkQuest = async () =>{
     rate.value = questStore.questCompletionRates[0].questCompletionRate;
     // console.log('조회2', questStore.questCompletionRates[0].questCompletionRate)
     if(rate === '100%'){
-      complete = true;
+      complete.value = true;
     }
     // const completion = computed(() => {const rates = questStore.questCompletionRates[0].questCompletionRate
     //   return rates && rates.length > 0 ? rates[0].questCompletionRate : '데이터 없음';
