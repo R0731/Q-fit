@@ -1,8 +1,9 @@
 <template>
   <div class="container">
     <h6 class="assign-header">{{ viewStore.selectedDate }}</h6>
-    <h5 class="assign-header">{{ traineeName }} 회원님의 운동 선택 확인</h5>
+    <h5 class="assign-header">{{ traineeName }} 회원님의 운동 횟수 입력</h5>
 
+    <!-- 선택한 운동을 카드 목록으로 표시 -->
     <div v-if="selectedExercises.length > 0" class="exercise-list">
       <div class="exercise-cards">
         <div 
@@ -103,6 +104,10 @@ const router = useRouter();
 
 const traineeName = computed(() => traineeStore.selectedTrainee.userName);
 
+	/**
+	 * 선택 운동 배열에 접근하여 시간, 무게, 횟수 입력 메서드
+	 * @param exercise
+	 */
 // selectedExercises를 ref로 정의하여 배열을 직접 수정할 수 있게 합니다.
 const selectedExercises = ref(exerciseStore.selectedExercises.map(exercise => {
   if (exercise.exerciseType === 'Cardio') {
@@ -114,13 +119,18 @@ const selectedExercises = ref(exerciseStore.selectedExercises.map(exercise => {
   return exercise;
 }));
 
-// 운동 삭제 메서드
+	/**
+	 * 운동 삭제 메서드
+	 * @param index
+	 */
 const removeExercise = (index) => {
   selectedExercises.value.splice(index, 1);
-  console.log(`운동 삭제 완료. 남은 운동: ${selectedExercises.value.length}`);
 };
 
-// 운동 부위 한글로 변환
+	/**
+	 * 운동 부위 한글 변환 메서드
+	 * @param part
+	 */
 const translateExercisePart = (part) => {
   const partTranslations = {
     leg: '하체',
@@ -134,16 +144,22 @@ const translateExercisePart = (part) => {
   return partTranslations[part] || part;
 };
 
-// 세트 추가 메서드
+	/**
+	 * 세트 추가 메서드
+	 * @param index
+	 */
 const addSet = (index) => {
   const exercise = { ...selectedExercises.value[index] };  // 새로운 세트 객체 복사
   selectedExercises.value.splice(index + 1, 0, exercise);  // 세트 추가
   exerciseStore.setSelectedExercises(selectedExercises.value); // 변경된 selectedExercises 값을 exerciseStore에 반영
-  console.log(`세트 추가 완료. 총 ${selectedExercises.value.length} 세트.`);
 };
 
-//퀘스트 등록 메서드
+	/**
+	 * 퀘스트 등록 메서드
+	 * @param -
+	 */
 const registerQuest = async () => {
+  
     // 날짜를 DATETIME 형식으로 변환하는 유틸리티 함수
     const formatDateToDatetime = (date) => {
       const d = new Date(date);
@@ -156,7 +172,10 @@ const registerQuest = async () => {
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     };
 
-    // `tasks` 배열 생성
+  /**
+	 * 퀘스트 안의 태스크 배열 생성 메서드
+	 * @param -
+	 */
     const tasks = selectedExercises.value
       .map((exercise) => {
         if (exercise.exerciseType === 'Cardio') {
@@ -179,8 +198,9 @@ const registerQuest = async () => {
       .filter((task) => task !== null); // 유효한 데이터만 포함
 
 
-      
-      // 퀘스트 데이터 생성
+    /**
+	   * 퀘스트 데이터 생성 메서드
+	   */
       const questData = {
         traineeId: traineeStore.selectedTrainee.id,
         trainerId: traineeStore.selectedTrainee.trainerId,
@@ -188,18 +208,19 @@ const registerQuest = async () => {
         tasks, // 매핑된 tasks 배열
       };
       
-      // 퀘스트 등록 알림 생성 메서드
-      console.log('알림 받을 트레이니', traineeStore.selectedTrainee.id);
+      /**
+       * 퀘스트등록 시 알림 생성 메서드
+	     * @param -
+	     */
       const notiTraineeId = traineeStore.selectedTrainee.id
       const notiTraineeName = traineeStore.selectedTrainee.userName
 
       const makeNotification = async(msg) => {
         try{
           const notification = {userId: notiTraineeId, message: `${notiTraineeName}님, 오늘의 퀘스트가 ${msg}되었습니다.`}
-          console.log('넘어가는 메시지 확인', notification)
           await notificationStore.createNotification(notification)
         }catch(err){
-          console.log('프론트 등록 중 오류 발생', err)
+          console.error('프론트 등록 중 오류 발생', err)
           // 알림 생성
         }
       }
