@@ -12,8 +12,6 @@ public interface ReviewDao {
 	
 	// ID에 해당하는 리뷰 가져오기
 	public Review getReviewByQuestId(int questId);
-	// Optional을 사용하면 NullPointerException 방지 가능
-	// Optional<Review> getReviewByQuestId(int questId);
 	
 	// 리뷰 등록
 	public void insertReview(Review review);

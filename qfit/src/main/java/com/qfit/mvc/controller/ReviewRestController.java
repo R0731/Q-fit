@@ -31,7 +31,7 @@ public class ReviewRestController {
 	/**
 	 * 리뷰 읽어오기 메서드
 	 * @param questId 읽어올 리뷰의 questId
-	 * @return 성공 시 OK (200), 해당 퀘스트 리뷰 없을 시 NO_CONTENT, 실패 시 INTERNAL_SERVER_ERROR 반환
+	 * @return 성공 시 OK (200), 해당 퀘스트 리뷰 없을 시 NO_CONTENT(204), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
 	@GetMapping("/{questId}")
 	@Operation(summary = "리뷰 조회", description = "questId에 해당하는 리뷰를 가져옵니다.")
@@ -39,10 +39,8 @@ public class ReviewRestController {
 		try {
 			Review review = reviewService.readReview(questId);
 			if (review != null) {
-				System.out.println("리뷰있음" + " " + review.toString());
 				return new ResponseEntity<Review>(review, HttpStatus.OK);
 			}
-			System.out.println("리뷰없음");
 			return new ResponseEntity<String>("No Review", HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -61,17 +59,12 @@ public class ReviewRestController {
 		System.out.println("@@@작성완료");
 		try {
 			reviewService.writeReview(review);
-			System.out.println("@문제가");
 			return new ResponseEntity<String>("", HttpStatus.CREATED);
 		} catch (IllegalArgumentException e) {
-			System.out.println("@어디서");
 			return new ResponseEntity<String>("Invalid review data", HttpStatus.BAD_REQUEST);
 		} catch(IllegalStateException e) {
-			System.out.println("@났을까");
 			return new ResponseEntity<String>("A review for this quest has already been submitted", HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			System.out.println("@정말 모르겠다");
-			System.out.println(e);
 			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

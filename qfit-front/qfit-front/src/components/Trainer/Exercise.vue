@@ -118,8 +118,6 @@ const canEdit = ref(false);
 
 const updateCanEdit = () => {
   const today = formatDateToYYYYMMDD(new Date()); // 오늘 날짜 계산
-  // console.log('선택된 날짜:', selectedDate.value);
-  // console.log('오늘 날짜:', today);
 
   if (selectedDate.value) {
     canEdit.value = selectedDate.value >= today; // 날짜 비교
@@ -137,16 +135,6 @@ const formatDateToYYYYMMDD = (date) => {
 };
 
 const selectedDate = computed(() => viewStore.selectedDate);
-
-// // tasks 감시
-// watch(
-//   () => questStore.tasks,
-//   (newTasks, oldTasks) => {
-//     console.log('watch에서 questStore.tasks 변경 감지:', { newTasks, oldTasks });
-//   },
-//   { deep: true }
-// );
-
 
 // 컴포넌트 초기화
 onMounted(async() => {

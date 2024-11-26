@@ -111,16 +111,12 @@ const canEdit = ref(false);
 
 const updateCanEdit = () => {
   const today = formatDateToYYYYMMDD(new Date()); // 오늘 날짜 계산
-  console.log('선택된 날짜:', formattedDate.value);
-  console.log('오늘 날짜:', today);
   
   if (formattedDate) {
     canEdit.value = formattedDate.value == today; // 날짜 비교
   } else {
     canEdit.value = false; // 선택된 날짜가 없으면 수정 불가
   }
-  
-  // console.log(canEdit.value);
 };
 
 // 날짜를 yyyy-mm-dd형식으로 변환
@@ -175,7 +171,7 @@ const changeComplete = async (task) => {
   }
 };
 
-// 알림 생성
+// 퀘스트 완료 시 알림 생성
 const makeNotification = async() => {
   try{
     const traineeId = userStore.loginUser.numberId;

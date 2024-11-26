@@ -31,14 +31,13 @@
     <!-- 나의 트레이너 -->
     <div class="section-container">
       <h4>나의 체육관</h4>
-      <p v-if="trainerStore.trainer.gym">
+      <div v-if="trainerStore.trainer.gym">
         <p>체육관 : {{ trainerStore.trainer.gym }}</p>
         <p>트레이너 : {{ traineeStore.trainer.name }}</p>
-      </p>
+      </div>
       <p v-else>
         아직 트레이너가 등록되지 않았습니다.
       </p>
-      <!-- <p class="section-content">{{ trainerDetail.id }} 회원님, 안녕하세요.</p> -->
     </div>
     <!-- 비밀번호 확인 모달 -->
     <div v-if="isModalOpen" class="modal-overlay">
@@ -143,13 +142,13 @@ const logout = async () => {
   }
 };
 
+// 트레이너 정보 조회
 async function fetchTrainerDetail() {
   const trainerId = await traineeStore.getTrainerId(userStore.loginUser.numberId);
-  console.log('트레이너아이디 조회:', trainerId);
+  // 트레이너 체육관 정보 가져오기
   await trainerStore.getGym(trainerId);
+  // 트레이너 이름 가져오기
   await traineeStore.getTrainerName(userStore.loginUser.numberId);
-  // gym = trainerStore.trainer.gym
-  console.log('체육관', trainerStore.trainer.gym)
 }
 
 // 프로필 이미지 로드

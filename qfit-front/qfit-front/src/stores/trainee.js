@@ -28,7 +28,11 @@ export const useTraineeStore = defineStore('trainee', () => {
     return age;
   }
 
-  // 트레이너에 해당하는 트레이니 찾기
+  /**
+   * 트레이너에 해당하는 트레이니 목록 조회
+   * @param {number} trainerId - 트레이너의 ID
+   * @returns {void} - 트레이니 목록을 `trainees`에 저장
+   */
   const fetchTraineeList = async (trainerId) =>{
     try{
       const response = await axios.get(`${REST_API_URL}/${trainerId}/trainee-list`);
@@ -42,7 +46,11 @@ export const useTraineeStore = defineStore('trainee', () => {
     }
   }
 
-  // 트레이니 검색
+  /**
+   * 트레이니 검색
+   * @param {number} userId - 검색할 트레이니의 사용자 ID
+   * @returns {void} - 검색된 트레이니 정보를 `searchResult`에 저장
+   */
   const searchResult = ref(null);
 
   const searchTrainee = async (userId) =>{
@@ -52,11 +60,17 @@ export const useTraineeStore = defineStore('trainee', () => {
       });
       searchResult.value = response.data;
 
+      // response.data가 존재할 경우에만 age 계산
+    if (response.data) {
       // `searchResult`에 나이(age) 추가
       searchResult.value = {
         ...response.data,
         age: calculateAge(response.data.birthdate), // 나이 추가
       };
+    } else {
+      // response.data가 없으면 그대로 설정
+      searchResult.value = null;
+    }
 
     } catch (err){
       searchResult.value = null;
@@ -64,19 +78,25 @@ export const useTraineeStore = defineStore('trainee', () => {
     }
   }
 
-  // 트레이너가 트레이니 추가
+  /**
+   * 트레이너가 트레이니 추가
+   * @param {number} traineeId - 트레이니의 ID
+   * @param {number} trainerId - 트레이너의 ID
+   * @returns {void} - 트레이니에 트레이너를 추가, DB에 저장
+   */
   const addTrainerToTrainee = async (traineeId, trainerId) => {
     try {
-      const response = await axios.put(
-        `${REST_API_URL}/${traineeId}/add-trainer/${trainerId}`
-      );
-      console.log(response.data);
+      await axios.put(`${REST_API_URL}/${traineeId}/add-trainer/${trainerId}`);
     } catch (err){
       console.error('Failed to add trainer to trainee:', err)
     }
   }
 
-  // 트레이너가 트레이니 삭제
+  /**
+   * 트레이너가 트레이니 삭제
+   * @param {number} traineeId - 삭제할 트레이니의 ID
+   * @returns {void} - 트레이니를 삭제하고, 리스트에서 해당 트레이니를 제거
+   */
   const deleteTrainee = async (traineeId) => {
     try {
       await axios.delete(`${REST_API_URL}/${traineeId}/delete`);
@@ -86,7 +106,12 @@ export const useTraineeStore = defineStore('trainee', () => {
     }
   };
 
-  // 퀘스트 상태 지닌 트레이니
+  /**
+   * 퀘스트 상태를 지닌 트레이니 목록 조회
+   * @param {number} trainerId - 트레이너의 ID
+   * @param {string} startAt - 조회 시작 날짜
+   * @returns {void} - 트레이니 목록과 퀘스트 상태를 병합하여 `trainees`에 저장
+   */
   const fetchTraineesWithQuestStatuses = async (trainerId, startAt) => {
     try {
       // 1. 훈련생 목록 가져오기
@@ -101,7 +126,6 @@ export const useTraineeStore = defineStore('trainee', () => {
         params: { startAt },
       });
       const questStatuses = questResponse.data;
-      console.log("questStatuses: ", questStatuses)
 
       // 3. 훈련생 목록과 퀘스트 상태 병합
       trainees.value = traineeList.map((trainee) => ({
@@ -113,19 +137,17 @@ export const useTraineeStore = defineStore('trainee', () => {
     }
   };
 
-  // 트레이니id로 트레이너 조회 메서드
+  /**
+   * 트레이니 ID로 트레이너 조회
+   * @param {number} traineeId - 조회할 트레이니의 ID
+   * @returns {object} - 트레이너 정보를 반환 (트레이너 ID 포함)
+   */
   const getTrainerId = async(traineeId) => {
     try{
       const url = `${REST_API_URL}/${traineeId}/read-trainer`
-      // console.log('조회 url', url)
       const res = await axios.get(url)
-      console.log('res', res);
-      console.log('resdata', res.data);
-      // console.log('res조회', res)
       if(res.status === 200){
-        // console.log('res.data 조회', res.data);
         trainer.value = { trainerId: res.data };
-        // console.log('trainer조회', trainer.value);
       }
       return res.data;
     }catch(err){
@@ -133,14 +155,17 @@ export const useTraineeStore = defineStore('trainee', () => {
     }
   }
 
-  // 트레이니id로 트레이너 이름 조회 메서드
+  /**
+   * 트레이니 ID로 트레이너 이름 조회
+   * @param {number} traineeId - 조회할 트레이니의 ID
+   * @returns {void} - 트레이너 이름을 `trainer`에 저장
+   */
   const getTrainerName = async(traineeId) => {
     try{
       const url = `${REST_API_URL}/search-trainer`
       const res = await axios.get(url, {
         params: {traineeId},
       });
-      console.log('resdata', res.data);
 
       trainer.value = { name: res.data };
     }catch(err){

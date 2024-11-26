@@ -42,13 +42,13 @@ import { useImageStore } from "@/stores/imageStore";
 import { useViewStore } from "@/stores/viewStore";
 import defaultProfileImage from "@/assets/default_profile.png";
 
-const router = useRouter();
-const userStore = useUserStore();
-const trainerId = userStore.loginUser.numberId;
-
 const traineeStore = useTraineeStore();
 const imageStore = useImageStore();
 const viewStore = useViewStore();
+const userStore = useUserStore();
+
+const router = useRouter();
+const trainerId = userStore.loginUser.numberId;
 
 const trainees = ref([]);
 const selectedDate = ref(viewStore.selectedDate);
@@ -56,7 +56,6 @@ const selectedDate = ref(viewStore.selectedDate);
 // 날짜 선택 시 호출되는 메서드
 const onDateSelected = (date) => {
   selectedDate.value = date; // 선택한 날짜 업데이트
-  console.log(selectedDate.value);
   fetchTrainees(); // 새 날짜에 맞는 데이터를 다시 가져옴
 };
 

@@ -46,14 +46,14 @@ import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { useNotificationStore } from "@/stores/notification";
 
-const searchUserId = ref("");
-const searchResult = ref(null);
-const showModal = ref(false); // 모달 표시 여부
-
 const traineeStore = useTraineeStore();
 const userStore = useUserStore();
 const notificationStore = useNotificationStore();
 const trainerId = userStore.loginUser.numberId;
+
+const searchUserId = ref("");
+const searchResult = ref(null);
+const showModal = ref(false); // 모달 표시 여부
 
 // 검색 로직
 const searchTrainee = async () => {
@@ -99,7 +99,6 @@ const closeModal = () => {
 const makeNotification = async() => {
   try{
     const notification = {userId: searchResult.value.id, message: `${userStore.loginUser.name}님이 당신을 회원 목록에 추가하였습니다.`}
-    console.log('넘어가는 메시지 확인', notification)
     await notificationStore.createNotification(notification)
   }catch(err){
     console.log('프론트 등록 중 오류 발생', err)

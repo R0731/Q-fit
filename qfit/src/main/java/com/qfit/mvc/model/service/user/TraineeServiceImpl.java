@@ -73,6 +73,7 @@ public class TraineeServiceImpl implements TraineeService {
 		}
 	}
 	
+	// 트레이니의 아이디로 트레이너 이름 조회
 	@Override
 	public String getTrainerNameByTraineeId(int traineeId) {
 		try {

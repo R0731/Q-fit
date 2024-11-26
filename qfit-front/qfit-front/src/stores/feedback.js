@@ -43,6 +43,11 @@ export const useFeedbackStore = defineStore('feedback', () => {
     }
   }
   
+  /**
+   * 피드백 남기지 않은 퀘스트 정보 불러오기
+   * @param {number} trainerId - 피드백을 확인할 트레이너의 ID
+   * @returns {void} - 퀘스트 데이터를 받아와 `feedbacks`에 저장
+   */
   const feedbacks = ref([]);
   const getFeedbackPendingQuests = async(trainerId) => {
     try {

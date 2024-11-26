@@ -40,8 +40,11 @@ import { useTraineeStore } from "@/stores/trainee";
 import { useImageStore } from "@/stores/imageStore";
 import defaultProfileImage from "@/assets/default_profile.png";
 
+// 스토어 사용
+const userStore = useUserStore();
+const traineeStore = useTraineeStore();
+const imageStore = useImageStore();
 const router = useRouter();
-
 
 // 페이지 이동 함수
 const goToUpdate = () => router.push({ name: "MyTraineesUpdate" });
@@ -54,33 +57,7 @@ const selectTrainee = (trainee) => {
   router.push({ name: 'MyTraineesBigCalender' }); // 라우터 이동
 };
 
-// 사용자 및 트레이니 데이터 로드
-const userStore = useUserStore();
-const traineeStore = useTraineeStore();
-const imageStore = useImageStore();
-
 const trainees = ref([]);
-
-// const loadProfileImages = async () => {
-//   // 각 트레이니의 프로필 이미지를 S3에서 로드
-//   for (const trainee of trainees.value) {
-//     if (trainee.userImg) {
-//       console.log(`이미지 파일 이름: ${trainee.userImg}`); // 디버그 로그 추가
-//       try {
-//         const blob = await imageStore.loadFile(trainee.userImg);
-//         trainee.profileImageUrl = URL.createObjectURL(blob); // Blob URL 생성
-//         console.log('트레이니이미지', trainee.profileImageUrl)
-//         console.log(`이미지 로드 성공: ${trainee.userImg}`); // 디버그 로그 추가
-//       } catch (error) {
-//         console.error(`이미지 로드 실패 (${trainee.userImg}):`, error);
-//         trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
-//       }
-//     } else {
-//       console.log("이미지 파일 이름이 없습니다."); // 디버그 로그 추가
-//       trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
-//     }
-//   }
-// };
 
 const loadProfileImages = async () => {
   for (const trainee of trainees.value) {
