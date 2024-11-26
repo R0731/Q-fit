@@ -88,11 +88,11 @@ const gender = ref('');
 const email = ref('');
 const phone = ref('');
 
-const idCheck = ref(false);
+const idCheck = ref(false); // 아이디 중복 확인 여부
 
+// 유저 id 중복 확인
 const userIdAvailable = async () => {
   const isOkay = await memberStore.userIdCheck(userId.value);
-  console.log(isOkay)
   if (isOkay) {
     idCheck.value = true;
     alert('사용가능한 아이디입니다');
@@ -103,9 +103,9 @@ const userIdAvailable = async () => {
   }
 };
 
+// 회원 가입
 const register = () => {
   if (!idCheck.value){
-    console.log('아이디체크', idCheck.value)
     alert('아이디 중복 확인을 해주세요.')
     return;
   }
@@ -116,15 +116,14 @@ const register = () => {
   registUser();
 
   if(userStore.userType === 'trainer'){
-    console.log('트레이너 로그인실행!')
     router.push({name : 'trainerLogin'});
   }
   if(userStore.userType === 'trainee'){
-    console.log('트레이니 로그인실행!')
     router.push({name : 'traineeLogin'});
   }
 };
 
+// 회원가입 될 유저 객체
 const registUser = async () => {
   const user = {
     userId: userId.value,
@@ -145,7 +144,6 @@ const registUser = async () => {
     console.error('회원가입 실패:', error);
   }
 };
-
 </script>
 
 <style scoped>
@@ -226,8 +224,4 @@ const registUser = async () => {
   transition: background-color 0.3s ease;
 }
 
-/* .register-btn:hover,
-.small-btn:hover {
-  background-color: #0056b3;
-} */
 </style>

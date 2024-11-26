@@ -82,12 +82,11 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useMemberStore } from '@/stores/member';
 import { useUserStore } from '@/stores/user';
 
 const router = useRouter();
-const route = useRoute();
 const memberStore = useMemberStore();
 const userStore = useUserStore();
 
@@ -102,11 +101,7 @@ const birthDay = ref('');
 const gender = ref('');
 const email = ref('');
 const phone = ref('');
-
-// 컴포넌트가 마운트될 때 유저 정보 로드
-onMounted(async () => {
-  await loadUserData();
-});
+const userImg = ref('');
 
 // 유저 정보 로드 함수
 const loadUserData = async () => {
@@ -120,10 +115,8 @@ const loadUserData = async () => {
 
     // 유저 ID 가져오기
     const userIdValue = loginUser.userId;
-    console.log('폼에서 유저 ID:', userIdValue);
 
     const userData = await userStore.getUserDetails(userIdValue);
-
     if (userData) {
       // 받아온 유저 정보로 폼 필드 채우기
       userId.value = userData.userId;
@@ -131,7 +124,7 @@ const loadUserData = async () => {
       phone.value = userData.phoneNumber;
       email.value = userData.email;
       gender.value = userData.gender;
-      
+      userImg.value = userData.userImg;
       if (userData.birthDate) {
         const [year, month, day] = userData.birthDate.split('-');
         birthYear.value = year;
@@ -158,6 +151,7 @@ const updateUser = async () => {
     userName: name.value,
     phoneNumber: phone.value,
     email: email.value,
+    userImg: userImg.value,
     birthDate: `${birthYear.value}-${birthMonth.value.padStart(2, '0')}-${birthDay.value.padStart(2, '0')}`,
     gender: gender.value,
   };
@@ -192,7 +186,7 @@ const confirmResign = async () => {
     const { userType, numberId } = userStore.loginUser;
 
     await memberStore.userResign(userType, numberId);
-    userStore.logout();
+    userStore.logout(); // 로그아웃 처리
     alert("회원 탈퇴가 완료되었습니다.");
     router.push({ name: "trainerLogin" });
   } catch (error) {
@@ -202,6 +196,12 @@ const confirmResign = async () => {
     closeResignModal();
   }
 };
+
+// 컴포넌트가 마운트될 때 유저 정보 로드
+onMounted(async () => {
+  await loadUserData();
+});
+
 </script>
 <style scoped>
 /* 페이지 컨테이너 */

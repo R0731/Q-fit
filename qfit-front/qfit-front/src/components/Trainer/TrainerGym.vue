@@ -21,22 +21,20 @@ import { ref, onMounted } from "vue";
 const userStore = useUserStore();
 const trainerStore = useTrainerStore();
 
-const gym = ref("");
+const gym = ref(""); // 체육관 정보
+const numberId = userStore.loginUser.numberId; // 유저 고유 id
 
-onMounted(async () => {
-  await loadData();
-});
-
-const numberId = userStore.loginUser.numberId;
+// 데이터 로드
 const loadData = async () => {
   try {
     await trainerStore.getGym(numberId);
     gym.value = trainerStore.trainer.gym;
   } catch (err) {
-    console.log("체육관 정보 읽기 실패", err);
+    console.error("체육관 정보 읽기 실패", err);
   }
 };
 
+// 체육관 정보 업데이트
 const updateGym = async () => {
   const updatedGym = {
     gym: gym.value,
@@ -45,11 +43,14 @@ const updateGym = async () => {
   try {
     await trainerStore.updateGym(numberId, updatedGym);
     alert("수정 완료");
-    console.log("체육관 업데이트 성공");
   } catch (err) {
-    console.log("체육관 업데이트 실패", err);
+    console.error("체육관 업데이트 실패", err);
   }
 };
+
+onMounted(async () => {
+  await loadData();
+});
 </script>
 
 <style scoped>

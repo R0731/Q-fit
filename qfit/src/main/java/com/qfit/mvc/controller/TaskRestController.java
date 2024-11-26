@@ -46,7 +46,6 @@ public class TaskRestController {
 	@Operation(summary = "태스크 전체조회", description = "모든 태스크를 조회합니다.")
 	public ResponseEntity<List<Task>> list(){
 		List<Task> list = taskService.getTaskList();
-		System.out.println(list.toString());
 		return new ResponseEntity<>(list,HttpStatus.OK);
 	}
 	
@@ -59,7 +58,6 @@ public class TaskRestController {
 	@Operation(summary = "퀘스트 ID로 태스크 조회", description = "퀘스트ID로 태스크를 조회합니다.")
 	public ResponseEntity<List<Task>> questList(@PathVariable("questId") int id){
 		List<Task> list = taskService.getTaskListdByQuestId(id);
-		System.out.println(list.toString());
 		return new ResponseEntity<>(list,HttpStatus.OK);
 	}
 	
@@ -72,9 +70,7 @@ public class TaskRestController {
 	@PostMapping("")
 	@Operation(summary = "태스크 등록", description = "태스크를 등록합니다.")
     public ResponseEntity<String> createTask(@RequestBody Task task) {
-		System.out.println("task등록조회" + task.toString());
         try {
-        	System.out.println("테스크생성실행" + task.getQuestId());
             taskService.createTask(task); // 태스크 생성 로직
             return new ResponseEntity<>("태스크가 성공적으로 생성되었습니다.", HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
@@ -91,7 +87,6 @@ public class TaskRestController {
 	@DeleteMapping("/{taskId}")
 	@Operation(summary = "태스크 삭제", description = "태스크를 삭제합니다.")
 	public ResponseEntity<String> delete(@PathVariable("taskId") int id){
-		System.out.println("테스크 삭제" + id);
 		boolean isDeleted = taskService.deleteTask(id);
 		
 		if(isDeleted) {
@@ -110,7 +105,6 @@ public class TaskRestController {
     @Operation(summary = "태스크 수정", description = "태스크를 수정합니다.")
     public ResponseEntity<String> updateTask(@PathVariable int taskId, @RequestBody Task task) {
         try {
-        	System.out.println("테스크 수정" + taskId + "@" + task.toString());
             task.setTaskId(taskId);
             taskService.updateTask(task);
             return new ResponseEntity<>("태스크가 성공적으로 수정되었습니다.", HttpStatus.OK);
@@ -145,7 +139,6 @@ public class TaskRestController {
 		try {
 			task.setTaskId(taskId);
 			taskService.updateTaskCompleted(task);
-			System.out.println("태스크조회중" + taskId + " " + task.toString());
 			return new ResponseEntity<>("태스크 수행여부가 성공적으로 수정되었습니다.", HttpStatus.OK);
 		} catch (IllegalArgumentException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

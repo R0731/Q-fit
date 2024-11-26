@@ -60,12 +60,9 @@ const router = useRouter();
 const traineeName = computed(() => traineeStore.selectedTrainee.userName);
 
 const selectedPart = ref('leg'); // 기본적으로 'leg' 선택
-const exercises = ref([]);
+const exercises = ref([]); // 로드된 운동 정보를 담을 배열
 
-	/**
-	 * 운동 전체 조회 메서드
-	 * @param 없음
-	 */
+// 운동 전체 조회 메서드
 const fetchExercises = async () => {
   try {
     const result = await exerciseStore.getAllExercises();
@@ -79,26 +76,14 @@ const fetchExercises = async () => {
   }
 };
 
-onMounted(() => {
-  fetchExercises();
-});
-
-
-	/**
-	 * 선택된 운동 부위 반영 메서드
-   * 선택된 부위를 변경하고 fetch로 반영
-	 * @param part
-	 */
+// 선택된 운동 부위 반영 메서드
 const selectPart = (part) => {
   selectedPart.value = part;
   fetchExercises();
 };
 
-	/**
-	 * 체크박스에서 선택된 운동 반영 메서드
-   * 선택된 운동을 선택된 운동 리스트에 추가, 체크없으면 삭제
-	 * @param exercise
-	 */
+
+// 체크박스에서 선택된 운동 반영 메서드
 const updateSelectedExercises = (exercise) => {
   if (exercise.selected) {
     exerciseStore.addSelectedExercise(exercise);
@@ -107,31 +92,25 @@ const updateSelectedExercises = (exercise) => {
   }
 };
 
-
-	/**
-	 * 선택한 부위별 운동 필터링 메서드
-	 * @param -
-	 */
+// 선택한 부위별 운동 필터링 메서드
 const filteredExercises = computed(() => {
   if (!selectedPart.value) return exercises.value;
   return exercises.value.filter(exercise => exercise.exerciseParts === selectedPart.value);
 });
 
-	/**
-	 * 엑서사이즈 스토어 컴퓨팅 메서드
-	 * @param -
-	 */
+// 엑서사이즈 스토어 컴퓨팅 메서드
 const selectedExercises = computed(() => {
   return exerciseStore.selectedExercises;
 });
 
-	/**
-	 * 횟수 입력화면 이동 메서드
-	 * @param -
-	 */
+// 횟수 입력화면 이동 메서드
 const goToQuestSetting = () => {
   router.push({ name: 'questSetting' });
 };
+
+onMounted(() => {
+  fetchExercises();
+});
 </script>
 
 <style scoped>

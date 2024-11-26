@@ -41,7 +41,6 @@ public class ExerciseRestController {
 	@Operation(summary = "운동 전체조회", description = "모든 운동을 조회합니다.")
 	public ResponseEntity<List<Exercise>> list(){
 		List<Exercise> list = exerciseService.getExerciseList();
-		System.out.println(list.toString());
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
@@ -57,7 +56,6 @@ public class ExerciseRestController {
 		Exercise exercise = exerciseService.getExerciseListById(id);
 		
 		if(exercise != null) {
-			System.out.println(exercise.toString());
 			return new ResponseEntity<>(exercise, HttpStatus.OK);
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -71,7 +69,6 @@ public class ExerciseRestController {
 	@GetMapping("/list/parts")
 	@Operation(summary = "운동부위별 운동조회", description = "운동부위별로 운동을 조회합니다.")
 	public ResponseEntity<List<Exercise>> parts(@RequestParam String parts){
-		System.out.println(parts);
 		List<Exercise> list = exerciseService.getExerciseListByParts(parts);
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}

@@ -13,7 +13,6 @@ import TrainerInfo from '@/components/Trainer/TrainerInfo.vue';
 import TraineeInfo from '@/components/Trainee/TraineeInfo.vue';
 import UserUpdate from '@/components/UserUpdate.vue';
 import TrainerGym from '@/components/Trainer/TrainerGym.vue';
-import TraineeRegist from '@/views/Trainee/TraineeRegist.vue';
 import TraineeQuest from '@/components/Trainee/TraineeQuest.vue';
 import TraineeReview from '@/components/Trainee/TraineeReview.vue';
 import TraineeMain from '@/components/Trainee/TraineeMain.vue';

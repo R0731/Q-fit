@@ -53,7 +53,7 @@ const userId = userStore.loginUser?.numberId || 0; // 사용자 ID
 const notifications = computed(() => notificationStore.notifications); // 알림 목록
 const unreadCount = computed(() => notifications.value.length); // 읽지 않은 알림 개수
 
-// 뒤로 가기 함수
+// 뒤로 가기
 const goBack = () => {
   router.back();
 };
@@ -71,8 +71,8 @@ const fetchNotifications = async () => {
   if (!userId) return; // 사용자 ID가 없으면 요청하지 않음
   try {
     await notificationStore.fetchUnreadNotifications(userId);
-  } catch (error) {
-    console.error('알림 데이터를 가져오는 중 오류 발생:', error);
+  } catch (err) {
+    console.error('알림 데이터를 가져오는 중 오류 발생:', err);
   }
 };
 
@@ -81,7 +81,7 @@ const handleNotificationClick = async (notificationId) => {
   try {
     const item = document.querySelector(`[data-id="${notificationId}"]`); // 알림 DOM 찾기
     if (item) {
-      item.classList.add('slide-out'); // 애니메이션 클래스 추가
+      item.classList.add('slide-out'); // 애니메이션 추가
 
       // 애니메이션 완료 후 실행
       setTimeout(() => {
@@ -99,7 +99,6 @@ const handleNotificationClick = async (notificationId) => {
 // 컴포넌트가 마운트되면 알림 데이터를 가져옴
 onMounted(fetchNotifications);
 </script>
-
 
 <style scoped>
 .icon-wrapper {

@@ -1,6 +1,7 @@
 <template>
   <div>
     <RouterView />
+    <!-- 동적으로 컴포넌트 렌더링 -->
     <component :is="currentComponent" />
   </div>
 </template>
@@ -13,30 +14,21 @@ import RegistForm from '@/components/RegistForm.vue';
 
 const viewStore = useViewStore();
 
+// 컴포넌트 매핑
 const componentMap = {
   RegistAgreement,
   RegistForm,
 };
 
+// 현재 컴포넌트
 const currentComponent = computed(() => {
   const componentName = viewStore.currentView;
-  console.log("현재 컴포넌트:", componentName);
   return componentMap[componentName] || null;
 });
 
-// const currentComponent = ref('TraineeList');
-
-// const currentComponent = computed(()=> viewStore.currentView);
-
-// console.log("현재 컴포넌트:", currentComponent.value);
-
 watch(
   () => viewStore.currentView,
-  (newView) => {
-    console.log("변경", newView);
-  }
 )
-
 </script>
 
 <style scoped>

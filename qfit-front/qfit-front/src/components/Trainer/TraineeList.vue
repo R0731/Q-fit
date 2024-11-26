@@ -1,7 +1,7 @@
 <!-- TraineeList.vue -->
 <template>
   <div>
-    <!-- 공통 캘린더 컴포넌트 -->
+    <!-- 캘린더 -->
     <TheCalender @update:selectedDate="onDateSelected" />
     <div class="card">
       <div class="list-header">
@@ -48,10 +48,10 @@ const viewStore = useViewStore();
 const userStore = useUserStore();
 
 const router = useRouter();
-const trainerId = userStore.loginUser.numberId;
 
-const trainees = ref([]);
-const selectedDate = ref(viewStore.selectedDate);
+const trainerId = userStore.loginUser.numberId; // 트레이너(자신)의 고유 id
+const trainees = ref([]); // 트레이니 리스트
+const selectedDate = ref(viewStore.selectedDate); // 선택된 날짜
 
 // 날짜 선택 시 호출되는 메서드
 const onDateSelected = (date) => {
@@ -59,21 +59,19 @@ const onDateSelected = (date) => {
   fetchTrainees(); // 새 날짜에 맞는 데이터를 다시 가져옴
 };
 
-// API 호출 메서드
+// 트레이니 리스트 로드
 const fetchTrainees = () => {
   console.log(viewStore.selectedDate)
   traineeStore
     .fetchTraineesWithQuestStatuses(trainerId, viewStore.selectedDate)
     .then(() => {
       trainees.value = traineeStore.trainees;
-      console.log("트레이니 데이터 로드 완료:", trainees.value); // 디버그 로그
 
-      // 데이터 로드 후 프로필 이미지 로드 실행 (이미지 오류 시 해당 코드 문제)
+      // 데이터 로드 후 프로필 이미지 로드 실행
       if (trainees.value.length > 0) {
-        console.log("트레이니 데이터 로드 후 이미지 로드 시작");
         loadProfileImages(); // 프로필 이미지 로드
       } else {
-        console.warn("트레이니 데이터가 비어 있습니다.");
+        console.error("트레이니 데이터가 비어 있습니다.");
       }
     })
     .catch((err) => {
@@ -97,27 +95,18 @@ const loadProfileImages = async () => {
   // 각 트레이니의 프로필 이미지를 S3에서 로드
   for (const trainee of trainees.value) {
     if (trainee.userImg) {
-      console.log(`이미지 파일 이름: ${trainee.userImg}`); // 디버그 로그 추가
       try {
         const blob = await imageStore.loadFile(trainee.userImg);
         trainee.profileImageUrl = URL.createObjectURL(blob); // Blob URL 생성
-        console.log(`이미지 로드 성공: ${trainee.profileImageUrl.value}`);
       } catch (error) {
         console.error(`이미지 로드 실패 (${trainee.userImg}):`, error);
         trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
       }
     } else {
-      console.log("이미지 파일 이름이 없습니다."); // 디버그 로그 추가
       trainee.profileImageUrl = defaultProfileImage; // 실패 시 기본 이미지 설정
     }
   }
 };
-
-//수정
-// 컴포넌트가 마운트될 때 데이터 로드
-onMounted(async () => {
-  fetchTrainees();
-});
 
 // 퀘스트 상태에 따른 클래스 변화
 const getStatusClass = (status) => {
@@ -133,6 +122,10 @@ const getStatusClass = (status) => {
   }
 };
 
+// 컴포넌트가 마운트될 때 데이터 로드
+onMounted(async () => {
+  fetchTrainees();
+});
 </script>
 
 <style scoped>

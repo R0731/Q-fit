@@ -31,18 +31,14 @@
 import { ref, computed, watch } from 'vue';
 import { useQuestStore } from '@/stores/quest';
 import { useReviewStore } from '@/stores/review';
-import { useUserStore } from '@/stores/user';
 
 const questStore = useQuestStore();
 const reviewStore = useReviewStore();
-const userStore = useUserStore();
 
-// 현재 퀘스트 정보
-const quest = computed(() => questStore.quest);
+const quest = computed(() => questStore.quest); // 현재 퀘스트 정보
 const questId = ref(null); // 현재 퀘스트 ID
 
-// 현재 리뷰 정보
-const review = computed(() => reviewStore.review);
+const review = computed(() => reviewStore.review); // 현재 리뷰 정보
 const difficulty = ref('NONE'); // 난이도 상태 ('EASY', 'MEDIUM', 'HARD' 등)
 
 // 퀘스트 변경 감지
@@ -61,7 +57,6 @@ watch(
   },
   { immediate: true } // 컴포넌트 로드시 실행
 );
-
 </script>
 
 <style scoped>

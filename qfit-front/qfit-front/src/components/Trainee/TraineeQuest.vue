@@ -67,7 +67,6 @@ const notificationStore = useNotificationStore();
 const traineeStore = useTraineeStore();
 
 const formattedDate = computed(() => viewStore.selectedDate);
-
 const tasks = computed(() => questStore.getTasks || []);
 
 // 영어 - 한글 매핑 객체
@@ -82,6 +81,7 @@ const bodyPartMap = {
 
 const exerciseData = ref({});
 
+// 해당하는 운동 정보 로드
 const loadExerciseInfo = async (exerciseId) => {
   if (exerciseData.value[exerciseId]) return;
 
@@ -99,6 +99,7 @@ const loadExerciseInfo = async (exerciseId) => {
   }
 };
 
+// 모든 운동 정보 로드
 const loadAllExerciseInfo = async () => {
   const uniqueExerciseIds = [...new Set(tasks.value.map((task) => task.exerciseId))];
   for (const exerciseId of uniqueExerciseIds) {
@@ -109,9 +110,9 @@ const loadAllExerciseInfo = async () => {
 // 선택한 날짜가 현재 날짜 이전이면 수정 불가능
 const canEdit = ref(false);
 
+// 오늘 날짜와 비교해 canEdit 값 업데이트
 const updateCanEdit = () => {
   const today = formatDateToYYYYMMDD(new Date()); // 오늘 날짜 계산
-  
   if (formattedDate) {
     canEdit.value = formattedDate.value == today; // 날짜 비교
   } else {
@@ -127,6 +128,7 @@ const formatDateToYYYYMMDD = (date) => {
   return `${year}-${month}-${day}`;
 };
 
+// 운동 정보 로드
 const loadQuest = async () => {
   const traineeId = userStore.loginUser.numberId;
 
@@ -141,14 +143,15 @@ const loadQuest = async () => {
 
 //꽃가루 날리기 함수
 const triggerConfetti = () => {
-      confetti({
-        particleCount: 100,  // 컨페티의 입자 수
-        spread: 70,          // 입자 퍼지는 범위
-        origin: { x: 0.5, y: 0.5 }, // 화면의 중앙에서 퍼지도록 설정
-        colors: ['#ff0000', '#00ff00', '#0000ff'], // 컨페티 색상
-      });
-    }
+  confetti({
+    particleCount: 100,  // 컨페티의 입자 수
+    spread: 70,          // 입자 퍼지는 범위
+    origin: { x: 0.5, y: 0.5 }, // 화면의 중앙에서 퍼지도록 설정
+    colors: ['#ff0000', '#00ff00', '#0000ff'], // 컨페티 색상
+  });
+}
 
+// 퀘스트 완료
 const changeComplete = async (task) => {
   const newStatus = !task.completed;
   try {
@@ -158,8 +161,6 @@ const changeComplete = async (task) => {
     const traineeId = userStore.loginUser.numberId;
     const startDate = viewStore.selectedDate;
     const endDate = viewStore.selectedDate;
-
-
 
     await questStore.getTraineeQuestCompletionRate(traineeId, startDate, endDate);
     if (questStore.questCompletionRates[0].questCompletionRate === '100%') {
@@ -183,7 +184,7 @@ const makeNotification = async() => {
     const notification = {userId: trainerId, message: `${userStore.loginUser.name}님이 ${viewStore.selectedDate} 퀘스트를 완료하였습니다.`}
     await notificationStore.createNotification(notification)
   }catch(err){
-    console.log('프론트 등록 중 오류 발생', err)
+    console.error('프론트 등록 중 오류 발생', err)
   }
 };
 
@@ -196,7 +197,6 @@ watch(formattedDate, loadQuest);
 button {
   cursor: default; /* 기본 포인터(화살표)로 설정 */
 }
-/* 퀘스트 등록 버튼 */
 /* 퀘스트 등록 버튼 */
 .create-quest-btn {
   background-color: var(--theme-color);

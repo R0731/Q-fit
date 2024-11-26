@@ -57,42 +57,37 @@ const selectTrainee = (trainee) => {
   router.push({ name: 'MyTraineesBigCalender' }); // 라우터 이동
 };
 
+// 회원 목록 데이터
 const trainees = ref([]);
 
+// 프로필 이미지 로드
 const loadProfileImages = async () => {
   for (const trainee of trainees.value) {
     if (trainee.userImg) {
-      console.log(`이미지 파일 이름: ${trainee.userImg}`);
       try {
         const blob = await imageStore.loadFile(trainee.userImg);
         if (blob) {
-          console.log('Blob 생성 성공:', blob);
           trainee.profileImageUrl = URL.createObjectURL(blob);
         } else {
           console.error('Blob 데이터가 비어 있습니다.');
-          trainee.profileImageUrl = defaultProfileImage;
+          trainee.profileImageUrl = defaultProfileImage; // 기본 이미지 설정
         }
-        console.log('트레이니이미지', trainee.profileImageUrl);
       } catch (error) {
         console.error(`이미지 로드 실패 (${trainee.userImg}):`, error);
-        trainee.profileImageUrl = defaultProfileImage;
+        trainee.profileImageUrl = defaultProfileImage; // 기본 이미지 설정
       }
     } else {
-      console.log("이미지 파일 이름이 없습니다.");
-      trainee.profileImageUrl = defaultProfileImage;
+      trainee.profileImageUrl = defaultProfileImage; // 기본 이미지 설정
     }
   }
 };
 
 onMounted(async () => {
-  const trainerId = userStore.loginUser.numberId;
-  // console.log(`트레이너 ID: ${trainerId}`);
-  await traineeStore.fetchTraineeList(trainerId); 
-  trainees.value = traineeStore.trainees;
-  // console.log("트레이니 리스트 로드 완료:", trainees.value);
-  await loadProfileImages();
+  const trainerId = userStore.loginUser.numberId; // 트레이너 ID
+  await traineeStore.fetchTraineeList(trainerId); // 회원 목록 로드
+  trainees.value = traineeStore.trainees; // 로드된 상태 저장
+  await loadProfileImages(); // 프로필 이미지 로드
 });
-
 </script>
 
 <style scoped>

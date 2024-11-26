@@ -37,7 +37,6 @@ public class TrainerRestController {
 	@Operation(summary = "체육관 정보 조회", description = "트레이너의 체육관 정보를 조회합니다.")
 	public ResponseEntity<?> updateGym(@PathVariable("trainerId") int trainerId){
 		Trainer trainer = trainerService.getGym(trainerId);
-		System.out.println(trainer.getId() + trainer.getGym() + "정보조회");
 		if(trainer != null) return ResponseEntity.status(HttpStatus.OK).body(trainer);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update Failed");
 	}

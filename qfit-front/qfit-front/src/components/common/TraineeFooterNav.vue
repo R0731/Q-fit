@@ -38,11 +38,9 @@ import { useRouter, useRoute } from 'vue-router';
 const router = useRouter();
 const route = useRoute();
 
-/* 라우터를 이용해 페이지 이동 (name 기반) */
-// route.name(현재경로)와 routeName(이동할경로) 비교 후 다를 경우만 이동
+// 라우터를 이용해 페이지 이동 (name 기반)
 const navigateTo = (routeName) => { 
-  if (route.name !== routeName) {
-    // console.log('이동경로', routeName)
+  if (route.name !== routeName) { // 다를 경우에만 이동
     router.push({ name: routeName });
   }
 };

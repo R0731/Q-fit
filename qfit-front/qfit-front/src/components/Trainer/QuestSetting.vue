@@ -93,7 +93,6 @@ import { useViewStore } from '@/stores/viewStore';
 import { useQuestStore } from '@/stores/quest';
 import { useRouter } from 'vue-router';
 import { useNotificationStore } from '@/stores/notification';
-import axios from 'axios'
 
 const viewStore = useViewStore();
 const traineeStore = useTraineeStore();
@@ -102,13 +101,9 @@ const questStore = useQuestStore();
 const notificationStore = useNotificationStore();
 const router = useRouter();
 
-const traineeName = computed(() => traineeStore.selectedTrainee.userName);
+const traineeName = computed(() => traineeStore.selectedTrainee.userName); // 변경하는 트레이니 이름
 
-	/**
-	 * 선택 운동 배열에 접근하여 시간, 무게, 횟수 입력 메서드
-	 * @param exercise
-	 */
-// selectedExercises를 ref로 정의하여 배열을 직접 수정할 수 있게 합니다.
+// 선택 운동 배열에 접근하여 시간, 무게, 횟수 입력 메서드
 const selectedExercises = ref(exerciseStore.selectedExercises.map(exercise => {
   if (exercise.exerciseType === 'Cardio') {
     exercise.cardioMinutes = exercise.cardioMinutes || null;
@@ -119,18 +114,14 @@ const selectedExercises = ref(exerciseStore.selectedExercises.map(exercise => {
   return exercise;
 }));
 
-	/**
-	 * 운동 삭제 메서드
-	 * @param index
-	 */
+
+// 운동 삭제 메서드
 const removeExercise = (index) => {
   selectedExercises.value.splice(index, 1);
 };
 
-	/**
-	 * 운동 부위 한글 변환 메서드
-	 * @param part
-	 */
+
+// 운동 부위 한글 변환 메서드
 const translateExercisePart = (part) => {
   const partTranslations = {
     leg: '하체',
@@ -144,20 +135,16 @@ const translateExercisePart = (part) => {
   return partTranslations[part] || part;
 };
 
-	/**
-	 * 세트 추가 메서드
-	 * @param index
-	 */
+
+// 세트 추가 메서드
 const addSet = (index) => {
   const exercise = { ...selectedExercises.value[index] };  // 새로운 세트 객체 복사
   selectedExercises.value.splice(index + 1, 0, exercise);  // 세트 추가
   exerciseStore.setSelectedExercises(selectedExercises.value); // 변경된 selectedExercises 값을 exerciseStore에 반영
 };
 
-	/**
-	 * 퀘스트 등록 메서드
-	 * @param -
-	 */
+
+// 퀘스트 등록 메서드
 const registerQuest = async () => {
   
     // 날짜를 DATETIME 형식으로 변환하는 유틸리티 함수
@@ -172,10 +159,7 @@ const registerQuest = async () => {
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     };
 
-  /**
-	 * 퀘스트 안의 태스크 배열 생성 메서드
-	 * @param -
-	 */
+	 // 퀘스트 안의 태스크 배열 생성 메서드
     const tasks = selectedExercises.value
       .map((exercise) => {
         if (exercise.exerciseType === 'Cardio') {
@@ -197,10 +181,7 @@ const registerQuest = async () => {
       })
       .filter((task) => task !== null); // 유효한 데이터만 포함
 
-
-    /**
-	   * 퀘스트 데이터 생성 메서드
-	   */
+      // 퀘스트 데이터 생성
       const questData = {
         traineeId: traineeStore.selectedTrainee.id,
         trainerId: traineeStore.selectedTrainee.trainerId,
@@ -208,10 +189,7 @@ const registerQuest = async () => {
         tasks, // 매핑된 tasks 배열
       };
       
-      /**
-       * 퀘스트등록 시 알림 생성 메서드
-	     * @param -
-	     */
+      // 퀘스트등록 시 알림 생성 메서드
       const notiTraineeId = traineeStore.selectedTrainee.id
       const notiTraineeName = traineeStore.selectedTrainee.userName
 
@@ -230,6 +208,7 @@ const registerQuest = async () => {
      // 운동 데이터 비우기
     exerciseStore.setSelectedExercises([]); // 선택된 운동을 비움
 
+    // 알림 생성
     makeNotification('생성');
 
     // 라우터 이동
@@ -237,7 +216,6 @@ const registerQuest = async () => {
 
 };
 </script>
-
 
 <style scoped>
 .assign-header {
