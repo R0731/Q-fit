@@ -58,7 +58,6 @@ public class Feedback {
 		this.createdAt = createdAt;
 	}
 
-	// toString
 	@Override
 	public String toString() {
 		return "Feedback [feedbackId=" + feedbackId + ", questId=" + questId + ", trainerId=" + trainerId + ", content="

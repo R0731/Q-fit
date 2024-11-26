@@ -32,12 +32,8 @@ public class LoginServiceImpl implements LoginService{
 		info.put("userId", id);
 		info.put("userPassword", userPassword);
 		Integer passwordCorrect = loginDao.loginCheck(info);
-	    System.out.println("@@@정보확인" + info);
-
-	    System.out.println("@@@@결과확인" + passwordCorrect);
 		
 	    if (passwordCorrect == null) {
-	        System.out.println("null발생");
 	        return false;
 	    }
 	    

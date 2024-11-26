@@ -9,23 +9,24 @@ import com.qfit.mvc.model.dao.user.UserDao;
 
 @Alias("User")
 public class User {
-	protected int id;
-	private String userId;
-	private String userPassword;
-	private String userName;
-	private String phoneNumber;
-	private String email;
-	private String gender;
-	private String userImg;
-	private String createdAt; 
-	protected int userType;
-	private boolean isAgreed;
+	protected int id; // user 고유 ID
+	private String userId; // user가 입력한 ID
+	private String userPassword; // 패스워드
+	private String userName; // 이름
+	private String phoneNumber; // 휴대폰 번호
+	private String email; // 이메일
+	private String gender; // 성별
+	private String userImg; // 프로필 이미지 주소
+	private String createdAt; // 계정 생성 시각
+	protected int userType; // 유저 타입
+	private boolean isAgreed; // 개인정보 선택 동의 여부
 	
 	// 인식이 제대로 되지 않아 직접 매핑
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonProperty("birthDate")
 	private String birthDate;
     
+    // 생성자
 	public User() {
 		// TODO Auto-generated constructor stub
 	}

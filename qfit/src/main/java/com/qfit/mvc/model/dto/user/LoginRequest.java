@@ -2,8 +2,8 @@ package com.qfit.mvc.model.dto.user;
 
 public class LoginRequest {
 	
-	private String userId;
-	private String userPassword;
+	private String userId; // 유저 ID
+	private String userPassword; // 유저 패스워드
 	
 	public LoginRequest() {
 		// TODO Auto-generated constructor stub

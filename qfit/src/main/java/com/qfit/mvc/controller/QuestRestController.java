@@ -39,7 +39,6 @@ public class QuestRestController {
 	@Operation(summary = "당일 Quest 조회", description = "traineeId와 startAt에 해당하는 퀘스트를 가져옵니다.")
 	public ResponseEntity<?> getQuestByTraineeId(@RequestParam("traineeId") int traineeId,
 		    @RequestParam("startAt") String startAt) {
-		System.out.println("실행확인" + traineeId + " " + startAt);
 		try {
 			Quest quest = questService.readQuest(traineeId, startAt);
 			if (quest != null) {

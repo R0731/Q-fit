@@ -1,5 +1,6 @@
 package com.qfit.mvc.model.service;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -33,18 +34,17 @@ public class S3Service {
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 
-	// AWS S3 자격 증명 지정
+	// AWS S3 자격 증명 생성 및 클라이언트 초기화
 	@PostConstruct
 	public void setAmazonS3() {
 		AWSCredentials awsCredentials = new BasicAWSCredentials(accesskey, secretKey);
-
 		amazonS3 = AmazonS3ClientBuilder.standard()
 				.withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
 				.withRegion(region)
 				.build();
 	}
 
-	// 파일 url 가져오기	
+	// 파일 url 반환	
 	public String getFileUrl(String fileName) {
 	    return amazonS3.getUrl(bucket, fileName).toString();
 	}
@@ -54,7 +54,13 @@ public class S3Service {
 	    amazonS3.deleteObject(bucket, fileName);
 	}
 	
-	// 파일 추가
+	/**
+	 * 파일 업로드 메서드
+	 * @param  fileName S3 버킷에 저장될 파일 이름
+	 * @param  inputStream 파일의 내용을 스트림 형태로 제공하여 업로드
+	 * @param  contentLength 파일의 크기
+	 * @param  contentType 파일의 MIME 타입(콘텐츠 유형)
+	 */
 	public void uploadFile(String fileName, InputStream inputStream, long contentLength, String contentType) {
 	    ObjectMetadata metadata = new ObjectMetadata();
 	    metadata.setContentLength(contentLength);
@@ -63,7 +69,11 @@ public class S3Service {
 	    amazonS3.putObject(bucket, fileName, inputStream, metadata);
 	}
 
-	// S3Service.java
+	/**
+	 * S3에서 파일을 InputStream으로 가져오는 메서드
+	 * @param  fileName S3 버킷에서 가져올 파일의 이름
+	 * @return S3 객체의 콘텐츠를 InputStream으로 반환
+	 */
 	public InputStream getFileAsStream(String fileName) {
 	    return amazonS3.getObject(bucket, fileName).getObjectContent();
 	}

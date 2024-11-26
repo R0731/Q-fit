@@ -38,15 +38,4 @@ public class TrianerServiceImpl implements TrainerService{
 		int result = trainerDao.addGym(temp);
 		return result == 1;
 	}
-
-	// 내 해당 트레이니 검색
-	
-//	@Override
-//	public List<Trainer> getTrainerSearch(UserSearchCondition condition) {
-//		return trainerDao.trainerSearch(condition);
-//	}
-
-
-
-
 }

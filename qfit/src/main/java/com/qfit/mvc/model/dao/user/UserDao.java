@@ -17,8 +17,6 @@ public interface UserDao {
 	// 유저 탈퇴 시 유저 테이블에 정보 삭제 
 	public int deleteUser(int id);
 	
-//	public void readUser(User user);
-	
 	// user_id로 회원조회
 	public User selectOnebyId(String userId); 
 	

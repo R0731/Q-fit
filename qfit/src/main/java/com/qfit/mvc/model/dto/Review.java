@@ -39,7 +39,6 @@ public class Review {
 	public void setQuestId(int questId) {
 		this.questId = questId;
 	}
-
 	
 	public int getTraineeId() {
 		return traineeId;
@@ -65,7 +64,6 @@ public class Review {
 		this.createdAt = createdAt;
 	}
 
-	// toString
 	@Override
 	public String toString() {
 		return "Review [reviewId=" + reviewId + ", questId=" + questId + ", difficulty=" + difficulty + "]";

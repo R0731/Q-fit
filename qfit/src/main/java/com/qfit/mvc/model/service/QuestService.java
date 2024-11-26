@@ -18,9 +18,5 @@ public interface QuestService {
 	
 	// 퀘스트 상태 출력
 	public List<Map<String, Object>> getQuestStatuses(int trainerId, String startAt);
-	
-	// 퀘스트 삭제 만들면 안될거같음...
-	
-	// 퀘스트 수정 추후 필요하면 만들기!
-	
+
 }

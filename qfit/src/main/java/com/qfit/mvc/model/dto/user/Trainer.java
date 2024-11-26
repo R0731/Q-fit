@@ -5,7 +5,7 @@ import com.qfit.mvc.model.dao.user.UserDao;
 
 public class Trainer extends User {
 	
-	private String gym;
+	private String gym; // 체육관 정보
 
 	public Trainer() {
 	}

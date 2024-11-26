@@ -42,11 +42,9 @@ public class UserRestController {
 	@Operation(summary = "로그인", description = "모든 유저의 로그인을 수행합니다.")
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
 		try {
-			// 로그인 시 사용자 정보와 JWT 토큰을 함께 반환
-			String token = loginService.login(loginRequest.getUserId(), loginRequest.getUserPassword());
+			String token = loginService.login(loginRequest.getUserId(), loginRequest.getUserPassword()); // 로그인 시 사용자 정보와 JWT 토큰을 함께 반환
 			return ResponseEntity.status(HttpStatus.OK).body(token);
 		}catch (IllegalArgumentException e) {
-			//추후 헤더를 통해 main으로 redirect 되도록 할 예정
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("login failed");
 		}	
 	}	
@@ -62,11 +60,9 @@ public class UserRestController {
 		try {
 			String userId = loginRequest.getUserId();
 			String password = loginRequest.getUserPassword();
-//			System.out.println("확인" + userId + " " + password);
 			boolean isCorrect = loginService.correctPassword(userId, password);
 			return ResponseEntity.status(HttpStatus.OK).body(isCorrect);
 		}catch (IllegalArgumentException e) {
-			//추후 헤더를 통해 main으로 redirect 되도록 할 예정
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("login failed");
 		}	
 	}	
@@ -81,10 +77,8 @@ public class UserRestController {
 	@Operation(summary = "유저 업데이트", description = "유저 정보를 업데이트합니다.")
 	public ResponseEntity<?> userUpdate(@PathVariable("id") int id, @RequestBody User user){
 		try {
-//			System.out.println("받은 id" + id);
 			user.setId(id);
 			boolean res = userService.updateUser(user);
-//			System.out.println("결과값" + res);
 			return ResponseEntity.ok(res);
 		}catch(IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("User update failed");
@@ -100,9 +94,7 @@ public class UserRestController {
 	@Operation(summary = "유저 정보 조회", description = "유저의 개인정보를 조회합니다.")
 	public ResponseEntity<?> userInfo(@PathVariable("userId") String userId){
 		try {
-//			System.out.println("유저id들어온거" + userId);
 			User user = userService.getUserbyId(userId);
-//			System.out.println("유저 정보" + user);
 			return ResponseEntity.status(HttpStatus.OK).body(user);
 		}catch(IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("User Not found");
@@ -120,7 +112,7 @@ public class UserRestController {
 	public ResponseEntity<?> userProfileUpdate(@RequestBody User user){
 		try {
 			int id = user.getId();
-			String url = user.getUserImg();
+			String url = user.getUserImg(); // 새로 생성된 이미지 주소
 			boolean res = userService.updateUserProfile(id, url);
 			return ResponseEntity.ok(res);
 		}catch(IllegalArgumentException e) {
@@ -137,7 +129,7 @@ public class UserRestController {
 	@Operation(summary = "유저 프로필 조회", description = "유저 프로필 정보를 조회합니다.")
 	public ResponseEntity<?> userProfileLoad(@PathVariable("id") int id){
 		try {
-			String res = userService.loadUserProfile(id);
+			String res = userService.loadUserProfile(id); // 해당하는 유저의 이미지 주소 정보 반환
 			return ResponseEntity.ok(res);
 		}catch(IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("User Profile load failed");

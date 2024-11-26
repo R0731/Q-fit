@@ -2,11 +2,11 @@ package com.qfit.mvc.model.dto;
 
 public class Notification {
 
-	private int notificationId;
-	private int userId;
-	private String message;
-	private String createdAt;
-	private boolean isRead;
+	private int notificationId; // 알림 고유 ID
+	private int userId; // 유저 고유 ID
+	private String message; // 알림 메시지 내용
+	private String createdAt; // 알림 생성 시간
+	private boolean isRead; // 읽음여부
 
 	public Notification() {
 		// TODO Auto-generated constructor stub

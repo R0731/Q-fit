@@ -12,8 +12,6 @@ public interface FeedbackDao {
 	
 	// ID에 해당하는 피드백 가져오기
 	public Feedback getFeedbackByQuestId(int questId);
-	// Optional을 사용하면 NullPointerException 방지 가능
-	// Optional<Feedback> getFeedbackByQuestId(int questId);
 	
 	// 피드백 등록
 	public void insertFeedback(Feedback feedback);
