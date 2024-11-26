@@ -7,8 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.qfit.mvc.model.dto.user.Trainee;
 import com.qfit.mvc.model.dto.user.Trainer;
-import com.qfit.mvc.model.service.user.UserSearchCondition;
-
 @Mapper
 public interface TrainerDao extends UserDao{
 	

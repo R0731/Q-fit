@@ -7,7 +7,10 @@
     <ul class="card">
       <li v-for="trainee in trainees" :key="trainee.id" class="trainee-item">
         <!-- 프로필 이미지 -->
-        <img src="@/assets/default_profile.png" alt="Profile" class="profile-img" />
+        <img
+              :src="trainee.profileImageUrl"
+              alt="Profile"
+              class="profile-img">
         <!-- 회원 정보 -->
         <div class="trainee-info">
           <span class="trainee-name">{{ trainee.userName }}</span>
@@ -33,17 +36,20 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useTraineeStore } from "@/stores/trainee";
 import { useNotificationStore } from "@/stores/notification";
 import { useUserStore } from "@/stores/user";
 import { useRouter } from "vue-router";
+import { useImageStore } from "@/stores/imageStore";
+import defaultProfileImage from "@/assets/default_profile.png";
 
 const traineeStore = useTraineeStore();
 const notificationStore = useNotificationStore();
 const userStore = useUserStore();
 const router = useRouter();
 const trainees = traineeStore.trainees;
+const imageStore = useImageStore();
 
 // 모달 상태 및 선택된 회원
 const showDeleteModal = ref(false);
@@ -87,6 +93,39 @@ const makeNotification = async() => {
     console.log('프론트 등록 중 오류 발생', err)
   }
 }
+
+const loadProfileImages = async () => {
+  for (const trainee of trainees.value) {
+    if (trainee.userImg) {
+      console.log(`이미지 파일 이름: ${trainee.userImg}`);
+      try {
+        const blob = await imageStore.loadFile(trainee.userImg);
+        if (blob) {
+          console.log('Blob 생성 성공:', blob);
+          trainee.profileImageUrl = URL.createObjectURL(blob);
+        } else {
+          console.error('Blob 데이터가 비어 있습니다.');
+          trainee.profileImageUrl = defaultProfileImage;
+        }
+        console.log('트레이니이미지', trainee.profileImageUrl);
+      } catch (error) {
+        console.error(`이미지 로드 실패 (${trainee.userImg}):`, error);
+        trainee.profileImageUrl = defaultProfileImage;
+      }
+    } else {
+      console.log("이미지 파일 이름이 없습니다.");
+      trainee.profileImageUrl = defaultProfileImage;
+    }
+  }
+};
+
+onMounted(async () => {
+  try {
+    await loadProfileImages();
+  } catch (err) {
+    console.warn(err);
+  }
+});
 </script>
 
 <style scoped>

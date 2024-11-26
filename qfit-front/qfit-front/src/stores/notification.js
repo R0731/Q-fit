@@ -10,12 +10,12 @@ export const useNotificationStore = defineStore('notification', () => {
   const error = ref(null); // 오류 메시지
 
   // 읽지 않은 알림 가져오기
-  const fetchUnreadNotifications = async (userId) => {
+  const fetchUnreadNotifications = async (id) => {
     loading.value = true;
     error.value = null;
     try {
       const response = await axios.get(`${REST_API_URL}/unread`, {
-        params: { userId },
+        params: { id },
       });
       notifications.value = response.data; // 서버에서 알림 목록 가져오기
     } catch (err) {
