@@ -216,6 +216,7 @@ button {
 .exercise-count {
   font-size: 0.9rem;
   color: #666; /* 약간 어두운 텍스트 색상 */
+  margin-left: 5px;
 }
 
 .edit-section{
