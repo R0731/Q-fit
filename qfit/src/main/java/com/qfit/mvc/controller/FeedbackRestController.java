@@ -35,7 +35,7 @@ public class FeedbackRestController {
 	/**
 	 * 피드백 읽어오기 메서드
 	 * @param questId 읽어올 피드백의 questId
-	 * @return 성공 시 OK (200), 해당 퀘스트 피드백 없을 시 NO_CONTENT, 실패 시 INTERNAL_SERVER_ERROR 반환
+	 * @return 성공 시 OK (200), 해당 퀘스트 피드백 없을 시 NO_CONTENT(204), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
 	@GetMapping("/{questId}")
 	@Operation(summary = "피드백 조회", description = "questId에 해당하는 피드백을 가져옵니다. 등록된 피드백이 있다면, 등록이 되지 않도록 하여 퀘스트 하나 당 피드백 하나만 등록될 수 있도록 합니다.")
@@ -76,7 +76,7 @@ public class FeedbackRestController {
 	 /**
 	 * 피드백 삭제 메서드
 	 * @param questId 삭제할 피드백의 questId
-	 * @return 성공 시 OK (200), 피드백 없을 시 NOT_FOUND(404), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
+	 * @return 성공 시 OK (200), 피드백 없을 시 BAD_REQUEST(400), 실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
 	@DeleteMapping("/{questId}")
 	@Operation(summary = "피드백 삭제", description = "questId에 해당하는 피드백을 삭제합니다.")
@@ -85,7 +85,7 @@ public class FeedbackRestController {
 			feedbackService.removeFeedback(questId);
 			return new ResponseEntity<String>("Delete complete", HttpStatus.OK);
 		} catch (IllegalStateException e) {
-			return new ResponseEntity<String>("Feedback doesn't exist", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Feedback doesn't exist", HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -93,8 +93,8 @@ public class FeedbackRestController {
 	
 	/**
 	 * 피드백 수정 메서드
-	 * @param questId 수정할 피드백의 questId, 수정할 난이도 내용 difficulty
-	 * @return 성공 시 OK (200), 데이터 잘못 입력 시 BAD_REQUEST(400), 피드백 없을 시 NOT_FOUND(404),
+	 * @param questId 수정할 피드백의 questId, feedback 수정할 피드백 내용
+	 * @return 성공 시 OK (200), 데이터 잘못 입력 시 BAD_REQUEST(400), 피드백 없을 시 BAD_REQUEST(404),
 	 *         실패 시 INTERNAL_SERVER_ERROR(500) 반환
 	 */
 	@PutMapping("/{questId}")

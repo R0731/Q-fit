@@ -17,7 +17,7 @@
 
     <!-- 달성률 표시 -->
      <div class="completion">
-      <h6>달성률 : {{ rate }}</h6>
+     <h6 v-if="rate">달성률 : {{ rate }}</h6>
 
   </div>
     
@@ -46,14 +46,9 @@ const viewStore = useViewStore();
 
 const userName = computed(() => userStore.loginUser.name);
 
-
-const complete = ref(false);
 const rate = ref();
 
-	/**
-	 * 퀘스트 달성률 상태 반영 메서드
-	 * @param -
-	 */
+// 퀘스트 달성률 상태 반영 메서드
 const checkQuest = async () =>{
   try{
     const traineeId = userStore.loginUser.numberId;
@@ -61,10 +56,6 @@ const checkQuest = async () =>{
     const endDate = viewStore.selectedDate;
     await questStore.getTraineeQuestCompletionRate(traineeId, startDate, endDate);
     rate.value = questStore.questCompletionRates[0].questCompletionRate;
-    if(rate === '100%'){
-      complete.value = true;
-    }
-    
   }catch(err){
     console.error(err)
   }

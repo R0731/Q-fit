@@ -31,7 +31,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	public void writeFeedback(Feedback feedback) throws IllegalArgumentException, IllegalStateException {
 		if (feedback==null || feedback.getQuestId()==0 || feedback.getContent()==null)
-			throw new IllegalArgumentException("Invalid review data.");
+			throw new IllegalArgumentException("Invalid feedback data.");
 		if (feedbackDao.feedbackExists(feedback.getQuestId()) >= 1)
 			throw new IllegalStateException("A feedback for this quest has already been submitted.");
 		feedbackDao.insertFeedback(feedback);

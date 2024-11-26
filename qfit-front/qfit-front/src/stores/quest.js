@@ -123,6 +123,13 @@ export const useQuestStore = defineStore('quest', () => {
     }
   };
 
+  /**
+   * 퀘스트 달성률, 리뷰, 피드백 상태 가져옴
+   * @param {number} traineeId - 트레이니의 ID
+   * @param {string} startDate - 조회 시작 날짜
+   * @param {string} endDate - 조회 종료 날짜
+   * @returns {void} - 트레이니의 퀘스트 상태를 `questCompletionRates`에 저장
+ */
   const questCompletionRates = ref([]); // 퀘스트 상태 (달성률, 리뷰, 피드백)
 
   const getTraineeQuestCompletionRate = async (traineeId, startDate, endDate) => {
@@ -137,27 +144,20 @@ export const useQuestStore = defineStore('quest', () => {
   };
   
   /**
-   * 퀘스트 등록 함수
+   * 퀘스트 등록
+   * @param {Object} questData - 등록할 퀘스트 데이터
+   * @returns {void} - 퀘스트 등록 결과 로그 출력
    */
   const createQuest = async (questData) => {
   
     try {
-  
-      // 요청 로그
-      console.log('API 요청 URL:', `${REST_API_URL}/`,  questData );
-  
       // API 호출
-      const res = await axios.post(`${REST_API_URL}/`, questData );
-  
-      if (res.status === 201) {
-        console.log('퀘스트 등록 성공:', res.data);
-      } else {
-        console.error('퀘스트 등록 실패');
-      }
+      await axios.post(`${REST_API_URL}/`, questData );
     } catch (error) {
       console.error('퀘스트 등록 중 오류 발생:', error);
     }
   };
+
   // 스토어에 제공할 함수 및 상태
   return { 
     quest, 

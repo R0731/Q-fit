@@ -58,16 +58,8 @@
           <div>달성률  {{ day.questStatus.questCompletionRate }}</div>
           <div v-if="day.questStatus.review">리뷰  <span v-html="getReviewEmoji(day.questStatus.review)"></span></div>
           <div v-if="day.questStatus.feedback">피드백  <i class="bi bi-chat-left"></i></div>
-          <!-- <div>피드백: {{ day.questStatus.feedback || '없음' }}</div> -->
         </div>
 
-        <!-- 이벤트 2, 3, 4 목록
-        <div class="events-list">
-          임시 이벤트 데이터 표시
-          <div v-for="(event, index) in day.events" :key="index" class="event-item">
-            {{ event }}
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
@@ -94,11 +86,7 @@ const getCurrentMonthText = computed(() => {
   return `${year}년 ${month}월`;
 });
 
-/**
- * 현재 월 데이터를 기반으로 달력 배열 생성
- * - 이벤트 1 (동그라미): 랜덤한 Boolean 값
- * - 이벤트 2, 3, 4: 임시 문자열 데이터로 초기화
- */
+// 현재 월 데이터를 기반으로 달력 배열 생성
 const generateCalendar = async () => {
   const start = new Date(
     currentMonth.value.getFullYear(),
@@ -131,8 +119,6 @@ const generateCalendar = async () => {
         daysInPrevMonth - i + 1
       ),
       inCurrentMonth: false,
-      // event1: Math.random() > 0.5,
-      // events: ["Event 2", "Event 3", "Event 4"],
     });
   }
 
@@ -145,8 +131,6 @@ const generateCalendar = async () => {
         i
       ),
       inCurrentMonth: true,
-      // event1: Math.random() > 0.5,
-      // events: ["Event 2", "Event 3", "피드백"],
     });
   }
 
@@ -159,8 +143,6 @@ const generateCalendar = async () => {
         i
       ),
       inCurrentMonth: false,
-      // event1: Math.random() > 0.5,
-      // events: ["Event 2", "Event 3", "Event 4"],
     });
   }
 
@@ -174,7 +156,6 @@ const generateCalendar = async () => {
 
   // 퀘스트 상태 데이터 로드
   const startDate = `${currentMonth.value.getFullYear()}-${currentMonth.value.getMonth() + 1}-01`;
-  // const endDate = `${currentMonth.value.getFullYear()}-${currentMonth.value.getMonth() + 1}-${currentMonth.value.getDate()}`;
   // 현재 달의 마지막 날짜 계산
   const lastDayOfCurrentMonth = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth() + 1, 0);
   const endDate = `${lastDayOfCurrentMonth.getFullYear()}-${lastDayOfCurrentMonth.getMonth() + 1}-${lastDayOfCurrentMonth.getDate()}`;
@@ -205,11 +186,7 @@ const updateCalendarWithQuestData = () => {
   });
 };
 
-/**
- * 리뷰를 Bootstrap Icons로 변환하는 메서드
- * @param {string} review - 리뷰 수준 (EASY, MEDIUM, HARD)
- * @returns {string} HTML 태그 문자열
- */
+// 리뷰를 Bootstrap Icons로 변환하는 메서드
  const getReviewEmoji = (review) => {
   if (!review) return '';
   switch (review) {
@@ -261,9 +238,7 @@ const selectDate = (date) => {
   router.push({ name: "quest" });
 };
 
-/**
- * 이전 달로 이동
- */
+// 이전 달로 이동
 const goToPreviousMonth = () => {
   currentMonth.value = new Date(
     currentMonth.value.getFullYear(),
@@ -273,9 +248,7 @@ const goToPreviousMonth = () => {
   generateCalendar();
 };
 
-/**
- * 다음 달로 이동
- */
+// 다음 달로 이동
 const goToNextMonth = () => {
   currentMonth.value = new Date(
     currentMonth.value.getFullYear(),

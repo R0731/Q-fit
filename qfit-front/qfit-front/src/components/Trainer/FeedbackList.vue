@@ -35,14 +35,24 @@ import { useTraineeStore } from "@/stores/trainee";
 import { useRouter } from "vue-router";
 import { useViewStore } from "@/stores/viewStore";
 
-// 피드백 리스트 임시 데이터
-const feedbacks = ref([]);
 const feedbackStore = useFeedbackStore();
 const userStore = useUserStore();
-const trainerId = userStore.loginUser.numberId;
 const traineeStore = useTraineeStore();
-const router = useRouter();
 const viewStore = useViewStore();
+
+// 피드백 리스트 임시 데이터
+const feedbacks = ref([]);
+const trainerId = userStore.loginUser.numberId;
+const router = useRouter();
+
+// 피드백 등록 버튼 클릭 핸들러
+const selectTrainee = (trainee_id, quest_start_at) => {
+  // 선택한 데이터를 상태로 저장 후 화면 전환
+  traineeStore.selectedTrainee = traineeStore.trainees.find((trainee) => trainee.id === trainee_id); // Store에 선택된 훈련생 저장
+  viewStore.selectedDate = quest_start_at;
+  // 퀘스트 상세창으로 이동
+  router.push({ name: 'quest' }); // 라우터 이동
+};
 
 onMounted(() => {
   feedbackStore
@@ -54,16 +64,6 @@ onMounted(() => {
       console.error(err);
     })
 });
-
-// 피드백 등록 버튼 클릭 핸들러
-const selectTrainee = (trainee_id, quest_start_at) => {
-  // 선택한 데이터를 상태로 저장 후 화면 전환
-  traineeStore.selectedTrainee = traineeStore.trainees.find((trainee) => trainee.id === trainee_id); // Store에 선택된 훈련생 저장
-  console.log(traineeStore.selectedTrainee)
-  viewStore.selectedDate = quest_start_at;
-  console.log(viewStore.selectedDate)
-  router.push({ name: 'quest' }); // 라우터 이동
-};
 </script>
 
 <style scoped>

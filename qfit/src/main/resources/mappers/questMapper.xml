@@ -11,12 +11,6 @@
 	</select>
 	
 	<!-- 퀘스트 불러오기 -->
-	<!-- 
-	<select id="getQuestByTraineeId" resultType="Quest">
-		SELECT * 
-		FROM quest 
-		WHERE trainee_id=#{traineeId} AND start_at=#{startAt}
-	</select>  -->
 	<select id="getQuestByTraineeId" resultMap="questResultMap">
         SELECT 
 	        q.quest_id, q.trainee_id, q.trainer_id, q.start_at, q.end_at, q.created_at, q.updated_at,
@@ -111,14 +105,14 @@
 	</select>
 	
 	<!-- 퀘스트 삭제 -->
-	<!-- 여기도 필요가 없어져버렸어
+	<!--
 	<delete id="deleteQuest" parameterType="int">
 		DELETE FROM quest 
 		WHERE quest_id=#{questId}
 	</delete> -->
 	
 	<!-- 퀘스트 수정-->
-	<!-- 없어도 될 거 같은 수정 부분
+	<!--
 	<update id="updateQuest" parameterType="map">
 		UPDATE quest
 		SET updated_at = #{updatedAt}
